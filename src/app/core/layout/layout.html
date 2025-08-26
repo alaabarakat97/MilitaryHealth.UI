@@ -1,0 +1,13 @@
+<div class="app-layout rtl-layout">
+  <app-sidebar [collapsed]="isSidebarCollapsed"></app-sidebar>
+
+  <div class="main-section">
+    <app-topbar (toggleSidebar)="isSidebarCollapsed = !isSidebarCollapsed"></app-topbar>
+
+    <main class="content">
+      <router-outlet></router-outlet>
+    </main>
+
+    <app-footer></app-footer>
+  </div>
+</div>

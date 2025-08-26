@@ -9,4 +9,8 @@ import { RouterOutlet } from '@angular/router';
 })
 export class App {
   protected readonly title = signal('MilitaryHealth.UI');
+
+   ngOnInit() {
+    document.body.dir = 'rtl'; 
+  }
 }
