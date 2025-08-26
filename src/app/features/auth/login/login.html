@@ -1,0 +1,31 @@
+<div class="container mt-5" style="max-width: 400px;">
+
+ <div class="text-center mb-4">
+    <img src="assets/images/syr.svg" alt="Logo" class="login-logo">
+  </div>
+
+  <h3 class="text-center mb-4">تسجيل الدخول</h3>
+
+  <form [formGroup]="loginForm">
+    <div class="form-group mb-3">
+      <label for="email" class="pb-2">اسم المستخدم</label>
+      <input type="text" formControlName="email" class="form-control" id="email" required
+        [class.is-invalid]="loginForm.get('email')?.touched && loginForm.get('email')?.invalid">
+      <div class="invalid-feedback">
+        {{ getFieldError('email') }}
+      </div>
+    </div>
+
+
+    <div class="form-group mb-3">
+      <label for="password" class="pb-2">كلمة المرور</label>
+      <input type="password" formControlName="passWord" class="form-control" id="passWord" required>
+    </div>
+
+    <div class="text-danger mb-3"></div>
+
+    <button type="submit" class="btn btn-primary w-100" (click)="loging()">
+      تسجيل
+    </button>
+  </form>
+</div>

@@ -11,9 +11,9 @@
   <div class="topbar-right">
     <i class="pi pi-bell"></i>
     <i class="pi pi-envelope"></i>
-    <div class="user-profile">
+    <div class="user-profile" [title]="userRole">
       <img src="assets/images/syr.svg" alt="User" />
-      <span>مدير</span>
     </div>
+    <button class="logout-btn" (click)="logout()">تسجيل الخروج</button>
   </div>
 </header>
