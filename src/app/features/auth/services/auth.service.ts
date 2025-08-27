@@ -54,4 +54,7 @@ export class AuthService {
     if (!payload) return false;
     return roles.includes(payload.role as UserRoles);
   }
+  getUserRole(){
+    return "Reception";
+  }
 }

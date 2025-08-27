@@ -7,12 +7,12 @@
   </div>
 
   <ul class="menu">
-    <li>
-      <i class="pi pi-home"></i>
-      <span>الرئيسية</span>
+   <li *ngIf="role === 'Reception'" routerLink="/reception/applicants/add">
+      <i class="pi pi-user-plus"></i>
+      <span>إضافة منتسب</span>
     </li>
-    <li>
-      <i class="pi pi-chart-line"></i>
+    <!-- <li> -->
+      <!-- <i class="pi pi-chart-line"></i>
       <span>الإحصائيات</span>
     </li>
     <li>
@@ -22,6 +22,6 @@
     <li>
       <i class="pi pi-cog"></i>
       <span>الإعدادات</span>
-    </li>
+    </li> -->
   </ul>
 </aside>

@@ -21,13 +21,19 @@ export const routes: Routes = [
       canActivate: [authGuard],
       data: { roles: [UserRoles.Admin] }
     },
-    {
-  path: 'reception',
-  loadComponent: () =>
-    import('./features/reception/components/reception/reception').then(m => m.Reception),
-  canActivate: [authGuard],
-  data: { roles: [UserRoles.Reception] }
-}
+//     {
+//   path: 'reception',
+//   loadComponent: () =>
+//     import('./features/reception/components/reception/reception').then(m => m.Reception),
+//   canActivate: [authGuard],
+//   data: { roles: [UserRoles.Reception] }
+// }
+ {
+        path: 'reception',
+        loadChildren: () =>
+          import('./features/reception/reception.routes').then(m => m.RECEPTION_ROUTES),
+        data: { roles: [UserRoles.Reception] }
+      },
   ]
   },
   { path: '**', redirectTo: 'login' }
