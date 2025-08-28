@@ -1,6 +1,11 @@
 <div class="container-fluid py-4">
     <div class="row justify-content-center">
         <div class="col-12 col-xxl-12">
+            @if(fileNumber){
+            <div  class=" p-2 bg-info text-dark rounded text-center">
+                <h5 class="mb-0">رقم الملف: {{ fileNumber }}</h5>
+            </div>
+            }
             <div class="card shadow-sm border-0">
                 <div class="card-body p-4">
                     <h4 class="card-title mb-4 fw-bold">إضافة منتسب</h4>
@@ -11,31 +16,31 @@
                         <div class="row g-3">
                             <div class="col-12 col-md-4">
                                 <label class="form-label">الاسم الكامل <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" formControlName="FullName"
-                                    [class.is-invalid]="isControlInvalid('FullName')"
-                                    [class.is-valid]="isControlValid('FullName')" />
-                                <div class="invalid-feedback" *ngIf="controlHasError('required','FullName')">
+                                <input type="text" class="form-control" formControlName="fullName"
+                                    [class.is-invalid]="isControlInvalid('fullName')"
+                                    [class.is-valid]="isControlValid('fullName')" />
+                                <div class="invalid-feedback" *ngIf="controlHasError('required','fullName')">
                                     الاسم مطلوب
                                 </div>
                             </div>
 
                             <div class="col-12 col-md-4">
                                 <label class="form-label">العمل<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" formControlName="Job"
-                                    [class.is-invalid]="isControlInvalid('Job')"
-                                    [class.is-valid]="isControlValid('Job')" />
-                                <div class="invalid-feedback" *ngIf="controlHasError('required','Job')">
+                                <input type="text" class="form-control" formControlName="job"
+                                    [class.is-invalid]="isControlInvalid('job')"
+                                    [class.is-valid]="isControlValid('job')" />
+                                <div class="invalid-feedback" *ngIf="controlHasError('required','job')">
                                     مطلوب
                                 </div>
                             </div>
                             <div class="col-12 col-md-4">
                                 <label class="form-label">الحالة الاجتماعية <span class="text-danger">*</span></label>
-                                <ng-select [items]="maritalStatuses" bindLabel="name" bindValue="id"
-                                    formControlName="MaritalStatusID" placeholder="اختر الحالة الاجتماعية"
-                                    [ngClass]="{'is-invalid': isControlInvalid('MaritalStatusID')}">
+                                <ng-select [items]="maritalStatuses" bindLabel="description" bindValue="maritalStatusID"
+                                    formControlName="maritalStatusID" placeholder="اختر الحالة الاجتماعية"
+                                    [ngClass]="{'is-invalid': isControlInvalid('maritalStatusID')}">
                                 </ng-select>
                                 <div class="invalid-feedback d-block"
-                                    *ngIf="controlHasError('required','MaritalStatusID')">
+                                    *ngIf="controlHasError('required','maritalStatusID')">
                                     يرجى اختيار الحالة الاجتماعية
                                 </div>
                             </div>
@@ -44,66 +49,51 @@
                         <div class="row g-3">
                             <div class="col-6 col-md-3">
                                 <label class="form-label">الطول (سم)</label>
-                                <input type="number" step="0.1" class="form-control" formControlName="Height" />
+                                <input type="number" step="0.1" class="form-control" formControlName="height" />
                                 <div class="form-text">أدخل الطول بالسنتيمتر</div>
                             </div>
 
                             <div class="col-6 col-md-3">
                                 <label class="form-label">الوزن (كغ)</label>
-                                <input type="number" step="0.1" class="form-control" formControlName="Weight" />
+                                <input type="number" step="0.1" class="form-control" formControlName="weight" />
                                 <div class="form-text">أدخل الوزن بالكيلوغرام</div>
                             </div>
 
                             <div class="col-12 col-md-3">
                                 <label class="form-label">BMI</label>
-                                <input type="number" class="form-control" formControlName="BMI" />
+                                <input type="number" class="form-control" formControlName="bmi" />
                             </div>
 
                             <div class="col-12 col-md-3">
                                 <label class="form-label">ضغط الدم</label>
-                                <input type="text" class="form-control" formControlName="BloodPressure"
+                                <input type="text" class="form-control" formControlName="bloodPressure"
                                     placeholder="120/80" />
                             </div>
 
                             <div class="col-6 col-md-3">
                                 <label class="form-label">النبض (نبضة/دقيقة)</label>
-                                <input type="number" class="form-control" formControlName="Pulse" placeholder="72" />
+                                <input type="number" class="form-control" formControlName="pulse" placeholder="72" />
                             </div>
 
                             <div class="col-6 col-md-3 d-flex align-items-end">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" id="tattooCheck"
-                                        formControlName="Tattoo" />
+                                        formControlName="tattoo" />
                                     <label class="form-check-label" for="tattooCheck">وشم</label>
                                 </div>
                             </div>
 
                             <div class="col-12">
                                 <label class="form-label">علامات مميزة</label>
-                                <textarea class="form-control" formControlName="DistinctiveMarks" rows="2"></textarea>
+                                <textarea class="form-control" formControlName="distinctiveMarks" rows="2"></textarea>
                             </div>
                         </div>
 
                         <div class="d-flex gap-2 mt-5">
                             <button class="btn btn-primary px-4" type="submit" [disabled]="loading">
                                 <i class="pi pi-save me-2 ms-2"></i>إرسال
-                                <span *ngIf="loading" class="spinner-border spinner-border-sm" role="status"></span>
-                                <span *ngIf="loading" class="ms-2">جارٍ الإرسال...</span>
-                            </button>
-
-                            <button class="btn btn-outline-secondary px-4" type="button" (click)="onReset()"
-                                [disabled]="loading">
-                                <i class="pi pi-refresh me-2 ms-2"></i>تفريغ
                             </button>
                         </div>
-
-
-                        <div class="mt-4" *ngIf="message">
-                            <div class="alert" [ngClass]="{'alert-success': success, 'alert-danger': !success}">
-                                {{ message }}
-                            </div>
-                        </div>
-
                     </form>
                 </div>
             </div>

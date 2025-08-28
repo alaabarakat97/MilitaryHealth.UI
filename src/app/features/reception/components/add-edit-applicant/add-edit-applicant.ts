@@ -5,6 +5,11 @@ import { ReactiveFormsModule, FormsModule, FormGroup, FormBuilder, Validators } 
 import { NgSelectModule } from '@ng-select/ng-select';
 import { MaritalStatus } from '../../models/marital-status.model';
 import { MaritalStatusService } from '../../services/marital-status.service';
+import { ApplicantModel } from '../../models/applicant.model';
+import { ApplicantService } from '../../services/applicant.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { tap } from 'rxjs';
+import { ApiResponse } from '../../../../shared/models/paged-response.model';
 
 @Component({
   selector: 'app-add-edit-applicant',
@@ -13,77 +18,107 @@ import { MaritalStatusService } from '../../services/marital-status.service';
   styleUrl: './add-edit-applicant.scss'
 })
 export class AddEditApplicant implements OnInit {
-  applicantForm!: FormGroup;
+    applicantForm!: FormGroup;
   maritalStatuses: MaritalStatus[] = [];
+  applicantId!: number;
+  fileNumber: string = '';
   submitted = false;
   loading = false;
   message = '';
   success = false;
 
-  private apiUrl = 'https://your-api-url.com/users';
-
-  constructor(private fb: FormBuilder,
-    private maritalStatusService: MaritalStatusService
-    , private http: HttpClient) { }
+  constructor(
+    private fb: FormBuilder,
+    private maritalStatusService: MaritalStatusService,
+    private applicantService: ApplicantService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
+    this.loadForm();
+    this.loadMaritalStatuses();
+
+    this.route.paramMap.subscribe(params => {
+  const id = params.get('id');
+  if (id) {
+    this.applicantId = +id;
+    this.loadApplicant(this.applicantId);
+  }
+});
+  }
+
+  loadForm() {
     this.applicantForm = this.fb.group({
-      FullName: ['', Validators.required],
-      MaritalStatusID: [null, Validators.required],
-      Job: ['', Validators.required],
-      Height: [null, Validators.required],
-      Weight: [null, Validators.required],
-      BMI: [null, Validators.required],
-      BloodPressure: ['', Validators.required],
-      Pulse: [null, Validators.required],
-      Tattoo: [false, Validators.required],
-      DistinctiveMarks: ['', Validators.required]
+      fullName: ['', Validators.required],
+      maritalStatusID: [null, Validators.required],
+      job: ['', Validators.required],
+      height: [null, Validators.required],
+      weight: [null, Validators.required],
+      bmi: [null, Validators.required],
+      bloodPressure: ['', Validators.required],
+      pulse: [null, Validators.required],
+      tattoo: [false, Validators.required],
+      distinctiveMarks: ['', Validators.required]
     });
   }
 
   loadMaritalStatuses() {
     this.maritalStatusService.getMaritalStatus().subscribe({
-      next: (data) => {
-        this.maritalStatuses = data;
-      },
-      error: (err) => {
-        console.error('Error fetching marital statuses', err);
-      }
+      next: (data) => (this.maritalStatuses = data),
+      error: (err) => console.error('Error fetching marital statuses', err)
     });
   }
+
+  loadApplicant(id: number) {
+    this.applicantService.getApplicantById$(id).subscribe({
+      next: (applicant: ApplicantModel) => {
+        this.applicantForm.patchValue(applicant); 
+        this.fileNumber = applicant.fileNumber;
+      },
+      error: () => console.error('Error fetching applicant data')
+    });
+  }
+
   onSubmit() {
     this.submitted = true;
-    this.message = '';
     if (this.applicantForm.invalid) return;
 
+    const applicantModel: ApplicantModel = this.applicantForm.getRawValue();
     this.loading = true;
-    const payload = this.applicantForm.getRawValue(); // عشان يجيب BMI كمان
 
-    this.http.post(this.apiUrl, payload).subscribe({
-      next: () => {
-        this.success = true;
-        this.message = 'تم الحفظ بنجاح ✅';
-        this.loading = false;
-        this.onReset();
-      },
-      error: () => {
-        this.success = false;
-        this.message = 'حصل خطأ أثناء الإرسال ❌';
-        this.loading = false;
-      }
-    });
+    if (!this.applicantId) {
+      this.applicantService.createApplicant(applicantModel)
+        .pipe(
+          tap((res: ApiResponse<ApplicantModel>) => {
+            console.log(res);
+            this.success = true;
+            this.applicantId = res.data.applicantID;
+            this.router.navigate(['reception/applicants/', res.data.applicantID]);
+          })
+        )
+        .subscribe({
+          error: () => {
+            this.success = false;
+            this.loading = false;
+          }
+        });
+    } else {
+      this.applicantService.updateApplicant(this.applicantId, applicantModel).subscribe({
+        next: () => {
+          this.success = true;
+          this.loading = false;
+        },
+        error: () => {
+          this.success = false;
+          this.loading = false;
+        }
+      });
+    }
   }
 
-  onReset() {
-    this.submitted = false;
-    this.applicantForm .reset({
-      Tattoo: false
-    });
-  }
-
-  // Getters & Helpers
   get f() {
-    return this.applicantForm .controls;
+    return this.applicantForm.controls;
   }
 
   isControlValid(controlName: string): boolean {

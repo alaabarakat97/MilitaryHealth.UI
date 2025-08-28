@@ -4,7 +4,7 @@ import { UserRoles } from '../../core/models/enums/user-roles.enum';
 
 export const Doctor_ROUTES: Routes = [
   {
-    path: '',
+    path: 'eye',
     loadComponent: () =>
       import('./components/doctor-test/doctor-test').then(m => m.DoctorTest),
     canActivate: [authGuard],

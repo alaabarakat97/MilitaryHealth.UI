@@ -16,4 +16,11 @@ export const RECEPTION_ROUTES: Routes = [
     canActivate: [authGuard],
     data: { roles: [UserRoles.Reception] }
   },
+    {
+    path: 'applicants/:id', 
+    loadComponent: () =>
+      import('./components/add-edit-applicant/add-edit-applicant').then(m => m.AddEditApplicant),
+    canActivate: [authGuard],
+    data: { roles: [UserRoles.Reception] }
+  },
 ];
