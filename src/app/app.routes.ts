@@ -12,29 +12,34 @@ export const routes: Routes = [
     path: '',
     loadComponent: () =>
       import('./core/layout/layout').then(m => m.Layout),
-     canActivate: [authGuard],
-      children: [
-    {
-      path: 'dashboard',
-      loadComponent: () =>
-        import('./features/admin/dashboard/dashboard').then(m => m.Dashboard),
-      canActivate: [authGuard],
-      data: { roles: [UserRoles.Admin] }
-    },
-//     {
-//   path: 'reception',
-//   loadComponent: () =>
-//     import('./features/reception/components/reception/reception').then(m => m.Reception),
-//   canActivate: [authGuard],
-//   data: { roles: [UserRoles.Reception] }
-// }
- {
+    canActivate: [authGuard],
+    children: [
+      {
+        path: 'admin',
+        loadChildren: () =>
+          import('./features/admin/admin.routes').then(m => m.ADMIN_ROUTES),
+        canActivate: [authGuard],
+        data: { roles: [UserRoles.Admin] }
+      },
+      {
         path: 'reception',
         loadChildren: () =>
           import('./features/reception/reception.routes').then(m => m.RECEPTION_ROUTES),
         data: { roles: [UserRoles.Reception] }
       },
-  ]
+       {
+        path: 'doctor',
+        loadChildren: () =>
+          import('./features/doctor/doctor.routes').then(m => m.Doctor_ROUTES),
+        data: { roles: [UserRoles.Doctor] }
+      },
+       {
+        path: 'supervisor',
+        loadChildren: () =>
+          import('./features/supervisor/supervisor.routes').then(m => m.RECEPTION_ROUTES),
+        data: { roles: [UserRoles.Supervisor] }
+      },
+    ]
   },
   { path: '**', redirectTo: 'login' }
 ];

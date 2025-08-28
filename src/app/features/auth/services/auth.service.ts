@@ -1,38 +1,53 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { UserDto } from '../../../core/models/user.dto';
 import { Observable, tap } from 'rxjs';
+import { jwtDecode } from 'jwt-decode';
+
+import { UserDto } from '../../../core/models/user.dto';
 import { LoginResponse } from '../../../core/models/auth.dto';
 import { JWTPayload } from '../../../core/models/jwt-payload.model';
-import { jwtDecode } from 'jwt-decode';
 import { UserRoles } from '../../../core/models/enums/user-roles.enum';
+import { environment } from '../../../../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-    url = 'http://localhost:5120';
+
+    private readonly TOKEN_KEY = 'access_token';
+  private readonly REFRESH_KEY = 'refresh_token';
+
   constructor(private http: HttpClient) { }
 
-    login(userDto: UserDto): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(this.url + '/api/Auth/login', userDto).pipe(
+  login(userDto: any): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${environment.apiUrl}/api/auth/login`, userDto).pipe(
       tap(response => {
-        if (response   && response.token ) {
-          this.setToken(response.token);
+        if (response?.data?.accessToken) {
+          this.setToken(response.data.accessToken, response.data.refreshToken);
         }
       })
     );
   }
 
-    setToken(token: string) {
-    localStorage.removeItem("token");
-    localStorage.setItem("token", token);
+private setToken(accessToken: string, refreshToken: string): void {
+    localStorage.setItem(this.TOKEN_KEY, accessToken);
+    localStorage.setItem(this.REFRESH_KEY, refreshToken);
   }
 
-    getToken(): string | null {
-    return localStorage.getItem("token");
+  getToken(): string | null {
+    return localStorage.getItem(this.TOKEN_KEY);
   }
 
-   getDecodedToken(): JWTPayload | null {
+  getRefreshToken(): string | null {
+    return localStorage.getItem(this.REFRESH_KEY);
+  }
+
+   logout(): void {
+    localStorage.removeItem(this.TOKEN_KEY);
+    localStorage.removeItem(this.REFRESH_KEY);
+  }
+
+  getDecodedToken(): JWTPayload | null {
     const token = this.getToken();
     if (!token) return null;
     try {
@@ -46,15 +61,29 @@ export class AuthService {
     const payload = this.getDecodedToken();
     if (!payload) return false;
     const now = Math.floor(Date.now() / 1000);
-    return payload.exp ? payload.exp > now : true;
+    return payload.exp ? payload.exp > now : false;
   }
 
   isAuthorizated(roles: UserRoles[]): boolean {
     const payload = this.getDecodedToken();
     if (!payload) return false;
-    return roles.includes(payload.role as UserRoles);
+
+    const roleClaim = payload["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+    return roles.includes(roleClaim as UserRoles);
   }
-  getUserRole(){
-    return "Reception";
-  }
+
+getUserRole(): string | null {
+  const payload = this.getDecodedToken();
+  return payload ? payload["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] : null;
+}
+
+getUserId(): string | null {
+  const payload = this.getDecodedToken();
+  return payload ? payload["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"] : null;
+}
+
+getUserName(): string | null {
+  const payload = this.getDecodedToken();
+  return payload ? payload["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"] : null;
+}
 }

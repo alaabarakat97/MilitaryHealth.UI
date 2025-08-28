@@ -1,53 +1,63 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { MaritalStatus } from '../../models/marital-status.model';
+import { MaritalStatusService } from '../../services/marital-status.service';
 
 @Component({
   selector: 'app-add-edit-applicant',
-  imports: [CommonModule,ReactiveFormsModule, FormsModule, NgSelectModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, NgSelectModule],
   templateUrl: './add-edit-applicant.html',
   styleUrl: './add-edit-applicant.scss'
 })
-export class AddEditApplicant {
-form: FormGroup;
+export class AddEditApplicant implements OnInit {
+  applicantForm!: FormGroup;
+  maritalStatuses: MaritalStatus[] = [];
   submitted = false;
   loading = false;
   message = '';
   success = false;
 
-  maritalStatuses = [
-    { id: 1, name: 'أعزب' },
-    { id: 2, name: 'متزوج' },
-    { id: 3, name: 'مطلق' },
-    { id: 4, name: 'أرمل' }
-  ];
+  private apiUrl = 'https://your-api-url.com/users';
 
-  private apiUrl = 'https://your-api-url.com/users'; 
+  constructor(private fb: FormBuilder,
+    private maritalStatusService: MaritalStatusService
+    , private http: HttpClient) { }
 
-  constructor(private fb: FormBuilder, private http: HttpClient) {
-    this.form = this.fb.group({
+  ngOnInit(): void {
+    this.applicantForm = this.fb.group({
       FullName: ['', Validators.required],
       MaritalStatusID: [null, Validators.required],
-      Job: ['',Validators.required],
-      Height: [null,Validators.required],
-      Weight: [null,Validators.required],
-      BMI: [null,Validators.required],
-      BloodPressure: ['',Validators.required],
-      Pulse: [null,Validators.required],
-      Tattoo: [false,Validators.required],
-      DistinctiveMarks: ['',Validators.required]
+      Job: ['', Validators.required],
+      Height: [null, Validators.required],
+      Weight: [null, Validators.required],
+      BMI: [null, Validators.required],
+      BloodPressure: ['', Validators.required],
+      Pulse: [null, Validators.required],
+      Tattoo: [false, Validators.required],
+      DistinctiveMarks: ['', Validators.required]
     });
   }
 
+  loadMaritalStatuses() {
+    this.maritalStatusService.getMaritalStatus().subscribe({
+      next: (data) => {
+        this.maritalStatuses = data;
+      },
+      error: (err) => {
+        console.error('Error fetching marital statuses', err);
+      }
+    });
+  }
   onSubmit() {
     this.submitted = true;
     this.message = '';
-    if (this.form.invalid) return;
+    if (this.applicantForm.invalid) return;
 
     this.loading = true;
-    const payload = this.form.getRawValue(); // عشان يجيب BMI كمان
+    const payload = this.applicantForm.getRawValue(); // عشان يجيب BMI كمان
 
     this.http.post(this.apiUrl, payload).subscribe({
       next: () => {
@@ -66,14 +76,14 @@ form: FormGroup;
 
   onReset() {
     this.submitted = false;
-    this.form.reset({
+    this.applicantForm .reset({
       Tattoo: false
     });
   }
 
   // Getters & Helpers
   get f() {
-    return this.form.controls;
+    return this.applicantForm .controls;
   }
 
   isControlValid(controlName: string): boolean {

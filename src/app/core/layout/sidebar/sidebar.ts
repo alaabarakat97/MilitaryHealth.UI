@@ -11,7 +11,7 @@ import {  RouterModule } from '@angular/router';
 })
 export class Sidebar implements OnInit  {
  @Input() collapsed = false; 
- role: string = '';
+ role: string | null = '';
  
   constructor(private authService: AuthService) {}
 

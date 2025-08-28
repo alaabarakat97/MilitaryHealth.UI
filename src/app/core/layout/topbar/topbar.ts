@@ -15,8 +15,7 @@ export class Topbar {
  userRole: string | null = null;
 showUserMenu = false;
    constructor(private auth: AuthService, private router: Router) {
-    const payload: JWTPayload | null = this.auth.getDecodedToken();
-    this.userRole = payload?.role || null;
+    this.userRole = this.auth.getUserRole();
   }
 
   

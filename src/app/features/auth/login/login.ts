@@ -6,50 +6,56 @@ import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, FormsModule, CommonModule,RouterModule],
+  imports: [ReactiveFormsModule, FormsModule, CommonModule, RouterModule],
   templateUrl: './login.html',
   styleUrl: './login.scss'
 })
 export class Login {
-loginForm!: FormGroup;
+  loginForm!: FormGroup;
 
 
   constructor(private authService: AuthService,
     private fb: FormBuilder, private router: Router
   ) { }
-  
- ngOnInit(): void {
+
+  ngOnInit(): void {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required]],
-      passWord: ['', [Validators.required]]
+      username: ['', [Validators.required]],
+      password: ['', [Validators.required]]
     });
   }
 
-    loging() {
+  loging() {
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
       return;
     }
-    if (this.loginForm.valid) {
-      const loginData = this.loginForm.value;
-      console.log(loginData);
-      this.authService.login(loginData).subscribe(
-        {
-          
-          next: (data) => {
-              const payload = this.authService.getDecodedToken();
-      const role = payload?.role || ''; // مثال: افترض role موجود في الـ JWT
 
-      if (role === 'Admin') {
-        this.router.navigate(['/']);
-      } else {
-        this.router.navigate(['/reception']);
-      }
-          }
+    const loginData = this.loginForm.value;
+
+    this.authService.login(loginData).subscribe({
+      next: () => {
+        const role = this.authService.getUserRole(); // ← هنا نستعمل الخدمة
+        if (role === 'Admin') {
+          this.router.navigate(['/admin']);
+        } else if (role === 'Reception') {
+          this.router.navigate(['/reception']);
+        } else if (role === 'Doctor') {
+          this.router.navigate(['/doctor']);
         }
-      );
-    }
+        else if (role === 'Supervisor') {
+          this.router.navigate(['/supervisor']);
+        }
+         else {
+          this.router.navigate(['/unauthorized']); // fallback لو حابب
+        }
+      },
+      error: (err) => {
+        console.error('Login failed:', err);
+      }
+    });
   }
+
   getFieldError(fieldName: string): string | null {
     const control = this.loginForm.get(fieldName);
     if (control && control.touched && control.invalid) {
