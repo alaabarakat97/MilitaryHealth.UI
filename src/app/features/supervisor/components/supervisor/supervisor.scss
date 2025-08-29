@@ -1,0 +1,99 @@
+.supervisor-page {
+  padding-top: 20px;
+}
+
+.search-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: 100%;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+.search-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px; 
+  padding: 10px 15px; 
+  border-radius: 8px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap; 
+}
+
+.search-btn .fas {
+  font-size: 1.2rem;
+}
+
+@media (max-width: 767px) {
+  .search-wrapper {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: 5px;
+    
+  }
+
+  .search-input {
+    width: 100%;
+    margin-bottom: 5px;
+    border-radius: 8px;
+  }
+
+  .search-btn {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    padding: 10px;
+  }
+}
+
+
+.card {
+  border: none;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card-header {
+  border-bottom: 1px solid rgba(0, 0, 0, .125);
+  font-weight: bold;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.card-header h5 {
+  font-size: 1.1rem;
+}
+
+.list-group-item {
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.list-group-item strong {
+  color: #333;
+}
+
+.list-group-item .fas {
+  color: #007bff;
+}
+
+.bg-success .list-group-item .fas {
+  color: #28a745;
+}

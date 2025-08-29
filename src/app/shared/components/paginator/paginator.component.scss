@@ -1,0 +1,85 @@
+.pagination-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+  direction: rtl; /* لدعم العربية */
+}
+
+.pagination-left {
+  display: flex;
+  justify-content: flex-start; /* معلومات الصفحة على اليسار */
+  flex: 1;
+}
+
+.pagination-center {
+  display: flex;
+  justify-content: center; /* أزرار التنقل في الوسط */
+  flex: 1;
+}
+
+.pagination-right {
+  display: flex;
+  justify-content: flex-end; /* عدد الصفوف على اليمين */
+  flex: 1;
+}
+
+.page-size-selector {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  color: #333;
+}
+
+.page-size-dropdown {
+  margin-right: 5px;
+  padding: 5px;
+  font-size: 14px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.page-info {
+  font-weight: bold;
+  color: #333;    
+}
+
+.page-navigation {
+  display: flex;
+  align-items: center;
+}
+
+.pagination {
+  list-style: none;
+  display: flex;
+  gap: 5px;
+  padding: 0;
+  margin: 0;
+}
+
+.page-item .page-link {
+  padding: 6px 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #fff;
+  color: #007bff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.page-item .page-link:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+.page-item.disabled .page-link {
+  color: #bbb;
+  cursor: not-allowed;
+}

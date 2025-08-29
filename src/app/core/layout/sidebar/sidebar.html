@@ -7,21 +7,32 @@
   </div>
 
   <ul class="menu">
-   <li *ngIf="role === 'Reception'" routerLink="/reception/applicants/add">
+    @if(role === 'Reception'){
+    <li routerLink="/reception/applicants/add">
       <i class="pi pi-user-plus"></i>
       <span>إضافة منتسب</span>
     </li>
-    <!-- <li> -->
-      <!-- <i class="pi pi-chart-line"></i>
+
+    <li routerLink="/reception/applicants">
+      <i class="pi pi-user-plus"></i>
+      <span>قائمة المنتسبين</span>
+    </li>
+    }
+    @if(role === 'Admin'){
+    <li>
+      <i class="pi pi-chart-line"></i>
       <span>الإحصائيات</span>
     </li>
-    <li>
-      <i class="pi pi-users"></i>
-      <span>المستخدمين</span>
+    <li routerLink="Admin/dashboard">
+      <i class="pi pi-user-plus"></i>
+      <span>قائمة المنتسبين</span>
     </li>
+    }
+    @if(role === 'Supervisor'){
     <li>
-      <i class="pi pi-cog"></i>
-      <span>الإعدادات</span>
-    </li> -->
+      <i class="pi pi-chart-line"></i>
+      <span>تقييم المنتسب</span>
+    </li>
+    }
   </ul>
 </aside>

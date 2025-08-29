@@ -35,11 +35,11 @@ export class Login {
 
     this.authService.login(loginData).subscribe({
       next: () => {
-        const role = this.authService.getUserRole(); // ← هنا نستعمل الخدمة
+        const role = this.authService.getUserRole();
         if (role === 'Admin') {
-          this.router.navigate(['/admin']);
+          this.router.navigate(['/admin/dashboard']);
         } else if (role === 'Reception') {
-          this.router.navigate(['/reception']);
+          this.router.navigate(['/reception/applicants/add']);
         } else if (role === 'Doctor') {
           this.router.navigate(['/doctor']);
         }

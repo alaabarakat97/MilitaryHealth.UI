@@ -22,18 +22,25 @@ export const routes: Routes = [
         data: { roles: [UserRoles.Admin] }
       },
       {
+        path: 'applicants',
+        loadComponent: () =>
+          import('./features/reception/components/applicants-list/applicants-list').then(m => m.ApplicantsList),
+        canActivate: [authGuard],
+        data: { roles: [UserRoles.Admin] }
+      },
+      {
         path: 'reception',
         loadChildren: () =>
           import('./features/reception/reception.routes').then(m => m.RECEPTION_ROUTES),
         data: { roles: [UserRoles.Reception] }
       },
-       {
+      {
         path: 'doctor',
         loadChildren: () =>
           import('./features/doctor/doctor.routes').then(m => m.Doctor_ROUTES),
         data: { roles: [UserRoles.Doctor] }
       },
-       {
+      {
         path: 'supervisor',
         loadChildren: () =>
           import('./features/supervisor/supervisor.routes').then(m => m.RECEPTION_ROUTES),

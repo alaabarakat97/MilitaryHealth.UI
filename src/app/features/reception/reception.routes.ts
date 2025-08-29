@@ -4,10 +4,11 @@ import { UserRoles } from '../../core/models/enums/user-roles.enum';
 
 export const RECEPTION_ROUTES: Routes = [
   {
-    path: '',
+    path: 'applicants',
     loadComponent: () =>
-      import('./components/reception/reception').then(m => m.Reception),
-    canActivate: [authGuard]
+      import('./components/applicants-list/applicants-list').then(m => m.ApplicantsList),
+    canActivate: [authGuard],
+     data: { roles: [UserRoles.Reception] }
   },
   {
     path: 'applicants/add',
@@ -22,5 +23,5 @@ export const RECEPTION_ROUTES: Routes = [
       import('./components/add-edit-applicant/add-edit-applicant').then(m => m.AddEditApplicant),
     canActivate: [authGuard],
     data: { roles: [UserRoles.Reception] }
-  },
+  }
 ];

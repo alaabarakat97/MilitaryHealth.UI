@@ -1,0 +1,48 @@
+<div class="pagination-container mt-3">
+  <!-- معلومات الصفحة على اليسار -->
+  <div class="pagination-left">
+    <div class="page-info">
+      {{ startRecord }} - {{ endRecord }} من {{ totalRecords }}
+    </div>
+  </div>
+
+  <!-- أزرار التنقل في الوسط -->
+  <div class="pagination-center">
+    <nav class="page-navigation">
+      <ul class="pagination">
+        <li class="page-item" [class.disabled]="currentPage === 1">
+          <button class="page-link" (click)="goToPage(1)">
+            <i class="fas fa-angles-right"></i> <!-- بداية -->
+          </button>
+        </li>
+        <li class="page-item" [class.disabled]="!hasPreviousPage">
+          <button class="page-link" (click)="prevPage()">
+            <i class="fas fa-chevron-right"></i> <!-- السابق -->
+          </button>
+        </li>
+        <li class="page-item" [class.disabled]="!hasNextPage">
+          <button class="page-link" (click)="nextPage()">
+            <i class="fas fa-chevron-left"></i> <!-- التالي -->
+          </button>
+        </li>
+        <li class="page-item" [class.disabled]="currentPage === totalPages">
+          <button class="page-link" (click)="goToPage(totalPages)">
+            <i class="fas fa-angles-left"></i> <!-- نهاية -->
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  <!-- Page size على اليمين -->
+  <div class="pagination-right">
+    <div class="page-size-selector">
+      <label for="pageSize">عدد الصفوف</label>
+      <select id="pageSize" (change)="changePageSize($event)" class="page-size-dropdown">
+        <option *ngFor="let size of pageSizes" [value]="size" [selected]="size === pageSize">
+          {{ size }}
+        </option>
+      </select>
+    </div>
+  </div>
+</div>

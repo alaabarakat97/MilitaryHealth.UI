@@ -13,5 +13,5 @@ export interface ApplicantModel{
   pulse: number;
   tattoo: boolean;
   distinctiveMarks: string;
-  maritalStatus?: MaritalStatus;
+  maritalStatus: MaritalStatus;
 }

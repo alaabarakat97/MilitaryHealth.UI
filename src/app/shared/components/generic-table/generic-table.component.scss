@@ -1,0 +1,47 @@
+:host ::ng-deep .custom-table {
+  font-size: 14px;
+  border-radius: 0.5rem; /* زوايا ناعمة */
+  overflow: hidden;
+}
+
+/* الهيدر */
+:host ::ng-deep .custom-table .p-datatable-thead > tr > th {
+  background: #f8fafc;
+  color: #374151;
+  font-weight: 600;
+  text-align: center;
+  padding: 0.75rem;
+  border-bottom: 2px solid #e5e7eb;
+  white-space: nowrap;
+}
+
+/* الصفوف */
+:host ::ng-deep .custom-table .p-datatable-tbody > tr {
+  transition: background 0.2s ease;
+}
+
+:host ::ng-deep .custom-table .p-datatable-tbody > tr:hover {
+  background: #f1f5f9; /* لون خفيف عند المرور */
+}
+
+/* الخلايا */
+:host ::ng-deep .custom-table .p-datatable-tbody > tr > td {
+  padding: 0.65rem 0.75rem;
+  text-align: center;
+  vertical-align: middle;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* عمود الأكشن */
+:host ::ng-deep .p-datatable-tbody > tr > td:last-child {
+  text-align: center;
+  width: 140px;
+}
+
+/* الأزرار */
+:host ::ng-deep .p-button.btn-sm {
+  height: 32px;
+  width: 32px;
+  border-radius: 50%;
+  padding: 0;
+}
