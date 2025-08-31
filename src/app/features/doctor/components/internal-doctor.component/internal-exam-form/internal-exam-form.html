@@ -1,0 +1,92 @@
+<div class="card p-3">
+  <h4>إضافة فحص داخلي</h4>
+  <form [formGroup]="examForm" (ngSubmit)="onSubmit()">
+
+    <div class="row mb-2">
+      <div class="col-12 mb-2">
+        <label class="form-label">القلب</label>
+        <input type="text" class="form-control" formControlName="heart" />
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="col-12 mb-2">
+        <label class="form-label">الجهاز التنفسي</label>
+        <input type="text" class="form-control" formControlName="respiratory" />
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="col-12 mb-2">
+        <label class="form-label">الجهاز الهضمي</label>
+        <input type="text" class="form-control" formControlName="digestive" />
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="col-12 mb-2">
+        <label class="form-label">الغدد الصماء</label>
+        <input type="text" class="form-control" formControlName="endocrine" />
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="col-12 mb-2">
+        <label class="form-label">الجهاز العصبي</label>
+        <input type="text" class="form-control" formControlName="neurology" />
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="col-12 mb-2">
+        <label class="form-label">الدم</label>
+        <input type="text" class="form-control" formControlName="blood" />
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="col-12 mb-2">
+        <label class="form-label">المفاصل</label>
+        <input type="text" class="form-control" formControlName="joints" />
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="col-12 mb-2">
+        <label class="form-label">الكلى</label>
+        <input type="text" class="form-control" formControlName="kidney" />
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="col-12 mb-2">
+        <label class="form-label">السمع</label>
+        <input type="text" class="form-control" formControlName="hearing" />
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="col-12 mb-2">
+        <label class="form-label">الجلد</label>
+        <input type="text" class="form-control" formControlName="skin" />
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">نتيجة الفحص</label>
+      <select class="form-select" formControlName="resultID">
+        <option value="">اختر النتيجة</option>
+        <option *ngFor="let r of results" [value]="r.resultID">{{ r.description }}</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">السبب</label>
+      <textarea class="form-control" formControlName="reason"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-success" [disabled]="examForm.invalid">
+      💾 حفظ الفحص الداخلي
+    </button>
+  </form>
+</div>

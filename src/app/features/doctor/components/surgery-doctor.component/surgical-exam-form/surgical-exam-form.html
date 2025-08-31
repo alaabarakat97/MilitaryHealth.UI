@@ -1,0 +1,44 @@
+<div class="card p-3">
+  <h4>إضافة فحص جراحي</h4>
+  <form [formGroup]="examForm" (ngSubmit)="onSubmit()">
+
+    <div class="mb-3">
+      <label class="form-label">جراحة عامة</label>
+      <input type="text" class="form-control" formControlName="generalSurgery" />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">جراحة المسالك البولية</label>
+      <input type="text" class="form-control" formControlName="urinarySurgery" />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">جراحة الأوعية الدموية</label>
+      <input type="text" class="form-control" formControlName="vascularSurgery" />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">جراحة الصدر</label>
+      <input type="text" class="form-control" formControlName="thoracicSurgery" />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">نتيجة الفحص</label>
+      <select class="form-select" formControlName="resultID">
+        <option value="">اختر النتيجة</option>
+        <option *ngFor="let r of results" [value]="r.resultID">
+          {{ r.description }}
+        </option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">السبب</label>
+      <textarea class="form-control" formControlName="reason"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-success" [disabled]="examForm.invalid">
+      حفظ الفحص الجراحي
+    </button>
+  </form>
+</div>

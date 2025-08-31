@@ -1,5 +1,5 @@
 export interface LoginRequest {
-  email: string;
+  username: string; // كان email عندك، بس الـ API يستعمل username
   password: string;
 }
 
@@ -12,8 +12,17 @@ export interface LoginResponse {
       userID: number;
       fullName: string;
       username: string;
+      doctorID: number;
       status: string;
       lastLogin: string;
+      email: string;
+    };
+    doctor: {
+      doctorID: number;
+      fullName: string;
+      specializationID: number;
+      contractTypeID: number;
+      code: string;
     };
     roles: string[];
     accessToken: string;
@@ -23,5 +32,3 @@ export interface LoginResponse {
   };
   traceId: string;
 }
-
-

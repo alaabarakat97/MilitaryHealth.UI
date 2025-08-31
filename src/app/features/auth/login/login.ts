@@ -12,7 +12,7 @@ import { AuthService } from '../services/auth.service';
 })
 export class Login {
   loginForm!: FormGroup;
-
+  roleWithSpecialty : string | null = '';
 
   constructor(private authService: AuthService,
     private fb: FormBuilder, private router: Router
@@ -40,9 +40,52 @@ export class Login {
           this.router.navigate(['/admin']);
         } else if (role === 'Reception') {
           this.router.navigate(['/reception']);
-        } else if (role === 'Doctor') {
-          this.router.navigate(['/doctor']);
+        } 
+        
+     else if (role === 'Doctor') {
+  // جلب الـ specializationID من الـ response
+  const specializationID = Number(this.authService.getDoctorSpecialty()); // ← خزناه بالـ localStorage عند login
+
+  if (specializationID) {
+    this.authService.getSpecializationNameById(specializationID).subscribe({
+      next: (specialtyName) => {
+        const specialty = specialtyName.toLowerCase();
+
+        // خزّن التخصص بالاسم للعرض لاحقاً
+        this.authService.setDoctorSpecialty(specialty);
+
+        // ربط الدور مع التخصص للعرض في sidebar
+        this.roleWithSpecialty = `Doctor_${specialty.charAt(0).toUpperCase() + specialty.slice(1)}`;
+
+        // التوجيه حسب التخصص
+        switch (specialty) {
+          case 'عيون':
+          case 'eye':
+            this.router.navigate(['/doctor/eye']);
+            break;
+          case 'باطنة':
+          case 'internal':
+            this.router.navigate(['/doctor/internal']);
+            break;
+          case 'عظمية':
+          case 'orthopedics':
+            this.router.navigate(['/doctor/orthopedics']);
+            break;
+          case 'جراحة':
+          case 'surgery':
+            this.router.navigate(['/doctor/surgery']);
+            break;
+          default:
+            this.router.navigate(['/doctor/eye']); // fallback
         }
+      },
+      error: (err) => {
+        console.error('Error fetching specialization name:', err);
+        this.router.navigate(['/doctor/eye']); // fallback
+      }
+    });
+  }
+}
         else if (role === 'Supervisor') {
           this.router.navigate(['/supervisor']);
         }

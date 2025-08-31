@@ -1,0 +1,52 @@
+<!-- edit-surgical-exam.component.html -->
+<div class="dialog-backdrop">
+  <div class="dialog-card">
+    <div class="dialog-header">
+      <h3>تعديل الفحص الجراحي</h3>
+    </div>
+
+    <form [formGroup]="examForm" (ngSubmit)="onSubmit()" class="dialog-form">
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>جراحة عامة</label>
+          <input formControlName="generalSurgery" placeholder="أدخل النتيجة" />
+        </div>
+
+        <div class="form-group">
+          <label>جراحة بولية</label>
+          <input formControlName="urinarySurgery" placeholder="أدخل النتيجة" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>جراحة وعائية</label>
+          <input formControlName="vascularSurgery" placeholder="أدخل النتيجة" />
+        </div>
+
+        <div class="form-group">
+          <label>جراحة صدرية</label>
+          <input formControlName="thoracicSurgery" placeholder="أدخل النتيجة" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>النتيجة</label>
+        <select formControlName="resultID">
+          <option *ngFor="let r of results" [value]="r.resultID">{{ r.description }}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>السبب</label>
+        <textarea formControlName="reason" placeholder="أدخل السبب إذا وجد"></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-success">حفظ</button>
+        <button type="button" class="btn btn-secondary" (click)="onCancel()">إلغاء</button>
+      </div>
+    </form>
+  </div>
+</div>

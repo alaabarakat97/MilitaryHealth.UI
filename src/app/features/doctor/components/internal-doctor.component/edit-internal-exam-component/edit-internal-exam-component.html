@@ -1,0 +1,81 @@
+<div class="dialog-backdrop">
+  <div class="dialog-card">
+    <div class="dialog-header">
+      <h3>تعديل الفحص الداخلي</h3>
+    </div>
+
+    <form [formGroup]="examForm" (ngSubmit)="onSubmit()" class="dialog-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label>القلب</label>
+          <input formControlName="heart" placeholder="أدخل النتيجة" />
+        </div>
+        <div class="form-group">
+          <label>التنفس</label>
+          <input formControlName="respiratory" placeholder="أدخل النتيجة" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>الجهاز الهضمي</label>
+          <input formControlName="digestive" placeholder="أدخل النتيجة" />
+        </div>
+        <div class="form-group">
+          <label>الغدد الصماء</label>
+          <input formControlName="endocrine" placeholder="أدخل النتيجة" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>الجهاز العصبي</label>
+          <input formControlName="neurology" placeholder="أدخل النتيجة" />
+        </div>
+        <div class="form-group">
+          <label>الدم</label>
+          <input formControlName="blood" placeholder="أدخل النتيجة" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>المفاصل</label>
+          <input formControlName="joints" placeholder="أدخل النتيجة" />
+        </div>
+        <div class="form-group">
+          <label>الكلى</label>
+          <input formControlName="kidney" placeholder="أدخل النتيجة" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>السمع</label>
+          <input formControlName="hearing" placeholder="أدخل النتيجة" />
+        </div>
+        <div class="form-group">
+          <label>الجلد</label>
+          <input formControlName="skin" placeholder="أدخل النتيجة" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>النتيجة</label>
+        <select formControlName="resultID">
+          <option *ngFor="let r of results" [value]="r.resultID">{{ r.description }}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>السبب</label>
+        <textarea formControlName="reason" placeholder="أدخل السبب إذا وجد"></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-success">حفظ</button>
+        <button type="button" class="btn btn-secondary" (click)="onCancel()">إلغاء</button>
+      </div>
+    </form>
+  </div>
+</div>

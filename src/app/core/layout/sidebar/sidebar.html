@@ -7,21 +7,68 @@
   </div>
 
   <ul class="menu">
-   <li *ngIf="role === 'Reception'" routerLink="/reception/applicants/add">
+
+    <!-- Reception -->
+    <li *ngIf="role === 'Reception'" routerLink="/reception/applicants/add">
       <i class="pi pi-user-plus"></i>
       <span>إضافة منتسب</span>
     </li>
-    <!-- <li> -->
-      <!-- <i class="pi pi-chart-line"></i>
-      <span>الإحصائيات</span>
+    <li *ngIf="role === 'Reception'" routerLink="/reception/applicants/list">
+      <i class="pi pi-list"></i>
+      <span>قائمة المنتسبين</span>
     </li>
-    <li>
+
+    <!-- Doctor Eye -->
+  <!-- Doctor Eye -->
+<li *ngIf="role === 'Doctor_Eye'" routerLink="/doctor/eye">
+  <i class="pi pi-eye"></i>
+  <span>إنشاء فحص عين للمريض</span>
+</li>
+<li *ngIf="role === 'Doctor_Eye'" routerLink="/doctor/eye/deferred">
+  <i class="pi pi-file"></i>
+  <span>الفحوص العين المؤجلة</span>
+</li>
+
+    <!-- Doctor Internal -->
+    <li *ngIf="role === 'Doctor_Internal'" routerLink="/doctor/internal">
+      <i class="pi pi-stethoscope"></i>
+      <span>الفحوصات الداخلية للمريض</span>
+    </li>
+    <li *ngIf="role === 'Doctor_Internal'" routerLink="/doctor/internal/medications">
+      <i class="pi pi-medkit"></i>
+      <span>الفحوص الداخلية المؤجلة</span>
+    </li>
+
+    <!-- Doctor Orthopedics -->
+   <li *ngIf="role === 'Doctor_Orthopedics'" routerLink="/doctor/orthopedics">
+  <i class="pi pi-heart"></i>
+  <span>الفحوصات العظمية للمريض</span>
+</li>
+<li *ngIf="role === 'Doctor_Orthopedics'" routerLink="/doctor/orthopedics/deferred">
+  <i class="pi pi-refresh"></i>
+  <span>الفحوص العظمية المؤجلة</span>
+</li>
+
+    <!-- Doctor Surgery -->
+<!-- Doctor Surgery -->
+<li *ngIf="role === 'Doctor_Surgery'" routerLink="/doctor/surgery">
+  <i class="pi pi-cut"></i>
+  <span>العمليات الجراحية للمريض</span>
+</li>
+<li *ngIf="role === 'Doctor_Surgery'" routerLink="/doctor/surgery/records">
+  <i class="pi pi-file"></i>
+  <span>الفحوص الجراحية المؤجلة</span>
+</li>
+
+    <!-- Supervisor -->
+    <li *ngIf="role === 'Supervisor'" routerLink="/supervisor/reports">
+      <i class="pi pi-file"></i>
+      <span>التقارير</span>
+    </li>
+    <li *ngIf="role === 'Supervisor'" routerLink="/supervisor/users">
       <i class="pi pi-users"></i>
-      <span>المستخدمين</span>
+      <span>إدارة المستخدمين</span>
     </li>
-    <li>
-      <i class="pi pi-cog"></i>
-      <span>الإعدادات</span>
-    </li> -->
+
   </ul>
 </aside>

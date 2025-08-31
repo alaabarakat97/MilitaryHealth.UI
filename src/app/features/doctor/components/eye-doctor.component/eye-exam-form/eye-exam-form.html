@@ -1,0 +1,56 @@
+<!-- components/eye-doctor/eye-exam-form/eye-exam-form.html -->
+<div class="card p-3">
+  <h4>إضافة فحص للعين</h4>
+  <form [formGroup]="examForm" (ngSubmit)="onSubmit()">
+
+    <div class="mb-3">
+      <label class="form-label">حدة البصر</label>
+      <input type="text" class="form-control" formControlName="vision" />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">فحص الألوان</label>
+      <input type="text" class="form-control" formControlName="colorTest" />
+    </div>
+
+  <div class="mb-3">
+  <label class="form-label">نوع الانكسار</label>
+  <select class="form-select" formControlName="refractionTypeID">
+    <option value="">اختر النوع</option>
+    <option *ngFor="let type of refractionTypes" [value]="type.refractionTypeID">
+      {{ type.description }}
+    </option>
+  </select>
+</div>
+
+    <div class="mb-3">
+      <label class="form-label">قيمة الانكسار</label>
+      <input type="number" class="form-control" formControlName="refractionValue" />
+    </div>
+
+    <div class="mb-3">
+    <label class="form-label">أمراض أخرى</label>
+    <input type="text" class="form-control" formControlName="otherDiseases" />
+    </div>
+
+
+  <div class="mb-3">
+  <label class="form-label">نتيجة الفحص</label>
+  <select class="form-select" formControlName="resultID">
+    <option value="">اختر النتيجة</option>
+    <option *ngFor="let r of results" [value]="r.resultID">
+      {{ r.description }}
+    </option>
+  </select>
+</div>
+
+    <div class="mb-3">
+      <label class="form-label">السبب</label>
+      <textarea class="form-control" formControlName="reason"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-success" [disabled]="examForm.invalid">
+      حفظ الفحص
+    </button>
+  </form>
+</div>

@@ -1,0 +1,62 @@
+<div class="container mt-5">
+  <div class="card card-body shadow-sm">
+    <h3 class="mb-4">الفحوصات الجراحية المؤجلة</h3>
+
+    <!-- حقل البحث -->
+    <div class="search-box mb-3">
+      <input type="text" placeholder="ابحث برقم الملف ..." class="form-control"
+             [(ngModel)]="searchTerm" (input)="onSearchChange()" />
+    </div>
+
+    <!-- تحميل -->
+    <div *ngIf="loading" class="text-center mb-3">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">جارٍ التحميل...</span>
+      </div>
+    </div>
+
+    <!-- جدول النتائج -->
+    <div class="table-responsive">
+      <table *ngIf="!loading && filteredExams.length > 0" class="table table-hover table-striped table-bordered">
+        <thead class="table-primary">
+          <tr>
+            <th>رقم الملف</th>
+            <th>عام</th>
+            <th>مسالك</th>
+            <th>أوردة</th>
+            <th>صدر</th>
+            <th>السبب</th>
+            <th>إجراءات</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let exam of filteredExams">
+            <td>{{ exam.applicantFileNumber }}</td>
+            <td>{{ exam.generalSurgery }}</td>
+            <td>{{ exam.urinarySurgery }}</td>
+            <td>{{ exam.vascularSurgery }}</td>
+            <td>{{ exam.thoracicSurgery }}</td>
+            <td>{{ exam.reason || '-' }}</td>
+            <td>
+     <button pButton type="button" label="تعديل" icon="pi pi-pencil" class="p-button-sm p-button-primary"
+        (click)="openEditDialog(exam)">
+        </button>
+
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="!loading && filteredExams.length === 0" class="alert alert-info text-center mt-3">
+      لا توجد فحوصات مؤجلة
+    </div>
+
+    <!-- نافذة التعديل -->
+    <app-edit-surgical-exam
+      *ngIf="selectedExam"
+      [exam]="selectedExam"
+      (dialogClosed)="onDialogClose($event)">
+    </app-edit-surgical-exam>
+  </div>
+</div>

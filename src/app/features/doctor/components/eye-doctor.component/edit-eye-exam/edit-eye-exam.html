@@ -1,0 +1,61 @@
+<div class="dialog-backdrop" (click)="onCancel()">
+  <div class="dialog-card" (click)="$event.stopPropagation()">
+    <div class="dialog-header">
+      <h3>تعديل فحص العين</h3>
+    </div>
+
+    <form [formGroup]="examForm" (ngSubmit)="onSubmit()" class="dialog-form">
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>حدة البصر</label>
+          <input formControlName="vision" placeholder="أدخل حدة البصر" />
+        </div>
+
+        <div class="form-group">
+          <label>اختبار الألوان</label>
+          <input formControlName="colorTest" placeholder="أدخل نتيجة اختبار الألوان" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>نوع الانكسار</label>
+          <select formControlName="refractionTypeID">
+            <option *ngFor="let r of refractionTypes" [value]="r.refractionTypeID">
+              {{ r.description }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>قيمة الانكسار</label>
+          <input type="number" formControlName="refractionValue" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>الأمراض الأخرى</label>
+        <input formControlName="otherDiseases" placeholder="إن وجدت" />
+      </div>
+
+      <div class="form-group">
+        <label>النتيجة</label>
+        <select formControlName="resultID">
+          <option *ngFor="let r of results" [value]="r.resultID">{{ r.description }}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>السبب</label>
+        <textarea formControlName="reason" placeholder="أدخل السبب إذا وجد"></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-success">حفظ</button>
+        <button type="button" class="btn btn-secondary" (click)="onCancel()">إلغاء</button>
+      </div>
+
+    </form>
+  </div>
+</div>
