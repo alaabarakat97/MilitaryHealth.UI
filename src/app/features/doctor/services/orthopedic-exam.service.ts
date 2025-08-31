@@ -20,7 +20,7 @@ export class OrthopedicExamService {
   getResults(): Observable<any> {
     const token = localStorage.getItem('token');
     const headers = { Authorization: `Bearer ${token}` };
-    return this.http.get(`${environment.apiUrl}/Results`, { headers });
+    return this.http.get(`${environment.apiUrl}/api/Results`, { headers });
   }
 
   updateOrthopedicExam(id: number, exam: OrthopedicExam): Observable<any> {

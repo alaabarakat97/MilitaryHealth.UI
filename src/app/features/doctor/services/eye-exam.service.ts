@@ -30,7 +30,7 @@ export class EyeExamService {
 
   // جلب نتائج الفحص
   getResults(): Observable<any> {
-    return this.http.get(`${environment.apiUrl}/Results`);
+    return this.http.get(`${environment.apiUrl}/api/Results`);
   }
 
   // إضافة فحص جديد
