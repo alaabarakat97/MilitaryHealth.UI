@@ -36,50 +36,52 @@ export class Login {
     this.authService.login(loginData).subscribe({
       next: () => {
         const role = this.authService.getUserRole();
-        if (role === 'Admin') {
+        if (role === 'Admin') 
+        {
           this.router.navigate(['/admin/dashboard']);
-        } else if (role === 'Reception') {
+        } 
+        else if (role === 'Reception') {
           this.router.navigate(['/reception/applicants/add']);
-        }  else if (role === 'Doctor') {
-  // جلب الـ specializationID من الـ response
-  const specializationID = Number(this.authService.getDoctorSpecialty()); // ← خزناه بالـ localStorage عند login
+        }
+     else if (role === 'Doctor') {
+      const specializationID = Number(this.authService.getDoctorSpecialty()); // ← خزناه بالـ localStorage عند login
 
-  if (specializationID) {
-    this.authService.getSpecializationNameById(specializationID).subscribe({
-      next: (specialtyName) => {
-        const specialty = specialtyName.toLowerCase();
+      if (specializationID) {
+        this.authService.getSpecializationNameById(specializationID).subscribe({
+          next: (specialtyName) => {
+            const specialty = specialtyName.toLowerCase();
 
-        // خزّن التخصص بالاسم للعرض لاحقاً
-        this.authService.setDoctorSpecialty(specialty);
+            // خزّن التخصص بالاسم للعرض لاحقاً
+            this.authService.setDoctorSpecialty(specialty);
 
-        // ربط الدور مع التخصص للعرض في sidebar
-        this.roleWithSpecialty = `Doctor_${specialty.charAt(0).toUpperCase() + specialty.slice(1)}`;
-        console.log(specialty);
-        // التوجيه حسب التخصص
-        switch (specialty) {
-          case 'عيون':
-          case 'eye':
-            this.router.navigate(['/doctor/eye']);
-            break;
-          case 'باطنة':
-          case 'internal':
-            this.router.navigate(['/doctor/internal']);
-            break;
-          case 'عظمية':
-          case 'orthopedics':
-            this.router.navigate(['/doctor/orthopedics']);
-            break;
-          case 'جراحة':
-          case 'surgery':
-            this.router.navigate(['/doctor/surgery']);
-            break;
-          default:
-            this.router.navigate(['/doctor/eye']); // fallback
+            // ربط الدور مع التخصص للعرض في sidebar
+            this.roleWithSpecialty = `Doctor_${specialty.charAt(0).toUpperCase() + specialty.slice(1)}`;
+
+            // التوجيه حسب التخصص
+            switch (specialty) {
+              case 'عيون':
+              case 'eye':
+                this.router.navigate(['/doctor/eye']);
+                break;
+              case 'باطنة':
+              case 'internal':
+                this.router.navigate(['/doctor/internal']);
+                break;
+              case 'عظمية':
+              case 'orthopedics':
+                this.router.navigate(['/doctor/orthopedics']);
+                break;
+              case 'جراحة':
+              case 'surgery':
+                this.router.navigate(['/doctor/surgery']);
+                break;
+              default:
+                this.router.navigate(['/doctor/eye']); // fallback
         }
       },
       error: (err) => {
         console.error('Error fetching specialization name:', err);
-        this.router.navigate(['/doctor/doctor-not-found-component']); // fallback
+        this.router.navigate(['/doctor']); // fallback
       }
     });
   }

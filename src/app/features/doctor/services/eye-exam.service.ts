@@ -25,12 +25,12 @@ export class EyeExamService {
 
   // جلب أنواع الانكسار
   getRefractionTypes(): Observable<any> {
-    return this.http.get(`${environment.apiUrl}/RefractionTypes`);
+    return this.http.get(`${environment.apiUrl}/api/RefractionTypes`);
   }
 
   // جلب نتائج الفحص
   getResults(): Observable<any> {
-    return this.http.get(`${environment.apiUrl}/Results`);
+    return this.http.get(`${environment.apiUrl}/api/Results`);
   }
 
   // إضافة فحص جديد

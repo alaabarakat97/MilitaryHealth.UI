@@ -11,7 +11,7 @@ import { UserRoles } from '../../../../core/models/enums/user-roles.enum';
 
 @Component({
   selector: 'app-applicants-list',
-  imports: [TableModule, CommonModule, PaginatorComponent, HighlightPipe],
+  imports: [TableModule, CommonModule, PaginatorComponent],
   templateUrl: './applicants-list.html',
   styleUrl: './applicants-list.scss'
 })

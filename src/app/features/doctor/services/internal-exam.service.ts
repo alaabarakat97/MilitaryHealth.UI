@@ -22,7 +22,7 @@ export class InternalExamService {
   getResults(): Observable<any> {
     const token = localStorage.getItem('token');
     const headers = { Authorization: `Bearer ${token}` };
-    return this.http.get(`${environment.apiUrl}/Results`, { headers });
+    return this.http.get(`${environment.apiUrl}/api/Results`, { headers });
   }
 
 

@@ -10,7 +10,7 @@ import { ApiResponse } from '../models/api-response.model';
   providedIn: 'root'
 })
 export class ApplicantService {
- private apiUrl = `${environment.apiUrl}/Applicants`;
+ private apiUrl = `${environment.apiUrl}/api/Applicants`;
 
   constructor(private http: HttpClient) {}
 
