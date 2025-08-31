@@ -6,7 +6,7 @@ import { EyeExam } from '../models/eye-exam-post.model';
 
 @Injectable({ providedIn: 'root' })
 export class EyeExamService {
-  private apiUrl = `${environment.apiUrl}/EyeExams`;
+  private apiUrl = `${environment.apiUrl}/api/EyeExams`;
 
   constructor(private http: HttpClient) {}
 

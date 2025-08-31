@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
-import { ChartModule } from 'primeng/chart';
 import { ApplicantService } from '../../reception/services/applicant.service';
 import { ApplicantsStatisticsResponse } from '../../reception/models/applicants-statistics-response.model';
 import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-dashboard',
-  imports: [ChartModule,CommonModule],
+  imports: [CommonModule],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss'
 })

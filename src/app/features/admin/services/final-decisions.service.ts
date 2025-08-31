@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { map, Observable } from 'rxjs';
 import { FinalDecisionsResponse } from '../dashboard/models/final-decisions-response.model';
-import { FinalDecision } from '../dashboard/models/result.model';
 
 @Injectable({
   providedIn: 'root'

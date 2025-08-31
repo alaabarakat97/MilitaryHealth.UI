@@ -7,7 +7,7 @@ import { OrthopedicExam } from '../models/orthopedic-exam.model';
   providedIn: 'root'
 })
 export class OrthopedicExamService {
-  private apiUrl = `${environment.apiUrl}/OrthopedicExams`;
+  private apiUrl = `${environment.apiUrl}/api/OrthopedicExams`;
 
   constructor(private http: HttpClient) {}
 

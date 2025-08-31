@@ -9,7 +9,7 @@ import { SurgicalExam } from '../models/surgical-exam-post.model';
   providedIn: 'root'
 })
 export class SurgicalExamService {
-  private apiUrl = `${environment.apiUrl}/SurgicalExams`;
+  private apiUrl = `${environment.apiUrl}/api/SurgicalExams`;
 
   constructor(private http: HttpClient) {}
 

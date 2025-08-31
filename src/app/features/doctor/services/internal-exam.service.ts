@@ -8,7 +8,7 @@ import { InternalExam } from '../models/internal-exam.model';
   providedIn: 'root'
 })
 export class InternalExamService {
-  private apiUrl = `${environment.apiUrl}/InternalExams`;
+  private apiUrl = `${environment.apiUrl}/api/InternalExams`;
 
   constructor(private http: HttpClient) {}
 

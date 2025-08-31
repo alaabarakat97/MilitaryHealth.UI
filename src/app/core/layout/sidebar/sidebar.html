@@ -18,10 +18,7 @@
         <i class="pi pi-user-plus"></i>
         <span>قائمة المنتسبين</span>
       </li>
-      <li routerLink="/reception/applicants/list">
-        <i class="pi pi-list"></i>
-        <span>قائمة المنتسبين</span>
-      </li>
+     
     }
 
     <!-- Admin -->
@@ -86,18 +83,12 @@
 
     <!-- Supervisor -->
     @if (role === 'Supervisor') {
-      <li routerLink="/supervisor/reports">
-        <i class="pi pi-file"></i>
-        <span>التقارير</span>
-      </li>
+      
       <li routerLink="supervisor">
         <i class="pi pi-chart-line"></i>
         <span>تقييم المنتسب</span>
       </li>
-      <li routerLink="/supervisor/users">
-        <i class="pi pi-users"></i>
-        <span>إدارة المستخدمين</span>
-      </li>
+     
     }
 
   </ul>
