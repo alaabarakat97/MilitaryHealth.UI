@@ -19,9 +19,6 @@
                                 <input type="text" class="form-control" formControlName="fullName"
                                     [class.is-invalid]="isControlInvalid('fullName')"
                                     [class.is-valid]="isControlValid('fullName')" />
-                                <div class="invalid-feedback" *ngIf="controlHasError('required','fullName')">
-                                    الاسم مطلوب
-                                </div>
                             </div>
 
                             <div class="col-12 col-md-4">
@@ -29,9 +26,6 @@
                                 <input type="text" class="form-control" formControlName="job"
                                     [class.is-invalid]="isControlInvalid('job')"
                                     [class.is-valid]="isControlValid('job')" />
-                                <div class="invalid-feedback" *ngIf="controlHasError('required','job')">
-                                    مطلوب
-                                </div>
                             </div>
                             <div class="col-12 col-md-4">
                                 <label class="form-label">الحالة الاجتماعية <span class="text-danger">*</span></label>
@@ -48,31 +42,33 @@
                         <h6 class="border-bottom pb-2 mt-4 mb-3 text-primary">البيانات الطبية</h6>
                         <div class="row g-3">
                             <div class="col-6 col-md-3">
-                                <label class="form-label">الطول (سم)</label>
-                                <input type="number" step="0.1" class="form-control" formControlName="height" />
-                                <div class="form-text">أدخل الطول بالسنتيمتر</div>
+                                <label class="form-label">الطول (سم)<span class="text-danger">*</span></label>
+                                <input type="number" step="0.1" class="form-control" formControlName="height"
+                                [ngClass]="{'is-invalid': isControlInvalid('height')}" />
                             </div>
 
                             <div class="col-6 col-md-3">
-                                <label class="form-label">الوزن (كغ)</label>
-                                <input type="number" step="0.1" class="form-control" formControlName="weight" />
-                                <div class="form-text">أدخل الوزن بالكيلوغرام</div>
+                                <label class="form-label">الوزن (كغ)<span class="text-danger">*</span></label>
+                                <input type="number" step="0.1" class="form-control" formControlName="weight" 
+                                [ngClass]="{'is-invalid': isControlInvalid('weight')}"/>
                             </div>
 
                             <div class="col-12 col-md-3">
-                                <label class="form-label">BMI</label>
-                                <input type="number" class="form-control" formControlName="bmi" />
+                                <label class="form-label">BMI <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" formControlName="bmi"
+                                [ngClass]="{'is-invalid': isControlInvalid('bmi')}" />
                             </div>
 
                             <div class="col-12 col-md-3">
-                                <label class="form-label">ضغط الدم</label>
+                                <label class="form-label">ضغط الدم<span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" formControlName="bloodPressure"
-                                    placeholder="120/80" />
+                                     [ngClass]="{'is-invalid': isControlInvalid('bloodPressure')}"/>
                             </div>
 
                             <div class="col-6 col-md-3">
-                                <label class="form-label">النبض (نبضة/دقيقة)</label>
-                                <input type="number" class="form-control" formControlName="pulse" placeholder="72" />
+                                <label class="form-label">النبض (نبضة/دقيقة)<span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" formControlName="pulse" 
+                                [ngClass]="{'is-invalid': isControlInvalid('pulse')}" />
                             </div>
 
                             <div class="col-6 col-md-3 d-flex align-items-end">
@@ -84,8 +80,9 @@
                             </div>
 
                             <div class="col-12">
-                                <label class="form-label">علامات مميزة</label>
-                                <textarea class="form-control" formControlName="distinctiveMarks" rows="2"></textarea>
+                                <label class="form-label">علامات مميزة <span class="text-danger">*</span></label>
+                                <textarea class="form-control" formControlName="distinctiveMarks" rows="2"
+                                [ngClass]="{'is-invalid': isControlInvalid('distinctiveMarks')}"></textarea>
                             </div>
                         </div>
 
