@@ -40,6 +40,8 @@ export class Login {
           this.router.navigate(['/admin/dashboard']);
         } else if (role === 'Reception') {
           this.router.navigate(['/reception/applicants/add']);
+        }else if (role === 'Diwan') {
+          this.router.navigate(['/archive']);
         }  else if (role === 'Doctor') {
   // جلب الـ specializationID من الـ response
   const specializationID = Number(this.authService.getDoctorSpecialty()); // ← خزناه بالـ localStorage عند login
