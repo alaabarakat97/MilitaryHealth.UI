@@ -25,7 +25,7 @@ showUserMenu = false;
 
 
    logout() {
-    localStorage.removeItem('token');
+    localStorage.clear();
     this.router.navigate(['/login']);
   }
 }

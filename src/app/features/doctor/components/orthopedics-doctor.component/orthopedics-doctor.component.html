@@ -1,0 +1,16 @@
+<div class="container mt-3">
+  <div class="mb-3">
+    <app-search-applicant (applicantSelected)="onApplicantSelected($event)"></app-search-applicant>
+  </div>
+
+  <div class="mb-3">
+    <button class="btn btn-primary" (click)="addOrthopedicExam()">
+      إضافة فحص العظام
+    </button>
+  </div>
+
+  <div *ngIf="showExamForm && selectedApplicant">
+ <app-orthopedic-exam-form [applicantFileNumber]="selectedApplicant.fileNumber"></app-orthopedic-exam-form>
+
+  </div>
+</div>

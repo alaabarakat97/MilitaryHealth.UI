@@ -7,32 +7,98 @@
   </div>
 
   <ul class="menu">
-    @if(role === 'Reception'){
-    <li routerLink="/reception/applicants/add">
-      <i class="pi pi-user-plus"></i>
-      <span>إضافة منتسب</span>
-    </li>
 
-    <li routerLink="/reception/applicants">
-      <i class="pi pi-user-plus"></i>
-      <span>قائمة المنتسبين</span>
-    </li>
+    <!-- Reception -->
+    @if (role === 'Reception') {
+      <li routerLink="/reception/applicants/add">
+        <i class="pi pi-user-plus"></i>
+        <span>إضافة منتسب</span>
+      </li>
+      <li routerLink="/reception/applicants">
+        <i class="pi pi-user-plus"></i>
+        <span>قائمة المنتسبين</span>
+      </li>
+      <li routerLink="/reception/applicants/list">
+        <i class="pi pi-list"></i>
+        <span>قائمة المنتسبين</span>
+      </li>
     }
-    @if(role === 'Admin'){
-    <li routerLink="admin/dashboard">
-      <i class="pi pi-chart-line"></i>
-      <span>الإحصائيات</span>
-    </li>
-    <li routerLink="admin/final">
-      <i class="pi pi-user-plus"></i>
-      <span>قائمة المنتسبين</span>
-    </li>
+
+    <!-- Admin -->
+    @if (role === 'Admin') {
+      <li routerLink="admin/dashboard">
+        <i class="pi pi-chart-line"></i>
+        <span>الإحصائيات</span>
+      </li>
+      <li routerLink="admin/final">
+        <i class="pi pi-user-plus"></i>
+        <span>قائمة المنتسبين</span>
+      </li>
     }
-    @if(role === 'Supervisor'){
-    <li routerLink="supervisor">
-      <i class="pi pi-chart-line"></i>
-      <span>تقييم المنتسب</span>
-    </li>
+
+    <!-- Doctor Eye -->
+    @if (role === 'Doctor_Eye') {
+      <li routerLink="/doctor/eye">
+        <i class="pi pi-eye"></i>
+        <span>إنشاء فحص عين للمريض</span>
+      </li>
+      <li routerLink="/doctor/eye/deferred">
+        <i class="pi pi-file"></i>
+        <span>الفحوص العين المؤجلة</span>
+      </li>
     }
+
+    <!-- Doctor Internal -->
+    @if (role === 'Doctor_Internal') {
+      <li routerLink="/doctor/internal">
+        <i class="pi pi-stethoscope"></i>
+        <span>الفحوصات الداخلية للمريض</span>
+      </li>
+      <li routerLink="/doctor/internal/medications">
+        <i class="pi pi-medkit"></i>
+        <span>الفحوص الداخلية المؤجلة</span>
+      </li>
+    }
+
+    <!-- Doctor Orthopedics -->
+    @if (role === 'Doctor_Orthopedics') {
+      <li routerLink="/doctor/orthopedics">
+        <i class="pi pi-heart"></i>
+        <span>الفحوصات العظمية للمريض</span>
+      </li>
+      <li routerLink="/doctor/orthopedics/deferred">
+        <i class="pi pi-refresh"></i>
+        <span>الفحوص العظمية المؤجلة</span>
+      </li>
+    }
+
+    <!-- Doctor Surgery -->
+    @if (role === 'Doctor_Surgery') {
+      <li routerLink="/doctor/surgery">
+        <i class="pi pi-cut"></i>
+        <span>العمليات الجراحية للمريض</span>
+      </li>
+      <li routerLink="/doctor/surgery/records">
+        <i class="pi pi-file"></i>
+        <span>الفحوص الجراحية المؤجلة</span>
+      </li>
+    }
+
+    <!-- Supervisor -->
+    @if (role === 'Supervisor') {
+      <li routerLink="/supervisor/reports">
+        <i class="pi pi-file"></i>
+        <span>التقارير</span>
+      </li>
+      <li routerLink="supervisor">
+        <i class="pi pi-chart-line"></i>
+        <span>تقييم المنتسب</span>
+      </li>
+      <li routerLink="/supervisor/users">
+        <i class="pi pi-users"></i>
+        <span>إدارة المستخدمين</span>
+      </li>
+    }
+
   </ul>
 </aside>

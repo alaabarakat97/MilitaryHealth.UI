@@ -1,0 +1,65 @@
+<div class="search-container">
+  <form [formGroup]="searchForm" (ngSubmit)="onSearch()" class="mb-3 d-flex gap-2 align-items-end">
+    <div class="flex-grow-1">
+      <label class="form-label">رقم الملف</label>
+      <input
+        type="text"
+        class="form-control"
+        formControlName="fileNumber"
+        placeholder="أدخل رقم الملف المنتسب ..."
+      />
+    </div>
+    <button type="submit" class="btn btn-primary" [disabled]="loading">
+      <i class="pi pi-search me-2 ms-2"></i>بحث
+    </button>
+  </form>
+
+  <table *ngIf="applicant" class="table table-striped table-bordered">
+    <tbody>
+      <tr>
+        <th>رقم الملف</th>
+        <td>{{ applicant.fileNumber }}</td>
+      </tr>
+      <tr>
+        <th>الاسم الكامل</th>
+        <td>{{ applicant.fullName }}</td>
+      </tr>
+      <tr>
+        <th>العمل</th>
+        <td>{{ applicant.job }}</td>
+      </tr>
+      <tr>
+        <th>الحالة الاجتماعية</th>
+        <td>{{ applicant.maritalStatus?.description }}</td>
+      </tr>
+      <tr>
+        <th>الطول</th>
+        <td>{{ applicant.height }} سم</td>
+      </tr>
+      <tr>
+        <th>الوزن</th>
+        <td>{{ applicant.weight }} كغ</td>
+      </tr>
+      <tr>
+        <th>BMI</th>
+        <td>{{ applicant.bmi }}</td>
+      </tr>
+      <tr>
+        <th>ضغط الدم</th>
+        <td>{{ applicant.bloodPressure }}</td>
+      </tr>
+      <tr>
+        <th>النبض</th>
+        <td>{{ applicant.pulse }}</td>
+      </tr>
+      <tr>
+        <th>وشم</th>
+        <td>{{ applicant.tattoo ? 'نعم' : 'لا' }}</td>
+      </tr>
+      <tr>
+        <th>علامات مميزة</th>
+        <td>{{ applicant.distinctiveMarks }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
