@@ -1,0 +1,97 @@
+<div class="user-header-section px-1 pt-1 container-fluid">
+  <div class="mb-3 d-flex justify-content-end">
+    <div class="search-wrapper">
+      <input type="text" class="form-control" placeholder="ابحث عن رقم الملف" (input)="onFilterChange($event)" />
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <p-table #table [value]="decisions" [rows]="10" [sortMode]="'multiple'" [scrollable]="true"
+           [showCurrentPageReport]="true">
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="applicantFileNumber">رقم الملف</th>
+        <th>فحص العيون</th>
+        <th>الفحص الداخلي</th>
+        <th>فحص العظام</th>
+        <th pSortableColumn="result.description">النتيجة</th>
+        <th>مدة التأجيل</th>
+        <th>السبب</th>
+        <th pSortableColumn="decisionDate">تاريخ القرار</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-decision>
+      <tr>
+        <td><span class="fw-bold">{{ decision.applicantFileNumber }}</span></td>
+
+        <td>
+          @if (decision.eyeExam) {
+            <div>
+              <small>الرؤية: {{ decision.eyeExam.vision }}</small><br>
+              <small>النتيجة: {{ decision.eyeExam.result?.description }}</small>
+            </div>
+          }
+        </td>
+
+        <td>
+          @if (decision.internalExam) {
+            <div>
+              <small>القلب: {{ decision.internalExam.heart }}</small><br>
+              <small>النتيجة: {{ decision.internalExam.result?.description }}</small>
+            </div>
+          }
+        </td>
+
+        <td>
+          @if (decision.orthopedicExam) {
+            <div>
+              <small>العظام: {{ decision.orthopedicExam.musculoskeletal }}</small><br>
+              <small>النتيجة: {{ decision.orthopedicExam.result?.description }}</small>
+            </div>
+          }
+        </td>
+
+        <td>
+          @if (decision.result?.description === 'لائق') {
+            <span class="badge bg-success">{{ decision.result?.description }}</span>
+          }
+          @else if (decision.result?.description === 'غير لائق') {
+            <span class="badge bg-danger">{{ decision.result?.description }}</span>
+          }
+          @else if (decision.result?.description === 'مؤجل') {
+            <span class="badge bg-warning text-dark">{{ decision.result?.description }}</span>
+          }
+        </td>
+
+        <td>
+          @if (decision.result?.description === 'مؤجل') {
+            {{ decision.postponeDuration }}
+          } @else {
+            -
+          }
+        </td>
+
+        <td>
+          @if (decision.result?.description === 'مؤجل') {
+            {{ decision.reason }}
+          } @else {
+            -
+          }
+        </td>
+
+        <td>{{ decision.decisionDate | date:'yyyy/MM/dd' }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <app-paginator 
+      [totalRecords]="totalRecords" 
+      [pageSize]="rowsPerPage" 
+      [currentPage]="page"
+      (pageChange)="onPageChange($event)" 
+      (pageSizeChange)="onPageSizeChange($event)">
+  </app-paginator>
+</div>

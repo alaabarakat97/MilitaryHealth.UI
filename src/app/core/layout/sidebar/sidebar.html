@@ -19,17 +19,17 @@
     </li>
     }
     @if(role === 'Admin'){
-    <li>
+    <li routerLink="admin/dashboard">
       <i class="pi pi-chart-line"></i>
       <span>الإحصائيات</span>
     </li>
-    <li routerLink="Admin/dashboard">
+    <li routerLink="admin/final">
       <i class="pi pi-user-plus"></i>
       <span>قائمة المنتسبين</span>
     </li>
     }
     @if(role === 'Supervisor'){
-    <li>
+    <li routerLink="supervisor">
       <i class="pi pi-chart-line"></i>
       <span>تقييم المنتسب</span>
     </li>

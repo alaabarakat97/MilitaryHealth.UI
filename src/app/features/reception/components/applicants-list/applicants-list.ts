@@ -7,6 +7,7 @@ import { PaginatorComponent } from "../../../../shared/components/paginator/pagi
 import { PagedResponse } from '../../../../shared/models/paged-response.model';
 import { HighlightPipe } from "../../../../shared/pipes/highlight.pipe";
 import { Router } from '@angular/router';
+import { UserRoles } from '../../../../core/models/enums/user-roles.enum';
 
 @Component({
   selector: 'app-applicants-list',
