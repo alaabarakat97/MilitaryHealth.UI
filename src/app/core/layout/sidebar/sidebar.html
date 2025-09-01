@@ -33,29 +33,6 @@
       </li>
     }
 
-   <!-- Doctor Eye -->
-@if (role === 'Doctor_Eye') {
-  <li routerLink="/doctor/eye">
-    <i class="pi pi-eye"></i>
-    <span>إنشاء فحص عين للمريض</span>
-  </li>
-  <li routerLink="/doctor/eye/deferred">
-    <i class="pi pi-file"></i>
-    <span>الفحوص العين المؤجلة</span>
-  </li>
-
-  <li routerLink="/doctor/eye/consultations">
-    <i class="pi pi-comments"></i>
-    <span>استشارات العينية</span>
-  </li>
-
-  <li routerLink="/doctor/eye/investigations"> <!-- ← هنا -->
-    <i class="pi pi-flask"></i>
-    <span>تحاليل العينية</span>
-  </li>
-}
-
-  <!-- Admin -->
     @if (role === 'Diwan') {
       <li routerLink="archive">
         <i class="pi pi-user-plus"></i>
@@ -70,7 +47,7 @@
       </li>
       <li routerLink="/doctor/eye/deferred">
         <i class="pi pi-file"></i>
-        <span>الفحوص العين المؤجلة</span>
+        <span>الفحوص العين</span>
       </li>
     }
 
@@ -82,7 +59,7 @@
       </li>
       <li routerLink="/doctor/internal/medications">
         <i class="pi pi-medkit"></i>
-        <span>الفحوص الداخلية المؤجلة</span>
+        <span>الفحوص الداخلية</span>
       </li>
        <li routerLink="/doctor/internal/consultations">
     <i class="pi pi-clock"></i>
@@ -102,7 +79,7 @@
   </li>
   <li routerLink="/doctor/orthopedics/deferred">
     <i class="pi pi-refresh"></i>
-    <span>الفحوص العظمية المؤجلة</span>
+    <span>الفحوص العظمية</span>
   </li>
   <li routerLink="/doctor/orthopedics/consultations">
     <i class="pi pi-stethoscope"></i>
@@ -123,7 +100,7 @@
   </li>
   <li routerLink="/doctor/surgery/records">
     <i class="pi pi-file"></i>
-    <span>الفحوص الجراحية المؤجلة</span>
+    <span>الفحوص الجراحية</span>
   </li>
   <li routerLink="/doctor/surgery/consultations">
     <i class="pi pi-comments"></i>
