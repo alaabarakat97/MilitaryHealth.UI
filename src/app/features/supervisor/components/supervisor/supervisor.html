@@ -9,6 +9,9 @@
         <input type="text" class="form-control search-input" placeholder="ابحث عن رقم الملف..." dir="rtl"
           [(ngModel)]="searchValue">
       </div>
+      <div *ngIf="!applicant && responseMessage" class="alert alert-warning mt-3" role="alert">
+        {{ responseMessage }}
+      </div>
     </div>
   </div>
 
@@ -73,126 +76,132 @@
     </div>
 
     <!-- الفحوصات -->
-   <div class="col-12 mt-4">
-  <div class="card shadow-sm">
-    <div class="card-header bg-dark text-white">
-      <h5 class="mb-0">الفحوصات الطبية</h5>
-    </div>
-    <div class="card-body">
-      <div class="row row-cols-2 row-cols-lg-3 g-2">
-        
-        <!-- فحص العيون -->
-        <div class="col">
-          <div class="border rounded p-2 small">
-            <h6 class="text-info mb-2">👁️ فحص العيون</h6>
-            <ng-container *ngIf="applicant.eyeExam; else noEye">
-              <div><strong>النظر:</strong> {{ applicant.eyeExam.vision }}</div>
-              <div><strong>الألوان:</strong> {{ applicant.eyeExam.colorTest }}</div>
-            </ng-container>
-            <ng-template #noEye><div class="text-muted">لا يوجد بيانات</div></ng-template>
+    <div class="col-12 mt-4">
+      <div class="card shadow-sm">
+        <div class="card-header bg-dark text-white">
+          <h5 class="mb-0">الفحوصات الطبية</h5>
+        </div>
+        <div class="card-body">
+          <div class="row row-cols-2 row-cols-lg-3 g-2">
+
+            <!-- فحص العيون -->
+            <div class="col">
+              <div class="border rounded p-2 small">
+                <h6 class="text-info mb-2">👁️ فحص العيون</h6>
+                <ng-container *ngIf="applicant.eyeExam; else noEye">
+                  <div><strong>النظر:</strong> {{ applicant.eyeExam.vision }}</div>
+                  <div><strong>الألوان:</strong> {{ applicant.eyeExam.colorTest }}</div>
+                </ng-container>
+                <ng-template #noEye>
+                  <div class="text-muted">لا يوجد بيانات</div>
+                </ng-template>
+              </div>
+            </div>
+
+            <!-- الفحص الجراحي -->
+            <div class="col">
+              <div class="border rounded p-2 small">
+                <h6 class="text-warning mb-2">🩺 الجراحي</h6>
+                <ng-container *ngIf="applicant.surgicalExam; else noSurg">
+                  <div><strong>عام:</strong> {{ applicant.surgicalExam.generalSurgery }}</div>
+                  <div><strong>المسالك:</strong> {{ applicant.surgicalExam.urinarySurgery }}</div>
+                </ng-container>
+                <ng-template #noSurg>
+                  <div class="text-muted">لا يوجد بيانات</div>
+                </ng-template>
+              </div>
+            </div>
+
+            <!-- فحص العظام -->
+            <div class="col">
+              <div class="border rounded p-2 small">
+                <h6 class="text-secondary mb-2">🦴 العظام</h6>
+                <ng-container *ngIf="applicant.orthopedicExamDto; else noOrtho">
+                  <div><strong>عضلي:</strong> {{ applicant.orthopedicExamDto.musculoskeletal }}</div>
+                  <div><strong>عصبي:</strong> {{ applicant.orthopedicExamDto.neurologicalSurgery }}</div>
+                </ng-container>
+                <ng-template #noOrtho>
+                  <div class="text-muted">لا يوجد بيانات</div>
+                </ng-template>
+              </div>
+            </div>
+
+            <!-- الفحص الباطني -->
+            <div class="col">
+              <div class="border rounded p-2 small">
+                <h6 class="text-danger mb-2">❤️ الباطني</h6>
+                <ng-container *ngIf="applicant.internalExam; else noInternal">
+                  <div><strong>قلب:</strong> {{ applicant.internalExam.heart }}</div>
+                  <div><strong>تنفس:</strong> {{ applicant.internalExam.respiratory }}</div>
+                </ng-container>
+                <ng-template #noInternal>
+                  <div class="text-muted">لا يوجد بيانات</div>
+                </ng-template>
+              </div>
+            </div>
+
+            <!-- الاستشارة -->
+            <div class="col">
+              <div class="border rounded p-2 small">
+                <h6 class="text-dark mb-2">📑 الاستشارة</h6>
+                <ng-container *ngIf="applicant.consultation; else noConsult">
+                  <div><strong>النوع:</strong> {{ applicant.consultation.consultationType }}</div>
+                  <div><strong>الطبيب:</strong> {{ applicant.consultation.referredDoctor }}</div>
+                </ng-container>
+                <ng-template #noConsult>
+                  <div class="text-muted">لا يوجد بيانات</div>
+                </ng-template>
+              </div>
+            </div>
+
           </div>
         </div>
-
-        <!-- الفحص الجراحي -->
-        <div class="col">
-          <div class="border rounded p-2 small">
-            <h6 class="text-warning mb-2">🩺 الجراحي</h6>
-            <ng-container *ngIf="applicant.surgicalExam; else noSurg">
-              <div><strong>عام:</strong> {{ applicant.surgicalExam.generalSurgery }}</div>
-              <div><strong>المسالك:</strong> {{ applicant.surgicalExam.urinarySurgery }}</div>
-            </ng-container>
-            <ng-template #noSurg><div class="text-muted">لا يوجد بيانات</div></ng-template>
-          </div>
-        </div>
-
-        <!-- فحص العظام -->
-        <div class="col">
-          <div class="border rounded p-2 small">
-            <h6 class="text-secondary mb-2">🦴 العظام</h6>
-            <ng-container *ngIf="applicant.orthopedicExamDto; else noOrtho">
-              <div><strong>عضلي:</strong> {{ applicant.orthopedicExamDto.musculoskeletal }}</div>
-              <div><strong>عصبي:</strong> {{ applicant.orthopedicExamDto.neurologicalSurgery }}</div>
-            </ng-container>
-            <ng-template #noOrtho><div class="text-muted">لا يوجد بيانات</div></ng-template>
-          </div>
-        </div>
-
-        <!-- الفحص الباطني -->
-        <div class="col">
-          <div class="border rounded p-2 small">
-            <h6 class="text-danger mb-2">❤️ الباطني</h6>
-            <ng-container *ngIf="applicant.internalExam; else noInternal">
-              <div><strong>قلب:</strong> {{ applicant.internalExam.heart }}</div>
-              <div><strong>تنفس:</strong> {{ applicant.internalExam.respiratory }}</div>
-            </ng-container>
-            <ng-template #noInternal><div class="text-muted">لا يوجد بيانات</div></ng-template>
-          </div>
-        </div>
-
-        <!-- الاستشارة -->
-        <div class="col">
-          <div class="border rounded p-2 small">
-            <h6 class="text-dark mb-2">📑 الاستشارة</h6>
-            <ng-container *ngIf="applicant.consultation; else noConsult">
-              <div><strong>النوع:</strong> {{ applicant.consultation.consultationType }}</div>
-              <div><strong>الطبيب:</strong> {{ applicant.consultation.referredDoctor }}</div>
-            </ng-container>
-            <ng-template #noConsult><div class="text-muted">لا يوجد بيانات</div></ng-template>
-          </div>
-        </div>
-
       </div>
     </div>
-  </div>
-</div>
 
-<div class="card shadow-sm mt-3">
-  <div class="card-header bg-dark text-white">
-    <h5 class="mb-0">القرار النهائي</h5>
-  </div>
-  <div class="card-body">
-    <form  #decisionForm="ngForm">
-
-      <div class="mb-3">
-        <label class="form-label">النتيجة</label>
-        <ng-select 
-          [items]="results" 
-          bindLabel="description" 
-          bindValue="resultID"
-          [(ngModel)]="decisionModel.resultID" 
-          name="resultID"
-          (ngModelChange)="onResultChange($event)"
-          placeholder="اختر النتيجة"
-          [appendTo]="'body'">
-        </ng-select>
+    <div class="card shadow-sm mt-3">
+      <div class="card-header bg-dark text-white">
+        <h5 class="mb-0">القرار النهائي</h5>
       </div>
+      <div class="card-body">
+        <form #decisionForm="ngForm">
 
-      @if(!isApproved){
-      <div class="mb-3">
-        <label class="form-label">سبب الرفض</label>
-        <textarea class="form-control" [(ngModel)]="decisionModel.reason" name="reason"></textarea>
+          <div class="mb-3">
+            <label class="form-label">النتيجة</label>
+            <ng-select [items]="results" bindLabel="description" bindValue="resultID"
+              [(ngModel)]="decisionModel.resultID" name="resultID" (ngModelChange)="onResultChange($event)"
+              placeholder="اختر النتيجة" [appendTo]="'body'">
+            </ng-select>
+          </div>
+
+          @if(!isApproved){
+          <div class="mb-3">
+            <label class="form-label">سبب الرفض</label>
+            <textarea class="form-control" [(ngModel)]="decisionModel.reason" name="reason"></textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">مدة التأجيل</label>
+            <input type="text" class="form-control" [(ngModel)]="decisionModel.postponeDuration"
+              name="postponeDuration" />
+          </div>
+          }
+
+          <div class="text-end">
+            <button type="button" class="btn btn-primary" (click)="submitDecision()">
+              <i class="fas fa-paper-plane"></i> إرسال
+            </button>
+          </div>
+          <div *ngIf="responseMessage" class="mt-3">
+            <div class="alert" [ngClass]="{'alert-success': responseSuccess, 'alert-danger': !responseSuccess}"
+              role="alert">
+              {{ responseMessage }}
+            </div>
+          </div>
+
+
+        </form>
       </div>
-      <div class="mb-3" >
-        <label class="form-label">مدة التأجيل</label>
-        <input type="text" class="form-control" [(ngModel)]="decisionModel.postponeDuration" name="postponeDuration"/>
-      </div>
-      }
-
-<div class="text-end">
-  <button type="button" class="btn btn-primary" (click)="submitDecision()">
-    <i class="fas fa-paper-plane"></i> إرسال
-  </button>
-</div>
-<div *ngIf="responseMessage" class="mt-3">
-  <div class="alert" [ngClass]="{'alert-success': responseSuccess, 'alert-danger': !responseSuccess}" role="alert">
-    {{ responseMessage }}
-  </div>
-</div>
-
-
-    </form>
-  </div>
-</div>
+    </div>
 
   </div>
 </div>

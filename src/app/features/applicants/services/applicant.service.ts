@@ -18,6 +18,6 @@ export class ApplicantService {
     const token = localStorage.getItem('token');
     const headers = { Authorization: `Bearer ${token}` };
     return this.http.get<ApiResponse<Applicant>>(`${this.apiUrl}/${fileNumber}`, { headers })
-      .pipe(map(res => res.data)); // 🔹 نعيد الـ Applicant مباشرة
+      .pipe(map(res => res.data));
   }
 }
