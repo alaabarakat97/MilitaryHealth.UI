@@ -1,0 +1,34 @@
+<div class="investigation-form">
+  <form [formGroup]="investigationForm" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label>نوع التحليل</label>
+      <input class="form-control" formControlName="type" />
+    </div>
+
+    <div class="form-group">
+      <label>النتيجة</label>
+      <textarea class="form-control" formControlName="result"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>حالة التحليل</label>
+      <select class="form-control" formControlName="status">
+        <option value="مؤجل">مؤجل</option>
+        <option value="مكتمل">مكتمل</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>ملف مرفق</label>
+      <input type="file" (change)="onFileSelected($event)" />
+      <div *ngIf="uploadedPath">
+        {{ uploadedPath }}
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-success" [disabled]="loading">
+      <span *ngIf="loading" class="spinner-border spinner-border-sm"></span>
+      حفظ طلب التحليل 
+    </button>
+  </form>
+</div>

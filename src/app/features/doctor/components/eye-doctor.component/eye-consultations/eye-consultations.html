@@ -1,0 +1,57 @@
+<div class="eye-consultations">
+  <h3 class="title">جميع استشارات العيادة العينية</h3>
+
+  <div class="search-box mb-3">
+    <input type="text" class="form-control" placeholder="ابحث هنا..."
+           [(ngModel)]="searchText" (input)="filterConsultations()" />
+  </div>
+
+  <div *ngIf="loading" class="loading alert alert-info">جارٍ التحميل...</div>
+
+  <table *ngIf="!loading && filteredConsultations.length > 0"
+         class="consultation-table table table-hover table-striped">
+    <thead class="table-primary">
+      <tr>
+        <th>رقم ملف المريض</th>
+        <th>نوع الاستشارة</th>
+        <th>الطبيب المحال إليه</th>
+        <th>النتيجة</th>
+        <th>الملف المرفق</th>
+        <th>اسم الطبيب</th>
+        <th>إجراءات</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let c of filteredConsultations">
+        <td>{{ c.applicantFileNumber }}</td>
+        <td>{{ c.consultationType }}</td>
+        <td>{{ c.referredDoctor }}</td>
+        <td>{{ c.result }}</td>
+        <td>
+           <button *ngIf="c.attachment" class="btn btn-link p-0" 
+            (click)="openFile(c.attachment)">
+             فتح الملف
+          </button>
+        </td>
+        <td>{{ c.doctor?.fullName }}</td>
+        <td>
+          <button class="btn btn-primary btn-sm" (click)="openEditDialog(c)">
+            تعديل
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="!loading && filteredConsultations.length === 0"
+       class="no-data alert alert-info mt-3">
+    لا توجد استشارات
+  </div>
+
+  <!-- نافذة التعديل -->
+  <app-edit-consultation
+    *ngIf="selectedConsultation"
+    [consultation]="selectedConsultation"
+    (dialogClosed)="onDialogClose($event)">
+  </app-edit-consultation>
+</div>

@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { MaritalStatus } from '../../features/reception/models/marital-status.model';
 import { ApiResponse, PagedResponse } from '../models/paged-response.model';
 import { Result } from '../models/result.model';
 

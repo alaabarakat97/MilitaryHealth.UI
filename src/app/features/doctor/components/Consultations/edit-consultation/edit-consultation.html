@@ -1,0 +1,47 @@
+<div class="dialog-backdrop" (click)="onCancel()">
+  <div class="dialog-card" (click)="$event.stopPropagation()">
+    <div class="dialog-header">
+      <h3>تعديل الاستشارة</h3>
+    </div>
+
+    <form [formGroup]="consultationForm" (ngSubmit)="onSubmit()" class="dialog-form">
+
+      <div class="form-group">
+        <label>رقم ملف المريض</label>
+        <input [value]="consultation.applicantFileNumber" disabled />
+      </div>
+
+      <div class="form-group">
+        <label>نوع الاستشارة</label>
+        <input formControlName="consultationType" placeholder="أدخل نوع الاستشارة" />
+      </div>
+
+      <div class="form-group">
+        <label>الطبيب المُحال إليه</label>
+        <input formControlName="referredDoctor" placeholder="أدخل اسم الطبيب" />
+      </div>
+
+      <div class="form-group">
+        <label>النتيجة</label>
+        <textarea formControlName="result" placeholder="أدخل النتيجة"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>ملف مرفق</label>
+        <input type="file" (change)="onFileSelected($event)" />
+        <div *ngIf="uploadedPath">
+           {{ uploadedPath }}
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-success" [disabled]="loading">
+          <span *ngIf="loading" class="spinner-border spinner-border-sm"></span>
+          حفظ
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="onCancel()">إلغاء</button>
+      </div>
+
+    </form>
+  </div>
+</div>

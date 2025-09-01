@@ -14,39 +14,67 @@ import { EditEyeExam } from '../edit-eye-exam/edit-eye-exam';
   styleUrl: './deferred-eye-exams.component.scss'
 })
 export class DeferredEyeExamsComponent {
- exams: EyeExam[] = [];
+exams: EyeExam[] = [];
   filteredExams: EyeExam[] = [];
   loading = true;
   selectedExam: EyeExam | null = null;
   searchTerm: string = '';
 
+  // 👇 خصائص التقليب
+  page = 1;
+  pageSize = 10;
+  totalItems = 0;
+
   constructor(private examService: EyeExamService) {}
 
-  ngOnInit(): void { this.loadDeferredExams(); }
+  ngOnInit(): void {
+    this.loadEyeExams();
+  }
 
-  loadDeferredExams() {
+  loadEyeExams() {
     this.loading = true;
-    this.examService.getEyeExams().subscribe({
-      next: (data) => {
+    this.examService.getAllEyeExams(this.page, this.pageSize).subscribe({
+      next: (data: any) => {
+        // لو الـ API يرجع totalCount حطه هون
         this.exams = data;
         this.filteredExams = [...this.exams];
+        this.totalItems = data.length < this.pageSize ? this.page * this.pageSize : (this.page + 1) * this.pageSize; 
         this.loading = false;
       },
       error: (err) => { console.error(err); this.loading = false; }
     });
   }
 
+  changePage(newPage: number) {
+    if (newPage < 1) return;
+    this.page = newPage;
+    this.loadEyeExams();
+  }
+
+onSearchChange() {
+  const term = this.searchTerm.trim().toLowerCase();
+  if (!term) {
+    this.filteredExams = [...this.exams];
+    return;
+  }
+
+  this.filteredExams = this.exams.filter(exam =>
+    exam.applicantFileNumber?.toLowerCase().includes(term) ||
+    exam.vision?.toLowerCase().includes(term) ||
+    exam.colorTest?.toLowerCase().includes(term) ||
+    exam.refractionType?.description?.toLowerCase().includes(term) ||
+    exam.refractionValue?.toString().includes(term) ||
+    exam.otherDiseases?.toLowerCase().includes(term) ||
+    exam.reason?.toLowerCase().includes(term) ||
+    exam.result?.description?.toLowerCase().includes(term)
+  );
+}
+
+
   openEditDialog(exam: EyeExam) { this.selectedExam = { ...exam }; }
 
   onDialogClose(updated: boolean) {
     this.selectedExam = null;
-    if (updated) this.loadDeferredExams();
-  }
-
-  onSearchChange() {
-    const term = this.searchTerm.trim().toLowerCase();
-    this.filteredExams = !term
-      ? [...this.exams]
-      : this.exams.filter(exam => exam.applicantFileNumber.toLowerCase().includes(term));
+    if (updated) this.loadEyeExams();
   }
 }

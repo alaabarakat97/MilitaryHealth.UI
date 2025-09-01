@@ -24,16 +24,16 @@ export class InternalExamForm implements OnInit {
 
   ngOnInit(): void {
     this.examForm = this.fb.group({
-      heart: ['', Validators.required],
-      respiratory: ['', Validators.required],
-      digestive: ['', Validators.required],
-      endocrine: ['', Validators.required],
-      neurology: ['', Validators.required],
-      blood: ['', Validators.required],
-      joints: ['', Validators.required],
-      kidney: ['', Validators.required],
-      hearing: ['', Validators.required],
-      skin: ['', Validators.required],
+      heart: ['سليم', Validators.required],
+      respiratory: ['سليم', Validators.required],
+      digestive: ['سليم', Validators.required],
+      endocrine: ['سليم', Validators.required],
+      neurology: ['سليم', Validators.required],
+      blood: ['سليم', Validators.required],
+      joints: ['سليم', Validators.required],
+      kidney: ['سليم', Validators.required],
+      hearing: ['سليم', Validators.required],
+      skin: ['سليم', Validators.required],
       resultID: [null, Validators.required],
       reason: ['']
     });

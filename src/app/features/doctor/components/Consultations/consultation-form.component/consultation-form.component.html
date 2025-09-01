@@ -1,0 +1,32 @@
+<div class="consultation-form">
+  <form [formGroup]="consultationForm" (ngSubmit)="onSubmit()">
+
+    <div class="form-group">
+      <label>نوع الاستشارة</label>
+      <input class="form-control" formControlName="consultationType">
+    </div>
+
+    <div class="form-group">
+      <label>الطبيب المُحال إليه</label>
+      <input class="form-control" formControlName="referredDoctor">
+    </div>
+
+    <div class="form-group">
+      <label>النتيجة</label>
+      <textarea class="form-control" formControlName="result"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>ملف مرفق</label>
+      <input type="file" (change)="onFileSelected($event)">
+      <div *ngIf="uploadedPath">
+        {{ uploadedPath }}
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary" [disabled]="loading">
+  <span *ngIf="loading" class="spinner-border spinner-border-sm"></span>
+  حفظ الاستشارة
+</button>
+  </form>
+</div>
