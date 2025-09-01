@@ -8,11 +8,13 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'app-edit-archive',
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './edit-archive.html',
+  templateUrl:'./edit-archive.html',
   styleUrl: './edit-archive.scss'
 })
 export class EditArchive {
-  archive!: ArchiveModel;
+ @Input() archive!: ArchiveModel;
+  @Output() archiveUpdated = new EventEmitter<any>();
+
   fileForm: FormGroup;
   selectedFile: File | null = null;
 
@@ -37,20 +39,22 @@ export class EditArchive {
 
     this.fileUploadService.uploadFile(this.selectedFile).subscribe({
       next: (res: { path: string; succeeded: boolean }) => {
-        const updateData = { digitalCopy: res.path };
-        this.archiveService.updateArchive(this.archive.archiveID, updateData).subscribe(
-          {
+        if (res.succeeded) {
+          const updateData = { digitalCopy: res.path };
+          this.archiveService.updateArchive(this.archive.archiveID, updateData).subscribe({
             next: (updateRes) => {
               console.log('✅ تم تحديث الأرشيف بنجاح:', updateRes);
-              this.selectedFile = null; // إعادة تعيين الملف
+              this.archiveUpdated.emit(updateRes);
+              this.selectedFile = null;
               this.modalService.dismissAll();
             },
             error: (err) => {
-            console.error('❌ فشل تحديث الأرشيف:', err);
-          }
-          },
-            
-        )
+              console.error('❌ فشل تحديث الأرشيف:', err);
+            }
+          });
+        } else {
+          console.error('❌ فشل رفع الملف، السيرفر رجع succeeded = false');
+        }
       },
       error: (err) => {
         console.error('❌ فشل رفع الملف:', err);
@@ -60,6 +64,6 @@ export class EditArchive {
 
   cancel() {
     this.selectedFile = null;
-     this.modalService.dismissAll();
+    this.modalService.dismissAll();
   }
 }
