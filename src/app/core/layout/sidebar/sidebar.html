@@ -32,6 +32,29 @@
         <span>قائمة المنتسبين</span>
       </li>
     }
+
+   <!-- Doctor Eye -->
+@if (role === 'Doctor_Eye') {
+  <li routerLink="/doctor/eye">
+    <i class="pi pi-eye"></i>
+    <span>إنشاء فحص عين للمريض</span>
+  </li>
+  <li routerLink="/doctor/eye/deferred">
+    <i class="pi pi-file"></i>
+    <span>الفحوص العين المؤجلة</span>
+  </li>
+
+  <li routerLink="/doctor/eye/consultations">
+    <i class="pi pi-comments"></i>
+    <span>استشارات العينية</span>
+  </li>
+
+  <li routerLink="/doctor/eye/investigations"> <!-- ← هنا -->
+    <i class="pi pi-flask"></i>
+    <span>تحاليل العينية</span>
+  </li>
+}
+
   <!-- Admin -->
     @if (role === 'Diwan') {
       <li routerLink="archive">
@@ -61,31 +84,57 @@
         <i class="pi pi-medkit"></i>
         <span>الفحوص الداخلية المؤجلة</span>
       </li>
+       <li routerLink="/doctor/internal/consultations">
+    <i class="pi pi-clock"></i>
+    <span>استشارات الداخلية</span>
+  </li>
+  <li routerLink="/doctor/internal/investigations">
+    <i class="pi pi-clock"></i>
+    <span>التحاليل الداخلية</span>
+  </li>
     }
 
-    <!-- Doctor Orthopedics -->
-    @if (role === 'Doctor_Orthopedics') {
-      <li routerLink="/doctor/orthopedics">
-        <i class="pi pi-heart"></i>
-        <span>الفحوصات العظمية للمريض</span>
-      </li>
-      <li routerLink="/doctor/orthopedics/deferred">
-        <i class="pi pi-refresh"></i>
-        <span>الفحوص العظمية المؤجلة</span>
-      </li>
-    }
+   <!-- Doctor Orthopedics -->
+@if (role === 'Doctor_Orthopedics') {
+  <li routerLink="/doctor/orthopedics">
+    <i class="pi pi-heart"></i>
+    <span>الفحوصات العظمية للمريض</span>
+  </li>
+  <li routerLink="/doctor/orthopedics/deferred">
+    <i class="pi pi-refresh"></i>
+    <span>الفحوص العظمية المؤجلة</span>
+  </li>
+  <li routerLink="/doctor/orthopedics/consultations">
+    <i class="pi pi-stethoscope"></i>
+    <span>الاستشارات العظمية</span>
+  </li>
+  <li routerLink="/doctor/orthopedics/investigations">
+    <i class="pi pi-flask"></i>
+    <span>التحاليل العظمية</span>
+  </li>
+}
 
-    <!-- Doctor Surgery -->
-    @if (role === 'Doctor_Surgery') {
-      <li routerLink="/doctor/surgery">
-        <i class="pi pi-cut"></i>
-        <span>العمليات الجراحية للمريض</span>
-      </li>
-      <li routerLink="/doctor/surgery/records">
-        <i class="pi pi-file"></i>
-        <span>الفحوص الجراحية المؤجلة</span>
-      </li>
-    }
+
+<!-- Doctor Surgery -->
+@if (role === 'Doctor_Surgery') {
+  <li routerLink="/doctor/surgery">
+    <i class="pi pi-cut"></i>
+    <span>العمليات الجراحية للمريض</span>
+  </li>
+  <li routerLink="/doctor/surgery/records">
+    <i class="pi pi-file"></i>
+    <span>الفحوص الجراحية المؤجلة</span>
+  </li>
+  <li routerLink="/doctor/surgery/consultations">
+    <i class="pi pi-comments"></i>
+    <span>الاستشارات الجراحية</span>
+  </li>
+  <li routerLink="/doctor/surgery/investigations">
+    <i class="pi pi-search"></i>
+    <span>التحاليل الجراحية</span>
+  </li>
+}
+
 
     <!-- Supervisor -->
     @if (role === 'Supervisor') {

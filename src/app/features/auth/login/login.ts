@@ -36,27 +36,31 @@ export class Login {
     this.authService.login(loginData).subscribe({
       next: () => {
         const role = this.authService.getUserRole();
-        if (role === 'Admin') {
+        if (role === 'Admin') 
+        {
           this.router.navigate(['/admin/dashboard']);
-        } else if (role === 'Reception') {
+        } 
+        else if (role === 'Reception') {
           this.router.navigate(['/reception/applicants/add']);
+        }
+     else if (role === 'Doctor') {
+      const specializationID = Number(this.authService.getDoctorSpecialty()); // ← خزناه بالـ localStorage عند login
         }else if (role === 'Diwan') {
           this.router.navigate(['/archive']);
         }  else if (role === 'Doctor') {
   // جلب الـ specializationID من الـ response
   const specializationID = Number(this.authService.getDoctorSpecialty()); // ← خزناه بالـ localStorage عند login
 
-  if (specializationID) {
-    this.authService.getSpecializationNameById(specializationID).subscribe({
-      next: (specialtyName) => {
-        const specialty = specialtyName.toLowerCase();
+      if (specializationID) {
+        this.authService.getSpecializationNameById(specializationID).subscribe({
+          next: (specialtyName) => {
+            const specialty = specialtyName.toLowerCase();
 
-        // خزّن التخصص بالاسم للعرض لاحقاً
-        this.authService.setDoctorSpecialty(specialty);
+            // خزّن التخصص بالاسم للعرض لاحقاً
+            this.authService.setDoctorSpecialty(specialty);
 
         // ربط الدور مع التخصص للعرض في sidebar
         this.roleWithSpecialty = `Doctor_${specialty.charAt(0).toUpperCase() + specialty.slice(1)}`;
-        console.log(specialty);
         // التوجيه حسب التخصص
         switch (specialty) {
           case 'عيون':
@@ -81,7 +85,7 @@ export class Login {
       },
       error: (err) => {
         console.error('Error fetching specialization name:', err);
-        this.router.navigate(['/doctor/doctor-not-found-component']); // fallback
+        this.router.navigate(['/doctor']); // fallback
       }
     });
   }

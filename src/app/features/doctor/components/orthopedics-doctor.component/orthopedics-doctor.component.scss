@@ -1,0 +1,43 @@
+.button-group {
+  display: flex;
+  gap: 15px; /* مسافة بين الأزرار */
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+}
+
+.button-group button {
+  padding: 10px 20px;
+  border: none;
+  color: #fff;
+  font-weight: 500;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.button-group .btn-primary {
+  background-color: #007bff;
+}
+.button-group .btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.button-group .btn-warning {
+  background-color: #ffc107;
+  color: #212529;
+}
+.button-group .btn-warning:hover {
+  background-color: #e0a800;
+}
+
+.button-group .btn-success {
+  background-color: #28a745;
+}
+.button-group .btn-success:hover {
+  background-color: #1e7e34;
+}
+
+.app-search-applicant {
+  width: 100%;
+  margin-bottom: 15px;
+}

@@ -1,0 +1,48 @@
+<!-- src/app/modules/doctor/components/surgery-doctor.component/surgery-investigations-list/surgery-investigations-list.html -->
+<div class="surgery-investigations">
+  <h3>جميع التحاليل للعيادة الجراحية</h3>
+
+  <input type="text" placeholder="ابحث هنا..." [(ngModel)]="searchText" 
+         (input)="filterInvestigations()" class="form-control mb-3"/>
+
+  <div *ngIf="loading" class="alert alert-info">جارٍ التحميل...</div>
+
+  <table *ngIf="!loading && filteredInvestigations.length > 0" class="table table-striped table-hover">
+    <thead class="table-danger">
+      <tr>
+        <th>رقم الملف</th>
+        <th>نوع التحليل</th>
+        <th>النتيجة</th>
+        <th>الحالة</th>
+        <th>الملف المرفق</th>
+        <th>الطبيب</th>
+        <th>إجراءات</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let i of filteredInvestigations">
+        <td>{{ i.applicantFileNumber }}</td>
+        <td>{{ i.type }}</td>
+        <td>{{ i.result }}</td>
+        <td>{{ i.status }}</td>
+        <td>
+          <button *ngIf="i.attachment" class="btn btn-link p-0" (click)="openFile(i.attachment)">فتح الملف</button>
+        </td>
+        <td>{{ i.doctor?.fullName }}</td>
+        <td>
+          <button class="btn btn-primary btn-sm" (click)="openEditDialog(i)">تعديل</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="!loading && filteredInvestigations.length === 0" class="alert alert-info">
+    لا توجد تحاليل
+  </div>
+
+  <app-edit-investigation 
+    *ngIf="selectedInvestigation" 
+    [investigation]="selectedInvestigation" 
+    (dialogClosed)="onDialogClose($event)">
+  </app-edit-investigation>
+</div>

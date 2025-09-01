@@ -14,31 +14,55 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./deferred-surgical-exams.component.scss']
 })
 export class DeferredSurgicalExamsComponent implements OnInit {
-  exams: SurgicalExam[] = [];          // جميع الفحوصات المؤجلة
-  filteredExams: SurgicalExam[] = [];  // نسخة للتصفية والبحث
+ exams: SurgicalExam[] = [];
+  filteredExams: SurgicalExam[] = [];
   loading = true;
   selectedExam: SurgicalExam | null = null;
-  searchTerm: string = '';          
+  searchTerm: string = '';
+
+  // Pagination
+  page = 1;
+  pageSize = 10;
+  totalItems = 0;
 
   constructor(private examService: SurgicalExamService) {}
 
   ngOnInit(): void {
-    this.loadDeferredExams();
+    this.loadExams();
   }
 
-  loadDeferredExams() {
+  get totalPages(): number {
+    return Math.ceil(this.totalItems / this.pageSize);
+  }
+
+  loadExams(page: number = 1) {
     this.loading = true;
-    this.examService.getDeferredSurgicalExams().subscribe({
-      next: (data) => {
-        this.exams = data;
-        this.filteredExams = [...this.exams];
+    this.examService.getAllSurgicalExams(page, this.pageSize).subscribe({
+      next: ({ items, totalCount }) => {
+        this.exams = items;
+        this.filteredExams = [...items];
+        this.totalItems = totalCount;
+        this.page = page;
         this.loading = false;
       },
-      error: (err) => {
-        console.error('❌ Error fetching deferred exams', err);
-        this.loading = false;
-      }
+      error: err => { console.error(err); this.loading = false; }
     });
+  }
+
+  changePage(newPage: number) {
+    if (newPage < 1 || newPage > this.totalPages) return;
+    this.loadExams(newPage);
+  }
+
+  onSearchChange() {
+    const term = this.searchTerm.trim().toLowerCase();
+    if (!term) {
+      this.filteredExams = [...this.exams];
+    } else {
+      this.filteredExams = this.exams.filter(exam =>
+        Object.values(exam).some(val => val?.toString().toLowerCase().includes(term))
+      );
+    }
   }
 
   openEditDialog(exam: SurgicalExam) {
@@ -47,20 +71,6 @@ export class DeferredSurgicalExamsComponent implements OnInit {
 
   onDialogClose(updated: boolean) {
     this.selectedExam = null;
-    if (updated) {
-      this.loadDeferredExams();
-    }
-  }
-
-  // 🔹 دالة البحث على الفرونت مباشرة
-  onSearchChange() {
-    const term = this.searchTerm.trim().toLowerCase();
-    if (!term) {
-      this.filteredExams = [...this.exams];
-    } else {
-      this.filteredExams = this.exams.filter(exam =>
-        exam.applicantFileNumber.toLowerCase().includes(term)
-      );
-    }
+    if (updated) this.loadExams(this.page);
   }
 }

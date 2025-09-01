@@ -2,9 +2,9 @@
   <div class="card card-body shadow-sm">
     <h3 class="mb-4">الفحوصات الداخلية المؤجلة</h3>
 
-    <!-- البحث -->
+    <!-- بحث -->
     <div class="search-box mb-3">
-      <input type="text" placeholder="ابحث برقم الملف ..." class="form-control"
+      <input type="text" placeholder="ابحث في كل الحقول ..." class="form-control"
              [(ngModel)]="searchTerm" (input)="onSearchChange()" />
     </div>
 
@@ -32,6 +32,7 @@
             <th>السمع</th>
             <th>البشرة</th>
             <th>السبب</th>
+            <th>النتيجة</th>
             <th>إجراءات</th>
           </tr>
         </thead>
@@ -50,18 +51,42 @@
             <td>{{ exam.skin }}</td>
             <td>{{ exam.reason || '-' }}</td>
             <td>
-              <button pButton type="button" label="تعديل" icon="pi pi-pencil"
-                      class="p-button-sm p-button-primary"
-                      (click)="openEditDialog(exam)">
-              </button>
+              <span [ngClass]="{
+                'badge bg-success': exam.result?.description === 'لائق',
+                'badge bg-danger': exam.result?.description === 'غير لائق',
+                'badge bg-warning text-dark': exam.result?.description === 'مؤجل'
+              }">
+                {{ exam.result?.description }}
+              </span>
+            </td>
+            <td>
+              <button pButton type="button" icon="pi pi-pencil" class="p-button-sm p-button-primary"
+                      (click)="openEditDialog(exam)"></button>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
 
+    <!-- Pagination -->
+    <div class="d-flex justify-content-center mt-3" *ngIf="!loading && filteredExams.length > 0">
+      <nav>
+        <ul class="pagination">
+          <li class="page-item" [class.disabled]="page === 1">
+            <a class="page-link" (click)="changePage(page - 1)">السابق</a>
+          </li>
+          <li class="page-item active">
+            <span class="page-link">{{ page }}</span>
+          </li>
+          <li class="page-item" [class.disabled]="filteredExams.length < pageSize">
+            <a class="page-link" (click)="changePage(page + 1)">التالي</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
     <div *ngIf="!loading && filteredExams.length === 0" class="alert alert-info text-center mt-3">
-      لا توجد فحوصات مؤجلة
+      لا توجد فحوصات داخلية
     </div>
 
     <!-- نافذة التعديل -->

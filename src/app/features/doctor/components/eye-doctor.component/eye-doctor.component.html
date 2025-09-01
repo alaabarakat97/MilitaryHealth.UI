@@ -4,16 +4,31 @@
     <app-search-applicant (applicantSelected)="onApplicantSelected($event)"></app-search-applicant>
   </div>
 
-  <!-- زر إضافة فحص للعين -->
-  <div class="mb-3">
+  <!-- الأزرار -->
+  <div class="button-group mb-3">
     <button class="btn btn-primary" (click)="addEyeExam()">
       إضافة فحص للعين
     </button>
+    <button class="btn btn-secondary" (click)="requestConsultation()">
+      طلب استشارة خارجية
+    </button>
+    <button class="btn btn-success" (click)="requestAnalysis()">
+      طلب تحليل
+    </button>
   </div>
 
-  <!-- عرض الفورم -->
+  <!-- عرض النماذج حسب الاختيار -->
   <div *ngIf="showExamForm && selectedApplicant">
-<app-eye-exam-form [applicantFileNumber]="selectedApplicant!.fileNumber"></app-eye-exam-form>
-</div>
+    <app-eye-exam-form [applicantFileNumber]="selectedApplicant!.fileNumber"></app-eye-exam-form>
+  </div>
 
+  <div *ngIf="showConsultationForm && selectedApplicant">
+    <!-- هون بتحط الكمبوننت تبع الاستشارة -->
+    <app-consultation-form [applicantFileNumber]="selectedApplicant!.fileNumber"></app-consultation-form>
+  </div>
+
+  <div *ngIf="showAnalysisForm && selectedApplicant">
+    <!-- هون بتحط الكمبوننت تبع التحليل -->
+    <app-investigation-form [applicantFileNumber]="selectedApplicant!.fileNumber"></app-investigation-form>
+  </div>
 </div>

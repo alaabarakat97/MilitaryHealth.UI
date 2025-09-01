@@ -70,10 +70,9 @@ getSpecializationId(): number | null {
 
 
 
- // services/auth.service.ts
 getSpecializationNameById(id: number): Observable<string> {
   return this.http
-    .get<any>(`${environment.apiUrl}/Specializations?page=1&pageSize=100`)
+    .get<any>(`${environment.apiUrl}/api/Specializations?page=1&pageSize=100`)
     .pipe(
       // فلترة حسب الـ specializationID
       map((res) => {

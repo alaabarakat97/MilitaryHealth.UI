@@ -20,25 +20,48 @@ exams: OrthopedicExam[] = [];
   selectedExam: OrthopedicExam | null = null;
   searchTerm: string = '';
 
+  // Pagination
+  page = 1;
+  pageSize = 10;
+  totalItems = 0;
+
   constructor(private examService: OrthopedicExamService) {}
 
   ngOnInit(): void {
-    this.loadDeferredExams();
+    this.loadExams();
   }
 
-  loadDeferredExams() {
+  loadExams(page: number = 1) {
     this.loading = true;
-    this.examService.getDeferredOrthopedicExams().subscribe({
-      next: data => {
-        this.exams = data;
-        this.filteredExams = [...data];
+    this.examService.getAllOrthopedicExams(page, this.pageSize).subscribe({
+      next: ({ items, totalCount }) => {
+        this.exams = items;
+        this.filteredExams = [...items];
+        this.totalItems = totalCount;
+        this.page = page;
         this.loading = false;
       },
-      error: err => {
-        console.error('❌ Error fetching deferred orthopedic exams', err);
-        this.loading = false;
-      }
+      error: err => { console.error(err); this.loading = false; }
     });
+  }
+
+  changePage(newPage: number) {
+    if (newPage < 1 || newPage > Math.ceil(this.totalItems / this.pageSize)) return;
+    this.loadExams(newPage);
+  }
+
+  onSearchChange() {
+    const term = this.searchTerm.trim().toLowerCase();
+    if (!term) {
+      this.filteredExams = [...this.exams];
+      return;
+    }
+
+    this.filteredExams = this.exams.filter(e =>
+      Object.values(e).some(val =>
+        val?.toString().toLowerCase().includes(term)
+      )
+    );
   }
 
   openEditDialog(exam: OrthopedicExam) {
@@ -47,14 +70,6 @@ exams: OrthopedicExam[] = [];
 
   onDialogClose(updated: boolean) {
     this.selectedExam = null;
-    if (updated) this.loadDeferredExams();
-  }
-
-  onSearchChange() {
-    const term = this.searchTerm.trim().toLowerCase();
-    if (!term) this.filteredExams = [...this.exams];
-    else this.filteredExams = this.exams.filter(e =>
-      e.applicantFileNumber.toLowerCase().includes(term)
-    );
+    if (updated) this.loadExams(this.page);
   }
 }
