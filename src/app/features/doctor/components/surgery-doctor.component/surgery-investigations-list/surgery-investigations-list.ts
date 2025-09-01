@@ -4,12 +4,13 @@ import { SurgicalExamService } from '../../../services/surgical-exam.service';
 import { EditInvestigation } from '../../Investigations/edit-investigation/edit-investigation';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-surgery-investigations-list',
   imports: [CommonModule, FormsModule, EditInvestigation],
   templateUrl: './surgery-investigations-list.html',
-  styleUrl: './surgery-investigations-list.scss'
+  styleUrls: ['./surgery-investigations-list.scss']
 })
 export class SurgeryInvestigationsList implements OnInit {
   investigations: Investigation[] = [];
@@ -18,9 +19,14 @@ export class SurgeryInvestigationsList implements OnInit {
   loading = false;
   searchText = '';
 
-  constructor(private service: SurgicalExamService) {}
+  constructor(
+    private service: SurgicalExamService,
+    private toastr: ToastrService
+  ) {}
 
-  ngOnInit() { this.loadInvestigations(); }
+  ngOnInit() { 
+    this.loadInvestigations(); 
+  }
 
   loadInvestigations() {
     this.loading = true;
@@ -30,7 +36,10 @@ export class SurgeryInvestigationsList implements OnInit {
         this.filteredInvestigations = [...res]; 
         this.loading = false; 
       },
-      error: err => { console.error(err); this.loading = false; }
+      error: () => { 
+        this.toastr.error('حدث خطأ أثناء تحميل الفحوصات الجراحية'); 
+        this.loading = false; 
+      }
     });
   }
 
@@ -46,7 +55,9 @@ export class SurgeryInvestigationsList implements OnInit {
       );
   }
 
-  openEditDialog(inv: Investigation) { this.selectedInvestigation = { ...inv }; }
+  openEditDialog(inv: Investigation) { 
+    this.selectedInvestigation = { ...inv }; 
+  }
 
   onDialogClose(updated: boolean) {
     this.selectedInvestigation = null;

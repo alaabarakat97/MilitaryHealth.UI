@@ -5,6 +5,7 @@ import { ApplicantService } from '../../../services/applicant.service';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { CommonModule } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-search-applicant',
@@ -18,14 +19,18 @@ import { CommonModule } from '@angular/common';
   templateUrl: './search-applicant.component.html',
   styleUrls: ['./search-applicant.component.scss']
 })
-export class SearchApplicantComponent  implements OnInit {
+export class SearchApplicantComponent implements OnInit {
   searchForm!: FormGroup;
   applicant: Applicant | null = null;
   loading = false;
 
   @Output() applicantSelected = new EventEmitter<Applicant>();
 
-  constructor(private fb: FormBuilder, private applicantService: ApplicantService) {}
+  constructor(
+    private fb: FormBuilder, 
+    private applicantService: ApplicantService,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {
     this.searchForm = this.fb.group({
@@ -35,24 +40,26 @@ export class SearchApplicantComponent  implements OnInit {
 
   onSearch(): void {
     const fileNumber = this.searchForm.value.fileNumber?.trim();
-    if (!fileNumber) return;
+    if (!fileNumber) {
+      this.toastr.warning('يرجى إدخال رقم الملف أولاً');
+      return;
+    }
 
     this.loading = true;
     this.applicantService.getApplicantByFileNumber(fileNumber).subscribe({
       next: (applicant) => {
         this.applicant = applicant || null;
         if (!this.applicant) {
-          alert('لم يتم العثور على منتسب بهذا الرقم');
+          this.toastr.warning('لم يتم العثور على منتسب بهذا الرقم');
         } else {
           this.applicantSelected.emit(this.applicant);
         }
         this.loading = false;
       },
-      error: (err) => {
-        console.error('❌ Error fetching applicant:', err);
+      error: () => {
         this.applicant = null;
         this.loading = false;
-        alert('حدث خطأ أثناء جلب البيانات');
+        this.toastr.error('حدث خطأ أثناء جلب البيانات');
       }
     });
   }

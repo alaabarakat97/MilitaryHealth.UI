@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angula
 import { EyeExam } from '../../../models/eye-exam-post.model';
 import { EyeExamService } from '../../../services/eye-exam.service';
 import { CommonModule } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-edit-eye-exam',
@@ -11,7 +12,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './edit-eye-exam.scss'
 })
 export class EditEyeExam {
- @Input() exam!: EyeExam;
+  @Input() exam!: EyeExam;
   @Output() dialogClosed = new EventEmitter<boolean>();
 
   examForm!: FormGroup;
@@ -20,7 +21,8 @@ export class EditEyeExam {
 
   constructor(
     private fb: FormBuilder,
-    private examService: EyeExamService
+    private examService: EyeExamService,
+    private toastr: ToastrService // ✅ أضفنا ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -42,7 +44,7 @@ export class EditEyeExam {
 
   onSubmit() {
     if (!this.exam || this.examForm.invalid) {
-      alert('❌ يرجى تعبئة جميع الحقول المطلوبة');
+      this.toastr.warning('❌ يرجى تعبئة جميع الحقول المطلوبة', 'تحذير');
       return;
     }
 
@@ -59,12 +61,11 @@ export class EditEyeExam {
 
     this.examService.updateEyeExam(examID, updatedExam).subscribe({
       next: () => {
-        alert('✅ تم التحديث بنجاح');
+        this.toastr.success('✅ تم التحديث بنجاح', 'نجاح');
         this.dialogClosed.emit(true); // إغلاق النافذة وتحديث الجدول
       },
-      error: (err) => {
-        console.error('❌ API error:', err);
-        alert('❌ فشل التحديث');
+      error: () => {
+        this.toastr.error('❌ فشل التحديث', 'خطأ');
       }
     });
   }

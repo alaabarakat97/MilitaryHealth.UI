@@ -12,11 +12,14 @@ import { AuthService } from '../services/auth.service';
 })
 export class Login {
   loginForm!: FormGroup;
-  roleWithSpecialty : string | null = '';
+  roleWithSpecialty: string | null = '';
+  showPassword: boolean = false;
 
-  constructor(private authService: AuthService,
-    private fb: FormBuilder, private router: Router
-  ) { }
+  constructor(
+    private authService: AuthService,
+    private fb: FormBuilder,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
@@ -25,6 +28,12 @@ export class Login {
     });
   }
 
+  togglePassword(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+
+  
   loging() {
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();

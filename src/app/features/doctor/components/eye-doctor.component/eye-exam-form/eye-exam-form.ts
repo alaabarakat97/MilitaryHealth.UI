@@ -5,6 +5,7 @@ import { EyeExamService } from '../../../services/eye-exam.service';
 import { EyeExam } from '../../../models/eye-exam-post.model';
 import { AuthService } from '../../../../auth/services/auth.service';
 import { CommonModule } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-eye-exam-form',
@@ -23,60 +24,58 @@ export class EyeExamForm implements OnInit {
   constructor(
     private fb: FormBuilder,
     private examService: EyeExamService,
-    private authService: AuthService
+    private authService: AuthService,
+    private toastr: ToastrService // ✅ أضفنا Toastr
   ) {}
 
   ngOnInit(): void {
     this.examForm = this.fb.group({
       vision: ['', Validators.required],
       colorTest: ['', Validators.required],
-      refractionTypeID: [null, Validators.required], // اختيار نوع الانكسار
-      refractionValue: [null, Validators.required], // القيمة الرقمية
-      otherDiseases: [''], // نص عادي
-      resultID: [null, Validators.required], // اختيار النتيجة
+      refractionTypeID: [null, Validators.required],
+      refractionValue: [null, Validators.required],
+      otherDiseases: [''],
+      resultID: [null, Validators.required],
       reason: ['']
     });
 
-    // جلب القوائم من الخدمة فقط للـ Select
+    // جلب القوائم
     this.examService.getRefractionTypes().subscribe(res => this.refractionTypes = res.data.items);
     this.examService.getResults().subscribe(res => this.results = res.data.items);
   }
 
   onSubmit() {
-  if (this.examForm.invalid) return;
-
-  // جلب معرف الطبيب من localStorage وتحويله لرقم
-  const doctorID = Number(this.authService.getDoctorId());
-  if (!doctorID) {
-    alert('❌ لم يتم العثور على معرف الطبيب');
-    return;
-  }
-
-  // إنشاء كائن الفحص لإرساله
-  const exam: EyeExam = {
-    applicantFileNumber: this.applicantFileNumber,
-    doctorID: doctorID, // رقم صحيح
-    vision: this.examForm.value.vision,
-    colorTest: this.examForm.value.colorTest, // نص مباشرة كما هو
-    refractionTypeID: Number(this.examForm.value.refractionTypeID),
-    refractionValue: Number(this.examForm.value.refractionValue),
-    otherDiseases: this.examForm.value.otherDiseases || '',
-    resultID: Number(this.examForm.value.resultID),
-    reason: this.examForm.value.reason || ''
-  };
-
-  console.log('🚀 Data to send:', exam);
-
-  this.examService.addEyeExam(exam).subscribe({
-    next: () => {
-      alert('✅ تمت إضافة الفحص بنجاح');
-      this.examForm.reset();
-    },
-    error: (err) => {
-      console.error('❌ API error:', err);
-      alert('❌ حدث خطأ أثناء إضافة الفحص');
+    if (this.examForm.invalid) {
+      this.toastr.warning('⚠️ يرجى تعبئة جميع الحقول المطلوبة', 'تنبيه');
+      return;
     }
-  });
-}
 
+    const doctorID = Number(this.authService.getDoctorId());
+    if (!doctorID) {
+      this.toastr.error('❌ لم يتم العثور على معرف الطبيب', 'خطأ');
+      return;
+    }
+
+    const exam: EyeExam = {
+      applicantFileNumber: this.applicantFileNumber,
+      doctorID: doctorID,
+      vision: this.examForm.value.vision,
+      colorTest: this.examForm.value.colorTest,
+      refractionTypeID: Number(this.examForm.value.refractionTypeID),
+      refractionValue: Number(this.examForm.value.refractionValue),
+      otherDiseases: this.examForm.value.otherDiseases || '',
+      resultID: Number(this.examForm.value.resultID),
+      reason: this.examForm.value.reason || ''
+    };
+
+    this.examService.addEyeExam(exam).subscribe({
+      next: () => {
+        this.toastr.success('✅ تمت إضافة الفحص بنجاح', 'نجاح');
+        this.examForm.reset();
+      },
+      error: () => {
+        this.toastr.error('❌ حدث خطأ أثناء إضافة الفحص', 'خطأ');
+      }
+    });
+  }
 }

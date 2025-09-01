@@ -4,10 +4,11 @@ import { InternalExamService } from '../../../services/internal-exam.service';
 import { EditInvestigation } from '../../Investigations/edit-investigation/edit-investigation';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-internal-investigations-list',
-  imports: [CommonModule, FormsModule,EditInvestigation],
+  imports: [CommonModule, FormsModule, EditInvestigation],
   templateUrl: './internal-investigations-list.html',
   styleUrl: './internal-investigations-list.scss'
 })
@@ -18,15 +19,25 @@ export class InternalInvestigationsList implements OnInit {
   loading = false;
   searchText = '';
 
-  constructor(private service: InternalExamService) {}
+  constructor(
+    private service: InternalExamService,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit() { this.loadInvestigations(); }
 
   loadInvestigations() {
     this.loading = true;
     this.service.getInternalInvestigations().subscribe({
-      next: res => { this.investigations = res; this.filteredInvestigations = [...res]; this.loading = false; },
-      error: err => { console.error(err); this.loading = false; }
+      next: res => {
+        this.investigations = res;
+        this.filteredInvestigations = [...res];
+        this.loading = false;
+      },
+      error: err => {
+        this.toastr.error('❌ فشل جلب التحاليل', 'خطأ');
+        this.loading = false;
+      }
     });
   }
 
@@ -42,15 +53,17 @@ export class InternalInvestigationsList implements OnInit {
       );
   }
 
-  openEditDialog(inv: Investigation) { this.selectedInvestigation = { ...inv }; }
+  openEditDialog(inv: Investigation) {
+    this.selectedInvestigation = { ...inv };
+  }
 
   onDialogClose(updated: boolean) {
     this.selectedInvestigation = null;
     if (updated) this.loadInvestigations();
   }
 
- openFile(attachment: string) {
-  if (!attachment) return;
-  window.open(`${this.service.uploadUrl}/${attachment}`, '_blank');
-}
+  openFile(attachment: string) {
+    if (!attachment) return;
+    window.open(`${this.service.uploadUrl}/${attachment}`, '_blank');
+  }
 }

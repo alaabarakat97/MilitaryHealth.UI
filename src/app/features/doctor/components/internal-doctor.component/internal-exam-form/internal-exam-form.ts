@@ -4,6 +4,7 @@ import { AuthService } from '../../../../auth/services/auth.service';
 import { InternalExam } from '../../../models/internal-exam.model';
 import { InternalExamService } from '../../../services/internal-exam.service';
 import { CommonModule } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-internal-exam-form',
@@ -19,7 +20,8 @@ export class InternalExamForm implements OnInit {
   constructor(
     private fb: FormBuilder,
     private examService: InternalExamService,
-    private authService: AuthService
+    private authService: AuthService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -38,33 +40,37 @@ export class InternalExamForm implements OnInit {
       reason: ['']
     });
 
-    this.examService.getResults().subscribe(res => this.results = res.data.items);
+    this.examService.getResults().subscribe({
+      next: res => this.results = res.data.items,
+      error: () => this.toastr.error('❌ فشل جلب النتائج', 'خطأ')
+    });
   }
 
-onSubmit() {
-  if (this.examForm.invalid) return;
-
-  const payload: InternalExam = {
-    applicantFileNumber: this.applicantFileNumber, // لازم تجيبها من المريض الحالي
-    doctorID: this.authService.getDoctorId(),      // أو من التوكن/السيشن
-    ...this.examForm.value,
-    resultID: Number(this.examForm.value.resultID) // تحويل من string → number
-  };
-
-  console.log("📤 Sending InternalExam:", payload);
-
-  this.examService.addInternalExam(payload).subscribe({
-    next: () => {
-      alert("تمت الاضافة بنجاح:");
-      // ممكن تسكر المودال أو تعرض رسالة نجاح
-    },
-    error: (err) => {
-       if (err.error?.errors?.detail?.[0] === "Applicant already registered before.") {
-        alert("⚠️ هذا المتقدم مسجل مسبقاً، استخدم التحديث بدل الإضافة.");
-        return;
-      }
-      console.error("❌ API error:", err);
+  onSubmit() {
+    if (this.examForm.invalid) {
+      this.toastr.warning('يرجى تعبئة جميع الحقول المطلوبة', 'تنبيه');
+      return;
     }
-  });
-}
+
+    const payload: InternalExam = {
+      applicantFileNumber: this.applicantFileNumber,
+      doctorID: this.authService.getDoctorId(),
+      ...this.examForm.value,
+      resultID: Number(this.examForm.value.resultID)
+    };
+
+    this.examService.addInternalExam(payload).subscribe({
+      next: () => {
+        this.toastr.success('✅ تمت إضافة الفحص بنجاح', 'نجاح');
+        this.examForm.reset();
+      },
+      error: (err) => {
+        if (err.error?.errors?.detail?.[0] === "Applicant already registered before.") {
+          this.toastr.warning('⚠️ هذا المتقدم مسجل مسبقاً، استخدم التحديث بدل الإضافة.', 'تنبيه');
+          return;
+        }
+        this.toastr.error('❌ حدث خطأ أثناء إضافة الفحص', 'خطأ');
+      }
+    });
+  }
 }

@@ -4,13 +4,14 @@ import { AuthService } from '../../../../auth/services/auth.service';
 import { OrthopedicExam } from '../../../models/orthopedic-exam.model';
 import { OrthopedicExamService } from '../../../services/orthopedic-exam.service';
 import { CommonModule } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-orthopedic-exam-form',
-   standalone: true,
+  standalone: true,
   imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './orthopedic-exam-form.component.html',
-  styleUrl: './orthopedic-exam-form.component.scss'
+  styleUrls: ['./orthopedic-exam-form.component.scss']
 })
 export class OrthopedicExamFormComponent {
   @Input() applicantFileNumber: string = '';
@@ -21,7 +22,8 @@ export class OrthopedicExamFormComponent {
   constructor(
     private fb: FormBuilder,
     private examService: OrthopedicExamService,
-    private authService: AuthService
+    private authService: AuthService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -40,34 +42,31 @@ export class OrthopedicExamFormComponent {
 
     const doctorID = Number(this.authService.getDoctorId());
     if (!doctorID) {
-      alert('❌ لم يتم العثور على معرف الطبيب');
+      this.toastr.error('❌ لم يتم العثور على معرف الطبيب');
       return;
     }
 
- const exam: OrthopedicExam = {
-  applicantFileNumber: this.applicantFileNumber,
-  doctorID: Number(doctorID), // تأكد من number
-  musculoskeletal: this.examForm.value.musculoskeletal,
-  neurologicalSurgery: this.examForm.value.neurologicalSurgery,
-  resultID: Number(this.examForm.value.resultID), // تأكد من number
-  reason: this.examForm.value.reason || ''
-};
+    const exam: OrthopedicExam = {
+      applicantFileNumber: this.applicantFileNumber,
+      doctorID: doctorID,
+      musculoskeletal: this.examForm.value.musculoskeletal,
+      neurologicalSurgery: this.examForm.value.neurologicalSurgery,
+      resultID: Number(this.examForm.value.resultID),
+      reason: this.examForm.value.reason || ''
+    };
 
-    console.log('🚀 Data to send:', exam);
-
- this.examService.addOrthopedicExam(exam).subscribe({
-  next: () => {
-    alert('✅ تمت إضافة فحص العظام بنجاح');
-    this.examForm.reset();
-  },
-  error: (err: any) => {
-    console.error(' API error:', err);
-    if (err?.error) {
-      alert(' ' + JSON.stringify(err.error));
-    } else {
-      alert(' حدث خطأ أثناء إضافة فحص العظام');
-    }
-  }
-});
+    this.examService.addOrthopedicExam(exam).subscribe({
+      next: () => {
+        this.toastr.success('✅ تمت إضافة فحص العظام بنجاح');
+        this.examForm.reset();
+      },
+      error: (err: any) => {
+        if (err?.error) {
+          this.toastr.error(JSON.stringify(err.error));
+        } else {
+          this.toastr.error('حدث خطأ أثناء إضافة فحص العظام');
+        }
+      }
+    });
   }
 }

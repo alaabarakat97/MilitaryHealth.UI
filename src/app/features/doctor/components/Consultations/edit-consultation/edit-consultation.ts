@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Consultation } from '../../../models/consultation.model';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../../auth/services/auth.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-edit-consultation',
@@ -13,7 +14,7 @@ import { AuthService } from '../../../../auth/services/auth.service';
   styleUrls: ['./edit-consultation.scss']
 })
 export class EditConsultation {
-  @Input() consultation!: Consultation;
+   @Input() consultation!: Consultation;
   @Output() dialogClosed = new EventEmitter<boolean>();
 
   consultationForm!: FormGroup;
@@ -23,7 +24,8 @@ export class EditConsultation {
   constructor(
     private fb: FormBuilder,
     private service: EyeExamService,
-    private authService: AuthService
+    private authService: AuthService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -39,26 +41,24 @@ export class EditConsultation {
   }
 
   // رفع الملف
-onFileSelected(event: any) {
-  const file: File = event.target.files[0];
-  if (file) {
-    this.service.uploadFile(file).subscribe({
-      next: (path) => {
-        this.uploadedPath = path; 
-        this.consultationForm.patchValue({ attachment: path });
-        console.log('📂 File uploaded, path:', path);
-      },
-      error: (err) => {
-        console.error('❌ File upload error:', err);
-        alert('فشل رفع الملف');
-      }
-    });
+  onFileSelected(event: any) {
+    const file: File = event.target.files[0];
+    if (file) {
+      this.service.uploadFile(file).subscribe({
+        next: (path) => {
+          this.uploadedPath = path; 
+          this.consultationForm.patchValue({ attachment: path });
+        },
+        error: (err) => {
+          this.toastr.error('فشل رفع الملف', 'خطأ');
+        }
+      });
+    }
   }
-}
 
   onSubmit() {
     if (!this.consultation || this.consultationForm.invalid) {
-      alert('❌ يرجى تعبئة جميع الحقول المطلوبة');
+      this.toastr.warning('❌ يرجى تعبئة جميع الحقول المطلوبة', 'تحذير');
       return;
     }
 
@@ -66,7 +66,6 @@ onFileSelected(event: any) {
 
     const doctorID = Number(this.authService.getDoctorId());
     if (!doctorID) {
-      alert('❌ لم يتم العثور على معرف الطبيب');
       this.loading = false;
       return;
     }
@@ -83,13 +82,12 @@ onFileSelected(event: any) {
 
     this.service.updateConsultation(this.consultation.consultationID!, updatedConsultation).subscribe({
       next: () => {
-        alert('✅ تم التحديث بنجاح');
+        this.toastr.success('✅ تم التحديث بنجاح', 'نجاح');
         this.loading = false;
         this.dialogClosed.emit(true);
       },
       error: (err) => {
-        console.error('❌ API error:', err);
-        alert('❌ فشل التحديث');
+        this.toastr.error('❌ فشل التحديث', 'خطأ');
         this.loading = false;
       }
     });

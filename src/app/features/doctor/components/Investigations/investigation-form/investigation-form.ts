@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { AuthService } from '../../../../auth/services/auth.service';
 import { Investigation } from '../../../models/investigation.model';
 import { EyeExamService } from '../../../services/eye-exam.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-investigation-form',
@@ -12,7 +13,7 @@ import { EyeExamService } from '../../../services/eye-exam.service';
   styleUrl: './investigation-form.scss'
 })
 export class InvestigationForm {
- @Input() applicantFileNumber: string = '';
+  @Input() applicantFileNumber: string = '';
   @Input() investigationToEdit?: Investigation;
 
   investigationForm!: FormGroup;
@@ -22,7 +23,8 @@ export class InvestigationForm {
   constructor(
     private fb: FormBuilder,
     private service: EyeExamService,
-    private authService: AuthService
+    private authService: AuthService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -45,11 +47,10 @@ export class InvestigationForm {
         next: (path) => {
           this.uploadedPath = path;
           this.investigationForm.patchValue({ attachment: path });
-          console.log('📂 File uploaded, path:', path);
+          this.toastr.success('تم رفع الملف بنجاح', 'نجاح');
         },
         error: (err) => {
-          console.error('❌ File upload error:', err);
-          alert('فشل رفع الملف');
+          this.toastr.error('فشل رفع الملف', 'خطأ');
         }
       });
     }
@@ -57,13 +58,13 @@ export class InvestigationForm {
 
   onSubmit() {
     if (!this.applicantFileNumber || this.investigationForm.invalid) {
-      alert('يرجى إدخال جميع الحقول المطلوبة');
+      this.toastr.warning('يرجى إدخال جميع الحقول المطلوبة', 'تنبيه');
       return;
     }
 
     const doctorID = Number(this.authService.getDoctorId());
     if (!doctorID) {
-      alert('❌ لم يتم العثور على معرف الطبيب');
+      this.toastr.error('لم يتم العثور على معرف الطبيب', 'خطأ');
       return;
     }
 
@@ -85,14 +86,16 @@ export class InvestigationForm {
 
     request$.subscribe({
       next: () => {
-        alert(this.investigationToEdit ? '✅ تم تعديل التحليل بنجاح' : '✅ تم إضافة طلب التحليل بنجاح');
+        this.toastr.success(
+          this.investigationToEdit ? 'تم تعديل التحليل بنجاح' : 'تم إضافة طلب التحليل بنجاح',
+          'نجاح'
+        );
         this.investigationForm.reset();
         this.uploadedPath = null;
         this.loading = false;
       },
       error: (err) => {
-        console.error('❌ خطأ في العملية:', err);
-        alert('فشل في العملية');
+        this.toastr.error('فشل في العملية', 'خطأ');
         this.loading = false;
       }
     });
