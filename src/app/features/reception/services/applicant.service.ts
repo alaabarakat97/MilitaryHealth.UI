@@ -5,7 +5,6 @@ import { environment } from '../../../../environments/environment';
 import { ApplicantDetailsModel, ApplicantModel } from '../models/applicant.model';
 import { ApiResponse, PagedResponse } from '../../../shared/models/paged-response.model';
 import { ApplicantsStatisticsResponse } from '../models/applicants-statistics-response.model';
-import { UserRoles } from '../../../core/models/enums/user-roles.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +22,7 @@ export class ApplicantService {
   }
 
   getApplicantById$(id: number): Observable<ApplicantModel> {
-    return this.http.get<ApiResponse<ApplicantModel>>(`${this.apiUrl}/${id}`)
+    return this.http.get<ApiResponse<ApplicantModel>>(`${this.apiUrl}/get/${id}`)
       .pipe(
         map(response => response.data)
       );
