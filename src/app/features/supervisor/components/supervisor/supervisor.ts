@@ -37,6 +37,7 @@ export class Supervisor implements OnInit {
   ) { }
   ngOnInit(): void {
     this.loadResults();
+    this.loadMaritalStatuses();
   }
 
   loadApplicants() {
@@ -75,11 +76,17 @@ export class Supervisor implements OnInit {
       error: (err) => console.error('Error fetching marital statuses', err)
     });
   }
+  getMaritalStatusDescription(id: number): string {
+    console.log(this.maritalStatuses);
+  const status = this.maritalStatuses.find(s => s.maritalStatusID === id);
+  return status ? status.description : 'غير محدد';
+}
+
   loadResults() {
     this.lookupService.getResults().subscribe({
       next: (data) => {
         this.results = data;
-        const rejected = this.results.find(r => r.description == 'مرفوض');
+        const rejected = this.results.find(r => r.description == 'غير لائق');
         console.log(rejected);
         const postponed = this.results.find(r => r.description == 'مؤجل');
         this.rejectedId = rejected ? rejected.resultID : null;

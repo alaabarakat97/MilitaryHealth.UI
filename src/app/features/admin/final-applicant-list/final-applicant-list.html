@@ -58,7 +58,7 @@
           @if (decision.result?.description === 'لائق') {
             <span class="badge bg-success">{{ decision.result?.description }}</span>
           }
-          @else if (decision.result?.description === 'مرفوض') {
+          @else if (decision.result?.description === 'غير لائق') {
             <span class="badge bg-danger">{{ decision.result?.description }}</span>
           }
           @else if (decision.result?.description === 'مؤجل') {

@@ -44,7 +44,7 @@
         <td>
           <span [ngClass]="{
             'badge bg-success': exam.result?.description === 'لائق',
-            'badge bg-danger': exam.result?.description === 'مرفوض',
+            'badge bg-danger': exam.result?.description === 'غير لائق',
             'badge bg-warning text-dark': exam.result?.description === 'مؤجل'
           }">
             {{ exam.result?.description }}

@@ -39,7 +39,7 @@
                   <strong>الوظيفة:</strong> <span>{{ applicant.job }}</span>
                 </li>
                 <li class="list-group-item d-flex justify-content-between">
-                  <strong>الحالة الاجتماعية:</strong> <span>{{ applicant.maritalStatusID }}</span>
+                  <strong>الحالة الاجتماعية:</strong> <span>{{ getMaritalStatusDescription(applicant.maritalStatusID) }}</span>
                 </li>
               </ul>
             </div>
