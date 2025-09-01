@@ -66,7 +66,7 @@ export class InternalExamForm implements OnInit {
       },
       error: (err) => {
         if (err.error?.errors?.detail?.[0] === "Applicant already registered before.") {
-          this.toastr.warning('⚠️ هذا المتقدم مسجل مسبقاً، استخدم التحديث بدل الإضافة.', 'تنبيه');
+          this.toastr.warning('⚠️ هذا المنتسب مسجل مسبقاً، استخدم التحديث بدل الإضافة.', 'تنبيه');
           return;
         }
         this.toastr.error('❌ حدث خطأ أثناء إضافة الفحص', 'خطأ');

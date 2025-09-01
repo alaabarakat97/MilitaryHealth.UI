@@ -12,3 +12,21 @@ a:hover {
   border-radius: 50%;   
   background: #fff;
 }
+.input-group {
+  position: relative; 
+}
+
+.password-toggle-icon {
+  position: absolute;
+  left: 15px; /* Change 'right' to 'left' */
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  cursor: pointer;
+  color: #6c757d; // A neutral color for the icon
+}
+
+/* Add padding to the left of the input field to prevent text from going under the icon */
+.input-group input.form-control {
+  padding-left: 45px; /* Adjust this value as needed to clear the icon */
+}

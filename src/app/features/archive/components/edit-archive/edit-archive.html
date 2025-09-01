@@ -1,11 +1,13 @@
 <div class="modal-content">
-  <div class="modal-header">
-    <h4 class="modal-title">تحميل نسخة رقمية للملف: {{ archive?.fileNumber }}</h4>
-    <button type="button" class="btn-close" aria-label="Close" (click)="cancel()"></button>
-  </div>
+  <div class="modal-header d-flex justify-content-between align-items-center">
+  <button type="button" class="btn-close" aria-label="Close" (click)="cancel()"></button>
+
+  <h4 class="modal-title text-center flex-grow-1">
+    تحميل نسخة رقمية للملف: {{ archive?.fileNumber }}
+  </h4>
+</div>
 
   <div class="modal-body">
-    <!-- إذا لا يوجد ملف سابق -->
     <ng-container *ngIf="!archive?.digitalCopy">
       <form [formGroup]="fileForm">
         <div class="mb-3">
@@ -28,6 +30,6 @@
 
   <div class="modal-footer">
     <button class="btn btn-secondary" (click)="cancel()">إلغاء</button>
-    <button class="btn btn-primary" (click)="save()" [disabled]="!selectedFile && !archive?.digitalCopy">حفظ</button>
+    <button *ngIf="!archive?.digitalCopy" class="btn btn-primary" (click)="save()" [disabled]="!selectedFile && !archive?.digitalCopy">حفظ</button>
   </div>
 </div>

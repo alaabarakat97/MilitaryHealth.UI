@@ -57,14 +57,14 @@ export class Supervisor implements OnInit {
           this.mapApplicantToDecision(applicantDetails);
 
         } else {
-          this.responseMessage = 'لم يتم العثور على المتقدم';
+          this.responseMessage = 'لم يتم العثور على المنتسب';
           this.responseSuccess = false;
         }
       },
       error: () => {
       this.applicant = undefined!;
       this.decisionModel = undefined!;
-      this.responseMessage = 'لم يتم العثور على المتقدم';
+      this.responseMessage = 'لم يتم العثور على المنتسب';
       this.responseSuccess = false;
     }
     });

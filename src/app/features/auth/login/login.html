@@ -21,13 +21,15 @@
 <div class="form-group mb-3">
   <label for="password" class="pb-2">كلمة المرور</label>
   <div class="input-group">
-    <input [type]="showPassword ? 'text' : 'password'" 
-           formControlName="password"
-           class="form-control"
-           id="password"
-           required
-           [class.is-invalid]="loginForm.get('password')?.touched && loginForm.get('password')?.invalid" />
-    <span class="input-group-text" (click)="togglePassword()" style="cursor:pointer">
+    <input 
+      [type]="showPassword ? 'text' : 'password'" 
+      formControlName="password"
+      class="form-control"
+      id="password"
+      required
+      [class.is-invalid]="loginForm.get('password')?.touched && loginForm.get('password')?.invalid" 
+    />
+    <span class="password-toggle-icon" (click)="togglePassword()" style="cursor:pointer">
       <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash-fill' : 'bi-eye-fill'"></i>
     </span>
   </div>

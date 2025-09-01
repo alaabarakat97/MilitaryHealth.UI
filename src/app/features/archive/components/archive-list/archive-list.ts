@@ -78,6 +78,9 @@ archives: ArchiveModel[] = [];
       centered: true
     });
     modalRef.componentInstance.archive = archive;
+     modalRef.componentInstance.archiveUpdated.subscribe(() => {
+    this.loadArchives();
+  });
   }
 
   ngAfterViewInit() {
