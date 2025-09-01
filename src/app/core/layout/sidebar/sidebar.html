@@ -28,15 +28,15 @@
         <span>الإحصائيات</span>
       </li>
       <li routerLink="admin/final">
-        <i class="pi pi-user-plus"></i>
+        <i class="pi pi-users"></i>
         <span>قائمة المنتسبين</span>
       </li>
     }
 
     @if (role === 'Diwan') {
       <li routerLink="archive">
-        <i class="pi pi-user-plus"></i>
-        <span>قائمة المنتسبين</span>
+        <i class="pi pi-users"></i>
+        <span> الديوان</span>
       </li>
     }
     <!-- Doctor Eye -->
@@ -48,6 +48,14 @@
       <li routerLink="/doctor/eye/deferred">
         <i class="pi pi-file"></i>
         <span>الفحوص العين</span>
+      </li>
+       <li routerLink="/doctor/eye/consultations">
+        <i class="pi pi-file"></i>
+        <span>الاستشارات العين</span>
+      </li>
+      <li routerLink="/doctor/eye/investigations">
+        <i class="pi pi-file"></i>
+        <span>التحاليل العين</span>
       </li>
     }
 
