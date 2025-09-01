@@ -85,7 +85,7 @@ export class Supervisor implements OnInit {
     this.lookupService.getResults().subscribe({
       next: (data) => {
         this.results = data;
-        const rejected = this.results.find(r => r.description == 'غير لائق');
+        const rejected = this.results.find(r => r.description == 'مرفوض');
         console.log(rejected);
         const postponed = this.results.find(r => r.description == 'مؤجل');
         this.rejectedId = rejected ? rejected.resultID : null;
