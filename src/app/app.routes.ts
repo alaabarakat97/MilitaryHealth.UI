@@ -46,6 +46,12 @@ export const routes: Routes = [
           import('./features/supervisor/supervisor.routes').then(m => m.RECEPTION_ROUTES),
         data: { roles: [UserRoles.Supervisor] }
       },
+       {
+        path: 'archive',
+        loadChildren: () =>
+          import('./features/archive/archive.routes').then(m => m.Archive_ROUTES),
+        data: { roles: [UserRoles.Diwan] }
+      },
     ]
   },
   { path: '**', redirectTo: 'login' }

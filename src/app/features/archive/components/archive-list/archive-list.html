@@ -1,0 +1,55 @@
+<div class="user-header-section px-1 pt-1 container-fluid">
+  <div class="mb-3 d-flex justify-content-end">
+    <div class="search-wrapper">
+      <input type="text" class="form-control" placeholder="ابحث عن رقم الملف" (input)="onFilterChange($event)" />
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <p-table #table [value]="archives" [rows]="10" [sortMode]="'multiple'" [scrollable]="true"
+    [showCurrentPageReport]="true" responsiveLayout="scroll">
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="fileNumber">رقم الأرشيف</th>
+        <th pSortableColumn="applicant.fileNumber">رقم ملف المتقدم</th>
+        <th pSortableColumn="applicant.fullName">الاسم</th>
+        <th>الوظيفة</th>
+        <th>الطول / الوزن</th>
+        <th>ضغط الدم</th>
+        <th>النسخة الرقمية</th>
+        <th pSortableColumn="archiveDate">تاريخ الأرشفة</th>
+        <th>إجراءات</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-archive>
+      <tr>
+        <td><span class="fw-bold">{{ archive.fileNumber }}</span></td>
+        <td>{{ archive.applicant?.fileNumber }}</td>
+        <td>{{ archive.applicant?.fullName }}</td>
+        <td>{{ archive.applicant?.job }}</td>
+        <td>{{ archive.applicant?.height }} سم / {{ archive.applicant?.weight }} كجم</td>
+        <td>{{ archive.applicant?.bloodPressure }}</td>
+        <td class="text-center">
+          <i *ngIf="archive.digitalCopy" class="fas fa-check text-success"></i>
+          <i *ngIf="!archive.digitalCopy" class="fas fa-times text-danger"></i>
+        </td>
+        <td>{{ archive.archiveDate | date:'yyyy/MM/dd' }}</td>
+
+        <!-- زر التعديل -->
+        <td class="text-center">
+          <button class="btn btn-sm btn-primary" (click)="openEditArchive(archive)">
+            <i class="fas fa-edit"></i> تعديل
+          </button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <!-- مكون الصفحات -->
+  <app-paginator [totalRecords]="totalRecords" [pageSize]="rowsPerPage" [currentPage]="page"
+    (pageChange)="onPageChange($event)" (pageSizeChange)="onPageSizeChange($event)">
+  </app-paginator>
+</div>

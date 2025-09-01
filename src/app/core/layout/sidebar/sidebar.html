@@ -32,7 +32,13 @@
         <span>قائمة المنتسبين</span>
       </li>
     }
-
+  <!-- Admin -->
+    @if (role === 'Diwan') {
+      <li routerLink="archive">
+        <i class="pi pi-user-plus"></i>
+        <span>قائمة المنتسبين</span>
+      </li>
+    }
     <!-- Doctor Eye -->
     @if (role === 'Doctor_Eye') {
       <li routerLink="/doctor/eye">

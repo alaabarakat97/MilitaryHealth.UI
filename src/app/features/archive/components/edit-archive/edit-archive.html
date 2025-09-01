@@ -1,0 +1,30 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h4 class="modal-title">تحميل نسخة رقمية للملف: {{ archive?.fileNumber }}</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="cancel()"></button>
+  </div>
+
+  <div class="modal-body">
+    <form [formGroup]="fileForm">
+      <div class="mb-3">
+        <label for="digitalCopy" class="form-label">اختر ملف</label>
+        <input 
+          type="file" 
+          class="form-control"
+          id="digitalCopy" 
+          (change)="onFileSelected($event)" 
+          accept=".pdf,.jpg,.png,.jpeg"
+        />
+      </div>
+    </form>
+
+    <div *ngIf="selectedFile" class="alert alert-info py-2 mt-2">
+      الملف المحدد: <strong>{{ selectedFile.name }}</strong>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button class="btn btn-secondary" (click)="cancel()">إلغاء</button>
+    <button class="btn btn-primary" (click)="save()" [disabled]="!selectedFile">حفظ</button>
+  </div>
+</div>

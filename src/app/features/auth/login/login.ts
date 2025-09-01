@@ -45,6 +45,11 @@ export class Login {
         }
      else if (role === 'Doctor') {
       const specializationID = Number(this.authService.getDoctorSpecialty()); // ← خزناه بالـ localStorage عند login
+        }else if (role === 'Diwan') {
+          this.router.navigate(['/archive']);
+        }  else if (role === 'Doctor') {
+  // جلب الـ specializationID من الـ response
+  const specializationID = Number(this.authService.getDoctorSpecialty()); // ← خزناه بالـ localStorage عند login
 
       if (specializationID) {
         this.authService.getSpecializationNameById(specializationID).subscribe({
