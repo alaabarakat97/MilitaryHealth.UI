@@ -30,5 +30,9 @@ export interface LoginResponse {
     accessTokenExpires: string;
     refreshTokenExpires: string;
   };
+  errors?: {
+    detail?: string[];
+    [key: string]: any;
+  };
   traceId: string;
 }

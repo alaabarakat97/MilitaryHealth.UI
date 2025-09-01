@@ -3,6 +3,10 @@ export interface ApiResponse<T> {
   status: number;
   message: string;
   data: T;
+  errors?: {
+    detail?: string[];
+    [key: string]: any; 
+  };
   traceId?: string;
 }
 
