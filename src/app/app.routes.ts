@@ -32,7 +32,7 @@ export const routes: Routes = [
         path: 'reception',
         loadChildren: () =>
           import('./features/reception/reception.routes').then(m => m.RECEPTION_ROUTES),
-        data: { roles: [UserRoles.Reception] }
+        data: { roles: [UserRoles.Receptionist] }
       },
       {
         path: 'doctor',

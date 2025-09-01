@@ -8,20 +8,20 @@ export const RECEPTION_ROUTES: Routes = [
     loadComponent: () =>
       import('./components/applicants-list/applicants-list').then(m => m.ApplicantsList),
     canActivate: [authGuard],
-     data: { roles: [UserRoles.Reception] }
+     data: { roles: [UserRoles.Receptionist] }
   },
   {
     path: 'applicants/add',
     loadComponent: () =>
       import('./components/add-edit-applicant/add-edit-applicant').then(m => m.AddEditApplicant),
     canActivate: [authGuard],
-    data: { roles: [UserRoles.Reception] }
+    data: { roles: [UserRoles.Receptionist] }
   },
     {
     path: 'applicants/:id', 
     loadComponent: () =>
       import('./components/add-edit-applicant/add-edit-applicant').then(m => m.AddEditApplicant),
     canActivate: [authGuard],
-    data: { roles: [UserRoles.Reception] }
+    data: { roles: [UserRoles.Receptionist] }
   }
 ];

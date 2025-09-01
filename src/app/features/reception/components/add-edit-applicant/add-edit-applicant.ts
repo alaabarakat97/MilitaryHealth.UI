@@ -79,6 +79,11 @@ export class AddEditApplicant implements OnInit {
       error: () => console.error('Error fetching applicant data')
     });
   }
+preventMinus(event: KeyboardEvent) {
+  if (event.key === '-' || event.key === 'e') {
+    event.preventDefault();
+  }
+}
 
   onSubmit() {
     this.submitted = true;

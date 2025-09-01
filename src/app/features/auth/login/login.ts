@@ -49,7 +49,7 @@ export class Login {
         {
           this.router.navigate(['/admin/dashboard']);
         } 
-        else if (role === 'Reception') 
+        else if (role === 'Receptionist') 
         {
           this.router.navigate(['/reception/applicants/add']);
         }
