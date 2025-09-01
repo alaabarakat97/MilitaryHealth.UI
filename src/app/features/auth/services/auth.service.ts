@@ -38,7 +38,6 @@ login(userDto: any): Observable<LoginResponse> {
 
           const role = this.getUserRole();
 
-          // ✅ خزن التخصص إذا كان دكتور
           if (role === UserRoles.Doctor && response.data.doctor?.specializationID) {
             localStorage.setItem(
               this.SPECIALTY_KEY,
@@ -46,7 +45,6 @@ login(userDto: any): Observable<LoginResponse> {
             );
           }
 
-          // ✅ خزن معرف الطبيب (doctorID) إذا كان دكتور
           if (role === UserRoles.Doctor && response.data.doctor?.doctorID) {
             localStorage.setItem(
               this.DOCTOR_ID_KEY,
