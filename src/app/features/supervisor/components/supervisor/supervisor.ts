@@ -8,7 +8,6 @@ import { Result } from '../../../../shared/models/result.model';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DecisionService } from '../../services/decision.service';
 import { FinalDecisionModel } from '../../models/final-decision.model';
-import { MessageService } from 'primeng/api';
 import { MaritalStatusService } from '../../../reception/services/marital-status.service';
 import { MaritalStatus } from '../../../reception/models/marital-status.model';
 @Component({
