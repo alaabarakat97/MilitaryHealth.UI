@@ -13,6 +13,10 @@ export class ArchiveService {
 
   constructor(private http: HttpClient) { }
 
+  updateArchive(id: number, data: { digitalCopy: string }) {
+  return this.http.put(`${this.apiUrl}/${id}`, data);
+}
+
   getArchives$(
     page: number = 1,
     pageSize: number = 10,

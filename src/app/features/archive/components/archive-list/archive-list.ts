@@ -6,6 +6,9 @@ import { Router } from '@angular/router';
 import { PagedResponse } from '../../../applicants/models/api-response.model';
 import { ArchiveModel } from '../../models/archive.model';
 import { ArchiveService } from '../../services/archive';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Result } from '../../../../shared/models/result.model';
+import { EditArchive } from '../edit-archive/edit-archive';
 @Component({
   selector: 'app-archive-list',
   imports: [PaginatorComponent, TableModule, CommonModule],
@@ -25,7 +28,8 @@ archives: ArchiveModel[] = [];
   constructor(
     private archiveService: ArchiveService,
     private cdr: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    private modalService: NgbModal,
   ) { }
 
   ngOnInit(): void {
@@ -65,9 +69,15 @@ archives: ArchiveModel[] = [];
     this.loadArchives();
   }
 
-  editArchive(archive: ArchiveModel) {
-    // ممكن تفتح مودال أو تروح لصفحة تعديل
-    this.router.navigate(['/archives/edit', archive.archiveID]);
+
+   openEditArchive(archive:ArchiveModel) {
+    const modalRef = this.modalService.open(EditArchive, {
+      size: 'lg',
+      backdrop: 'static',
+      keyboard: false,
+      centered: true
+    });
+    modalRef.componentInstance.archive = archive;
   }
 
   ngAfterViewInit() {
