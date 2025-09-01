@@ -5,18 +5,21 @@
   </div>
 
   <div class="modal-body">
-    <form [formGroup]="fileForm">
-      <div class="mb-3">
-        <label for="digitalCopy" class="form-label">اختر ملف</label>
-        <input 
-          type="file" 
-          class="form-control"
-          id="digitalCopy" 
-          (change)="onFileSelected($event)" 
-          accept=".pdf,.jpg,.png,.jpeg"
-        />
-      </div>
-    </form>
+    <!-- إذا لا يوجد ملف سابق -->
+    <ng-container *ngIf="!archive?.digitalCopy">
+      <form [formGroup]="fileForm">
+        <div class="mb-3">
+          <label for="digitalCopy" class="form-label">اختر ملف</label>
+          <input type="file" class="form-control" id="digitalCopy" (change)="onFileSelected($event)"
+            accept=".pdf,.jpg,.png,.jpeg" />
+        </div>
+      </form>
+    </ng-container>
+
+    <div *ngIf="archive?.digitalCopy" class="alert alert-secondary py-2 mt-2">
+      الملف الحالي:
+      <a [href]="getFileUrl(archive.digitalCopy)" target="_blank" (click)="cancel()">{{ getFileName(archive.digitalCopy) }}</a>
+    </div>
 
     <div *ngIf="selectedFile" class="alert alert-info py-2 mt-2">
       الملف المحدد: <strong>{{ selectedFile.name }}</strong>
@@ -25,6 +28,6 @@
 
   <div class="modal-footer">
     <button class="btn btn-secondary" (click)="cancel()">إلغاء</button>
-    <button class="btn btn-primary" (click)="save()" [disabled]="!selectedFile">حفظ</button>
+    <button class="btn btn-primary" (click)="save()" [disabled]="!selectedFile && !archive?.digitalCopy">حفظ</button>
   </div>
 </div>

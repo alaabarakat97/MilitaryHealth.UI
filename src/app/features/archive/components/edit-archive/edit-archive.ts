@@ -5,14 +5,16 @@ import { ArchiveModel } from '../../models/archive.model';
 import { CommonModule } from '@angular/common';
 import { ArchiveService } from '../../services/archive';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { environment } from '../../../../../environments/environment';
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-edit-archive',
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl:'./edit-archive.html',
+  templateUrl: './edit-archive.html',
   styleUrl: './edit-archive.scss'
 })
 export class EditArchive {
- @Input() archive!: ArchiveModel;
+  @Input() archive!: ArchiveModel;
   @Output() archiveUpdated = new EventEmitter<any>();
 
   fileForm: FormGroup;
@@ -23,6 +25,7 @@ export class EditArchive {
     private fileUploadService: FileUploadService,
     private archiveService: ArchiveService,
     private modalService: NgbModal,
+    private toastr: ToastrService
   ) {
     this.fileForm = this.fb.group({});
   }
@@ -43,21 +46,21 @@ export class EditArchive {
           const updateData = { digitalCopy: res.path };
           this.archiveService.updateArchive(this.archive.archiveID, updateData).subscribe({
             next: (updateRes) => {
-              console.log('✅ تم تحديث الأرشيف بنجاح:', updateRes);
+              this.toastr.success("تم تحديث الأرشيف بنجاح");
               this.archiveUpdated.emit(updateRes);
               this.selectedFile = null;
               this.modalService.dismissAll();
             },
             error: (err) => {
-              console.error('❌ فشل تحديث الأرشيف:', err);
+              this.toastr.error("فشل تحديث الأرشيف");
             }
           });
         } else {
-          console.error('❌ فشل رفع الملف، السيرفر رجع succeeded = false');
+          this.toastr.error("فشل تحديث الأرشيف");
         }
       },
       error: (err) => {
-        console.error('❌ فشل رفع الملف:', err);
+        this.toastr.error("فشل تحديث الأرشيف");
       }
     });
   }
@@ -65,5 +68,12 @@ export class EditArchive {
   cancel() {
     this.selectedFile = null;
     this.modalService.dismissAll();
+  }
+  getFileUrl(path: string) {
+    return `${environment.apiUrl}/${path}`;
+  }
+
+  getFileName(path: string) {
+    return path.split('/').pop() || 'ملف';
   }
 }
