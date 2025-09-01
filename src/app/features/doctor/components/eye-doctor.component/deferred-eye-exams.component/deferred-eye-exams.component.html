@@ -16,37 +16,65 @@
     </div>
 
     <!-- جدول النتائج -->
-    <div class="table-responsive">
-      <table *ngIf="!loading && filteredExams.length > 0" class="table table-hover table-striped table-bordered">
-        <thead class="table-primary">
-          <tr>
-            <th>رقم الملف</th>
-            <th>البصر</th>
-            <th>اختبار الألوان</th>
-            <th>نوع الانكسار</th>
-            <th>قيمة الانكسار</th>
-            <th>الأمراض الأخرى</th>
-            <th>السبب</th>
-            <th>إجراءات</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let exam of filteredExams">
-            <td>{{ exam.applicantFileNumber }}</td>
-            <td>{{ exam.vision }}</td>
-            <td>{{ exam.colorTest }}</td>
-            <td>{{ exam.refractionType?.description }}</td>
-            <td>{{ exam.refractionValue }}</td>
-            <td>{{ exam.otherDiseases || '-' }}</td>
-            <td>{{ exam.reason || '-' }}</td>
-            <td>
-              <button pButton type="button" icon="pi pi-pencil" class="p-button-sm p-button-primary"
-        (click)="openEditDialog(exam)"></button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+<div class="table-responsive">
+  <table *ngIf="!loading && filteredExams.length > 0" 
+         class="table table-hover table-striped table-bordered">
+    <thead class="table-primary">
+      <tr>
+        <th>رقم الملف</th>
+        <th>البصر</th>
+        <th>اختبار الألوان</th>
+        <th>نوع الانكسار</th>
+        <th>قيمة الانكسار</th>
+        <th>الأمراض الأخرى</th>
+        <th>السبب</th>
+        <th>النتيجة</th>
+        <th>إجراءات</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let exam of filteredExams">
+        <td>{{ exam.applicantFileNumber }}</td>
+        <td>{{ exam.vision }}</td>
+        <td>{{ exam.colorTest }}</td>
+        <td>{{ exam.refractionType?.description }}</td>
+        <td>{{ exam.refractionValue }}</td>
+        <td>{{ exam.otherDiseases || '-' }}</td>
+        <td>{{ exam.reason || '-' }}</td>
+        <td>
+          <span [ngClass]="{
+            'badge bg-success': exam.result?.description === 'لائق',
+            'badge bg-danger': exam.result?.description === 'غير لائق',
+            'badge bg-warning text-dark': exam.result?.description === 'مؤجل'
+          }">
+            {{ exam.result?.description }}
+          </span>
+        </td>
+        <td>
+          <button pButton type="button" icon="pi pi-pencil" class="p-button-sm p-button-primary"
+                  (click)="openEditDialog(exam)"></button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Pagination -->
+<div class="d-flex justify-content-center mt-3" *ngIf="!loading && filteredExams.length > 0">
+  <nav>
+    <ul class="pagination">
+      <li class="page-item" [class.disabled]="page === 1">
+        <a class="page-link" (click)="changePage(page - 1)">السابق</a>
+      </li>
+      <li class="page-item active">
+        <span class="page-link">{{ page }}</span>
+      </li>
+      <li class="page-item" [class.disabled]="filteredExams.length < pageSize">
+        <a class="page-link" (click)="changePage(page + 1)">التالي</a>
+      </li>
+    </ul>
+  </nav>
+</div>
 
     <div *ngIf="!loading && filteredExams.length === 0" class="alert alert-info text-center mt-3">
       لا توجد فحوص مؤجلة

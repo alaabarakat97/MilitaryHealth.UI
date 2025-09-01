@@ -1,3 +1,8 @@
+export interface Result {
+  resultID: number;
+  description: string;
+}
+
 export interface InternalExam {
   internalExamID?: number;
   applicantFileNumber: string;
@@ -14,4 +19,5 @@ export interface InternalExam {
   skin: string;
   resultID: number;
   reason?: string;
+  result?: Result; // ✅ أضفنا هذا الحقل
 }

@@ -1,18 +1,21 @@
 <div class="container mt-5">
   <div class="card card-body shadow-sm">
-    <h3 class="mb-4">الفحوص العظمية المؤجلة</h3>
+    <h3 class="mb-4">الفحوص العظمية</h3>
 
+    <!-- بحث -->
     <div class="search-box mb-3">
-      <input type="text" placeholder="ابحث برقم الملف ..." class="form-control"
+      <input type="text" placeholder="ابحث في كل الحقول ..." class="form-control"
              [(ngModel)]="searchTerm" (input)="onSearchChange()" />
     </div>
 
+    <!-- تحميل -->
     <div *ngIf="loading" class="text-center mb-3">
       <div class="spinner-border text-primary" role="status">
         <span class="visually-hidden">جارٍ التحميل...</span>
       </div>
     </div>
 
+    <!-- جدول النتائج -->
     <div class="table-responsive">
       <table *ngIf="!loading && filteredExams.length > 0" class="table table-hover table-striped table-bordered">
         <thead class="table-primary">
@@ -30,10 +33,16 @@
             <td>{{ exam.applicantFileNumber }}</td>
             <td>{{ exam.musculoskeletal }}</td>
             <td>{{ exam.neurologicalSurgery }}</td>
-            <td>{{ exam.result?.description }}</td>
+            <td>
+              <span [ngClass]="{
+                'badge bg-success': exam.result?.description === 'لائق',
+                'badge bg-danger': exam.result?.description === 'غير لائق',
+                'badge bg-warning text-dark': exam.result?.description === 'مؤجل'
+              }">{{ exam.result?.description }}</span>
+            </td>
             <td>{{ exam.reason || '-' }}</td>
             <td>
-              <button pButton type="button" label="تعديل" icon="pi pi-pencil" class="p-button-sm p-button-primary"
+              <button pButton type="button" icon="pi pi-pencil" class="p-button-sm p-button-primary"
                       (click)="openEditDialog(exam)"></button>
             </td>
           </tr>
@@ -41,10 +50,28 @@
       </table>
     </div>
 
-    <div *ngIf="!loading && filteredExams.length === 0" class="alert alert-info text-center mt-3">
-      لا توجد فحوصات عظمية مؤجلة
+    <!-- Pagination -->
+    <div class="d-flex justify-content-center mt-3" *ngIf="!loading && filteredExams.length > 0">
+      <nav>
+        <ul class="pagination">
+          <li class="page-item" [class.disabled]="page === 1">
+            <a class="page-link" (click)="changePage(page - 1)">السابق</a>
+          </li>
+          <li class="page-item active">
+            <span class="page-link">{{ page }}</span>
+          </li>
+          <li class="page-item" [class.disabled]="filteredExams.length < pageSize">
+            <a class="page-link" (click)="changePage(page + 1)">التالي</a>
+          </li>
+        </ul>
+      </nav>
     </div>
 
+    <div *ngIf="!loading && filteredExams.length === 0" class="alert alert-info text-center mt-3">
+      لا توجد فحوص عظمية
+    </div>
+
+    <!-- نافذة التعديل -->
     <app-edit-orthopedic-exam
       *ngIf="selectedExam"
       [exam]="selectedExam"

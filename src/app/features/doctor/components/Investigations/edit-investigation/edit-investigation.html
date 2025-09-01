@@ -1,0 +1,43 @@
+<div class="dialog-backdrop" (click)="onCancel()">
+  <div class="dialog-card" (click)="$event.stopPropagation()">
+    <div class="dialog-header"><h3>تعديل التحليل</h3></div>
+
+    <form [formGroup]="investigationForm" (ngSubmit)="onSubmit()" class="dialog-form">
+
+      <div class="form-group">
+        <label>رقم ملف المريض</label>
+        <input [value]="investigation.applicantFileNumber" disabled />
+      </div>
+
+      <div class="form-group">
+        <label>نوع التحليل</label>
+        <input formControlName="type" placeholder="أدخل نوع التحليل" />
+      </div>
+
+      <div class="form-group">
+        <label>النتيجة</label>
+        <textarea formControlName="result" placeholder="أدخل النتيجة"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>الحالة</label>
+        <select formControlName="status">
+          <option value="مؤجل">مؤجل</option>
+          <option value="مكتمل">مكتمل</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>ملف مرفق</label>
+        <input type="file" (change)="onFileSelected($event)" />
+        <div *ngIf="uploadedPath">{{ uploadedPath }}</div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-success" [disabled]="loading">حفظ</button>
+        <button type="button" class="btn btn-secondary" (click)="onCancel()">إلغاء</button>
+      </div>
+
+    </form>
+  </div>
+</div>

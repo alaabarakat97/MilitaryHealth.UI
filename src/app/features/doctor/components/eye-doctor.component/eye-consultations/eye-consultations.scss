@@ -1,0 +1,77 @@
+.eye-consultations {
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  .title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+  }
+
+  .loading {
+    font-size: 1rem;
+    color: #007bff;
+    text-align: center;
+    margin: 20px 0;
+  }
+
+  .consultation-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    background-color: #fff;
+
+    thead {
+      background-color: #34495e;
+      color: #fff;
+      text-align: center;
+
+      th {
+        padding: 10px 12px;
+        font-weight: 500;
+        border-bottom: 2px solid #2c3e50;
+      }
+    }
+
+    tbody {
+      tr {
+        text-align: center;
+        transition: background 0.2s;
+
+        &:nth-child(even) {
+          background-color: #f8f9fa;
+        }
+
+        &:hover {
+          background-color: #e0f7fa;
+        }
+
+        td {
+          padding: 10px 12px;
+          border-bottom: 1px solid #ddd;
+
+          a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 500;
+
+            &:hover {
+              text-decoration: underline;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .no-data {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 1rem;
+    color: #7f8c8d;
+  }
+}

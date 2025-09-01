@@ -54,7 +54,6 @@ export class Login {
 
         // ربط الدور مع التخصص للعرض في sidebar
         this.roleWithSpecialty = `Doctor_${specialty.charAt(0).toUpperCase() + specialty.slice(1)}`;
-        console.log(specialty);
         // التوجيه حسب التخصص
         switch (specialty) {
           case 'عيون':

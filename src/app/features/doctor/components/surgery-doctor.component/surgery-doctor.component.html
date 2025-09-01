@@ -1,15 +1,26 @@
 <div class="container mt-3">
+  <!-- البحث -->
   <div class="mb-3">
     <app-search-applicant (applicantSelected)="onApplicantSelected($event)"></app-search-applicant>
   </div>
 
-  <div class="mb-3">
-    <button class="btn btn-primary" (click)="addSurgicalExam()">
-      إضافة فحص جراحي
-    </button>
+  <!-- الأزرار -->
+  <div class="button-group mb-3">
+    <button class="btn btn-primary" (click)="addSurgicalExam()">إضافة فحص جراحي</button>
+    <button class="btn btn-warning" (click)="addConsultation()">طلب استشارة</button>
+    <button class="btn btn-success" (click)="addInvestigation()">طلب تحليل</button>
   </div>
 
-  <div *ngIf="showExamForm && selectedApplicant">
+  <!-- الفورمات -->
+  <div *ngIf="showExamForm && selectedApplicant" class="mt-3">
     <app-surgical-exam-form [applicantFileNumber]="selectedApplicant!.fileNumber"></app-surgical-exam-form>
+  </div>
+
+  <div *ngIf="showConsultationForm && selectedApplicant" class="mt-3">
+    <app-consultation-form [applicantFileNumber]="selectedApplicant!.fileNumber" specializationID="4"></app-consultation-form>
+  </div>
+
+  <div *ngIf="showInvestigationForm && selectedApplicant" class="mt-3">
+    <app-investigation-form [applicantFileNumber]="selectedApplicant!.fileNumber" specializationID="4"></app-investigation-form>
   </div>
 </div>
