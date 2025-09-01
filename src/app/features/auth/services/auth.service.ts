@@ -8,6 +8,7 @@ import { JWTPayload } from '../../../core/models/jwt-payload.model';
 import { UserRoles } from '../../../core/models/enums/user-roles.enum';
 import { environment } from '../../../../environments/environment';
 import { ToastrService } from 'ngx-toastr';
+import { ApiResponse } from '../../applicants/models/api-response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -90,11 +91,21 @@ export class AuthService {
   getRefreshToken(): string | null {
     return localStorage.getItem(this.REFRESH_KEY);
   }
+  logout(): Observable<ApiResponse<any>> {
+    const refreshToken = this.getRefreshToken();
+    this.clearStorage();
+    return this.http.post<ApiResponse<any>>(
+      `${environment.apiUrl}/api/auth/logout`,
+      { refreshToken }
+    );
+  }
 
-  logout(): void {
+  clearStorage() {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.REFRESH_KEY);
+    localStorage.clear();
   }
+
 
   getDecodedToken(): JWTPayload | null {
     const token = this.getToken();

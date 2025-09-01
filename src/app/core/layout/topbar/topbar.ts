@@ -11,21 +11,31 @@ import { CommonModule } from '@angular/common';
   styleUrl: './topbar.scss'
 })
 export class Topbar {
- @Output() toggleSidebar = new EventEmitter<void>();
- userRole: string | null = null;
-showUserMenu = false;
-   constructor(private auth: AuthService, private router: Router) {
+  @Output() toggleSidebar = new EventEmitter<void>();
+  userRole: string | null = null;
+
+  showUserMenu = false;
+  constructor(private auth: AuthService, private router: Router) {
     this.userRole = this.auth.getUserRole();
   }
 
-  
+
   onToggleSidebar() {
     this.toggleSidebar.emit();
   }
 
 
-   logout() {
-    localStorage.clear();
-    this.router.navigate(['/login']);
+  logout() {
+    this.auth.logout().subscribe({
+      next: () => {
+        this.auth.clearStorage();
+        this.router.navigate(['/login']);
+      },
+      error: (err) => {
+        console.error('Logout failed:', err);
+        this.auth.clearStorage();
+        this.router.navigate(['/login']);
+      }
+    });
   }
 }
