@@ -10,6 +10,7 @@ import { ApplicantService } from '../../services/applicant.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { tap } from 'rxjs';
 import { ApiResponse } from '../../../../shared/models/paged-response.model';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-add-edit-applicant',
@@ -32,7 +33,8 @@ export class AddEditApplicant implements OnInit {
     private maritalStatusService: MaritalStatusService,
     private applicantService: ApplicantService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -96,7 +98,7 @@ preventMinus(event: KeyboardEvent) {
       this.applicantService.createApplicant(applicantModel)
         .pipe(
           tap((res: ApiResponse<ApplicantModel>) => {
-            console.log(res);
+            this.toastr.success("تمت إضافة منتسب بنجاح");
             this.success = true;
             this.applicantId = res.data.applicantID;
             this.router.navigate(['reception/applicants/', res.data.applicantID]);
