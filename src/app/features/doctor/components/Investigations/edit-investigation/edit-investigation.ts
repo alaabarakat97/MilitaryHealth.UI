@@ -4,6 +4,7 @@ import { AuthService } from '../../../../auth/services/auth.service';
 import { Investigation } from '../../../models/investigation.model';
 import { EyeExamService } from '../../../services/eye-exam.service';
 import { CommonModule } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-edit-investigation',
@@ -12,7 +13,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './edit-investigation.scss'
 })
 export class EditInvestigation {
- @Input() investigation!: Investigation;
+  @Input() investigation!: Investigation;
   @Output() dialogClosed = new EventEmitter<boolean>();
 
   investigationForm!: FormGroup;
@@ -22,7 +23,8 @@ export class EditInvestigation {
   constructor(
     private fb: FormBuilder,
     private service: EyeExamService,
-    private authService: AuthService
+    private authService: AuthService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -38,15 +40,22 @@ export class EditInvestigation {
   onFileSelected(event: any) {
     const file: File = event.target.files[0];
     if (file) {
-      this.service.uploadFile(file).subscribe(path => {
-        this.uploadedPath = path;
-        this.investigationForm.patchValue({ attachment: path });
+      this.service.uploadFile(file).subscribe({
+        next: (path) => {
+          this.uploadedPath = path;
+          this.investigationForm.patchValue({ attachment: path });
+          this.toastr.success('تم رفع الملف بنجاح', 'نجاح');
+        },
+        error: () => this.toastr.error('فشل رفع الملف', 'خطأ')
       });
     }
   }
 
   onSubmit() {
-    if (!this.investigation || this.investigationForm.invalid) return alert('يرجى تعبئة الحقول المطلوبة');
+    if (!this.investigation || this.investigationForm.invalid) {
+      this.toastr.warning('يرجى تعبئة الحقول المطلوبة', 'تنبيه');
+      return;
+    }
 
     this.loading = true;
     const doctorID = Number(this.authService.getDoctorId());
@@ -62,8 +71,15 @@ export class EditInvestigation {
     };
 
     this.service.updateInvestigation(this.investigation.investigationID!, updatedInv).subscribe({
-      next: () => { alert('✅ تم التحديث'); this.loading = false; this.dialogClosed.emit(true); },
-      error: () => { alert('❌ فشل التحديث'); this.loading = false; }
+      next: () => {
+        this.toastr.success('تم التحديث بنجاح', 'نجاح');
+        this.loading = false;
+        this.dialogClosed.emit(true);
+      },
+      error: () => {
+        this.toastr.error('فشل التحديث', 'خطأ');
+        this.loading = false;
+      }
     });
   }
 

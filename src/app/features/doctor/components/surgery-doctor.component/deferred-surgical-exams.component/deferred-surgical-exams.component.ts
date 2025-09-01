@@ -5,6 +5,7 @@ import { SurgicalExam } from '../../../models/surgical-exam-post.model';
 import { EditSurgicalExam } from '../edit-surgical-exam/edit-surgical-exam';
 import { SurgicalExamService } from '../../../services/surgical-exam.service';
 import { FormsModule } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-deferred-surgical-exams',
@@ -14,7 +15,7 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./deferred-surgical-exams.component.scss']
 })
 export class DeferredSurgicalExamsComponent implements OnInit {
- exams: SurgicalExam[] = [];
+  exams: SurgicalExam[] = [];
   filteredExams: SurgicalExam[] = [];
   loading = true;
   selectedExam: SurgicalExam | null = null;
@@ -25,7 +26,10 @@ export class DeferredSurgicalExamsComponent implements OnInit {
   pageSize = 10;
   totalItems = 0;
 
-  constructor(private examService: SurgicalExamService) {}
+  constructor(
+    private examService: SurgicalExamService,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {
     this.loadExams();
@@ -45,7 +49,10 @@ export class DeferredSurgicalExamsComponent implements OnInit {
         this.page = page;
         this.loading = false;
       },
-      error: err => { console.error(err); this.loading = false; }
+      error: err => { 
+        this.toastr.error('حدث خطأ أثناء تحميل الفحوصات الجراحية'); 
+        this.loading = false; 
+      }
     });
   }
 

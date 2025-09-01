@@ -4,12 +4,13 @@ import { OrthopedicExamService } from '../../../services/orthopedic-exam.service
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { EditInvestigation } from '../../Investigations/edit-investigation/edit-investigation';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-orthopedic-investigations-list',
   imports: [CommonModule, FormsModule, EditInvestigation],
   templateUrl: './orthopedic-investigations-list.html',
-  styleUrl: './orthopedic-investigations-list.scss'
+  styleUrls: ['./orthopedic-investigations-list.scss']
 })
 export class OrthopedicInvestigationsList implements OnInit {
   investigations: Investigation[] = [];
@@ -18,7 +19,10 @@ export class OrthopedicInvestigationsList implements OnInit {
   loading = false;
   searchText = '';
 
-  constructor(private service: OrthopedicExamService) {}
+  constructor(
+    private service: OrthopedicExamService,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit() {
     this.loadInvestigations();
@@ -33,7 +37,7 @@ export class OrthopedicInvestigationsList implements OnInit {
         this.loading = false; 
       },
       error: err => { 
-        console.error(err); 
+        this.toastr.error('حدث خطأ أثناء تحميل الفحوصات'); 
         this.loading = false; 
       }
     });

@@ -4,10 +4,11 @@ import { InternalExamService } from '../../../services/internal-exam.service';
 import { EditConsultation } from '../../Consultations/edit-consultation/edit-consultation';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-internal-consultations-list',
-  imports: [CommonModule, FormsModule,EditConsultation],
+  imports: [CommonModule, FormsModule, EditConsultation],
   templateUrl: './internal-consultations-list.html',
   styleUrl: './internal-consultations-list.scss'
 })
@@ -18,15 +19,25 @@ export class InternalConsultationsList implements OnInit {
   loading = false;
   searchText = '';
 
-  constructor(private service: InternalExamService) {}
+  constructor(
+    private service: InternalExamService,
+    private toastr: ToastrService // ✅ toastr
+  ) {}
 
   ngOnInit() { this.loadConsultations(); }
 
   loadConsultations() {
     this.loading = true;
     this.service.getInternalConsultations().subscribe({
-      next: res => { this.consultations = res; this.filteredConsultations = [...res]; this.loading = false; },
-      error: err => { console.error(err); this.loading = false; }
+      next: res => {
+        this.consultations = res;
+        this.filteredConsultations = [...res];
+        this.loading = false;
+      },
+      error: () => {
+        this.toastr.error('❌ فشل جلب الاستشارات', 'خطأ');
+        this.loading = false;
+      }
     });
   }
 
@@ -48,9 +59,9 @@ export class InternalConsultationsList implements OnInit {
     this.selectedConsultation = null;
     if (updated) this.loadConsultations();
   }
-  openFile(attachment: string) {
-  if (!attachment) return;
-  window.open(`${this.service.uploadUrl}/${attachment}`, '_blank');
-}
 
+  openFile(attachment: string) {
+    if (!attachment) return;
+    window.open(`${this.service.uploadUrl}/${attachment}`, '_blank');
+  }
 }

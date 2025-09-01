@@ -4,28 +4,27 @@ import { OrthopedicExamService } from '../../../services/orthopedic-exam.service
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
-import { OrthopedicExamFormComponent } from '../orthopedic-exam-form.component/orthopedic-exam-form.component';
 import { EditOrthopedicExamComponent } from '../edit-orthopedic-exam.component/edit-orthopedic-exam.component';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-deferred-orthopedi-exams-component',
-  imports: [CommonModule, FormsModule, ButtonModule,EditOrthopedicExamComponent],
+  imports: [CommonModule, FormsModule, ButtonModule, EditOrthopedicExamComponent],
   templateUrl: './deferred-orthopedi-exams-component.html',
   styleUrl: './deferred-orthopedi-exams-component.scss'
 })
-export class DeferredOrthopediExamsComponent  implements OnInit {
-exams: OrthopedicExam[] = [];
+export class DeferredOrthopediExamsComponent implements OnInit {
+  exams: OrthopedicExam[] = [];
   filteredExams: OrthopedicExam[] = [];
   loading = true;
   selectedExam: OrthopedicExam | null = null;
   searchTerm: string = '';
 
-  // Pagination
   page = 1;
   pageSize = 10;
   totalItems = 0;
 
-  constructor(private examService: OrthopedicExamService) {}
+  constructor(private examService: OrthopedicExamService, private toastr: ToastrService) {}
 
   ngOnInit(): void {
     this.loadExams();
@@ -41,7 +40,10 @@ exams: OrthopedicExam[] = [];
         this.page = page;
         this.loading = false;
       },
-      error: err => { console.error(err); this.loading = false; }
+      error: err => { 
+        this.toastr.error('❌ فشل تحميل الفحوص', 'خطأ');
+        this.loading = false; 
+      }
     });
   }
 

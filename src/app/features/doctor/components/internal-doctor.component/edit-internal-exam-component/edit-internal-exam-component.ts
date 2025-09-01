@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angula
 import { InternalExam } from '../../../models/internal-exam.model';
 import { InternalExamService } from '../../../services/internal-exam.service';
 import { CommonModule } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-edit-internal-exam-component',
@@ -11,7 +12,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './edit-internal-exam-component.scss'
 })
 export class EditInternalExamComponent {
- @Input() exam!: InternalExam;
+  @Input() exam!: InternalExam;
   @Output() dialogClosed = new EventEmitter<boolean>();
 
   examForm!: FormGroup;
@@ -19,7 +20,8 @@ export class EditInternalExamComponent {
 
   constructor(
     private fb: FormBuilder,
-    private examService: InternalExamService
+    private examService: InternalExamService,
+    private toastr: ToastrService // ✅ أضفنا toastr
   ) {}
 
   ngOnInit(): void {
@@ -45,41 +47,39 @@ export class EditInternalExamComponent {
           this.examForm.patchValue({ resultID: this.exam.resultID });
         }
       },
-      error: (err) => console.error('❌ Error loading results', err)
+      error: () => this.toastr.error('❌ فشل جلب قائمة النتائج', 'خطأ')
     });
   }
 
-onSubmit() {
-  if (!this.exam?.internalExamID) {
-    alert('❌ لا يمكن التحديث: لا يوجد ID للفحص');
-    return;
-  }
-
-  if (this.examForm.invalid) {
-    alert('❌ يرجى تعبئة جميع الحقول المطلوبة');
-    return;
-  }
-
-  const updatedExam: InternalExam = {
-    ...this.exam,
-    ...this.examForm.value,
-    resultID: Number(this.examForm.value.resultID) // تأكد من أنه رقم
-  };
-
-  const examID: number = updatedExam.internalExamID!;
-
-  this.examService.updateInternalExam(examID, updatedExam).subscribe({
-    next: () => {
-      alert('✅ تم التحديث بنجاح');
-      this.exam.resultID = updatedExam.resultID; // فقط تحديث resultID
-      this.dialogClosed.emit(true);
-    },
-    error: (err) => {
-      console.error('❌ API error:', err);
-      alert('❌ فشل التحديث، تحقق من ID أو الاتصال بالإنترنت');
+  onSubmit() {
+    if (!this.exam?.internalExamID) {
+      this.toastr.error('❌ لا يمكن التحديث: لا يوجد ID للفحص', 'خطأ');
+      return;
     }
-  });
-}
+
+    if (this.examForm.invalid) {
+      this.toastr.warning('❌ يرجى تعبئة جميع الحقول المطلوبة', 'تنبيه');
+      return;
+    }
+
+    const updatedExam: InternalExam = {
+      ...this.exam,
+      ...this.examForm.value,
+      resultID: Number(this.examForm.value.resultID)
+    };
+
+    const examID: number = updatedExam.internalExamID!;
+
+    this.examService.updateInternalExam(examID, updatedExam).subscribe({
+      next: () => {
+        this.toastr.success('✅ تم التحديث بنجاح', 'نجاح');
+        this.exam.resultID = updatedExam.resultID;
+        this.dialogClosed.emit(true);
+      },
+      error: () => this.toastr.error('❌ فشل التحديث، تحقق من ID أو الاتصال بالإنترنت', 'خطأ')
+    });
+  }
+
   onCancel() {
     this.dialogClosed.emit(false);
   }

@@ -33,7 +33,7 @@ export class EyeExamService {
 
   //  جلب أنواع الانكسار
   getRefractionTypes(): Observable<any> {
-    return this.http.get(`${environment.apiUrl}/RefractionTypes`, {
+    return this.http.get(`${environment.apiUrl}/api/RefractionTypes`, {
       headers: this.getAuthHeaders(),
     });
   }

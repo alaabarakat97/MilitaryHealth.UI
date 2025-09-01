@@ -1,9 +1,10 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { OrthopedicExam } from '../../../models/orthopedic-exam.model';
 import { OrthopedicExamService } from '../../../services/orthopedic-exam.service';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-edit-orthopedic-exam',
@@ -18,7 +19,11 @@ export class EditOrthopedicExamComponent implements OnInit {
   examForm!: FormGroup;
   results: any[] = [];
 
-  constructor(private fb: FormBuilder, private examService: OrthopedicExamService) {}
+  constructor(
+    private fb: FormBuilder,
+    private examService: OrthopedicExamService,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {
     this.examForm = this.fb.group({
@@ -35,18 +40,18 @@ export class EditOrthopedicExamComponent implements OnInit {
           this.examForm.patchValue({ resultID: this.exam.resultID });
         }
       },
-      error: err => console.error('❌ Error loading results', err)
+      error: err => this.toastr.error('❌ فشل جلب النتائج', 'خطأ')
     });
   }
 
   onSubmit() {
     if (!this.exam?.orthopedicExamID) {
-      alert('❌ لا يمكن التحديث: لا يوجد ID للفحص');
+      this.toastr.error('❌ لا يمكن التحديث: لا يوجد ID للفحص', 'خطأ');
       return;
     }
 
     if (this.examForm.invalid) {
-      alert('❌ يرجى تعبئة جميع الحقول المطلوبة');
+      this.toastr.warning('يرجى تعبئة جميع الحقول المطلوبة', 'تحذير');
       return;
     }
 
@@ -58,15 +63,12 @@ export class EditOrthopedicExamComponent implements OnInit {
 
     this.examService.updateOrthopedicExam(this.exam.orthopedicExamID, updatedExam).subscribe({
       next: () => {
-        alert('✅ تم التحديث بنجاح');
+        this.toastr.success('✅ تم التحديث بنجاح', 'نجاح');
         this.exam.resultID = updatedExam.resultID;
         this.exam.result = this.results.find(r => r.resultID === updatedExam.resultID);
         this.dialogClosed.emit(true);
       },
-      error: err => {
-        console.error('❌ API error:', err);
-        alert('❌ فشل التحديث');
-      }
+      error: err => this.toastr.error('❌ فشل التحديث', 'خطأ')
     });
   }
 

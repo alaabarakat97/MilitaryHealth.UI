@@ -5,12 +5,18 @@ import { SearchApplicantComponent } from '../../../applicants/components/search-
 import { CommonModule } from '@angular/common';
 import { ConsultationFormComponent } from '../Consultations/consultation-form.component/consultation-form.component';
 import { InvestigationForm } from '../Investigations/investigation-form/investigation-form';
-
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-eye-doctor',
   standalone: true,
-  imports: [SearchApplicantComponent,InvestigationForm, EyeExamForm,CommonModule,ConsultationFormComponent],
+  imports: [
+    SearchApplicantComponent,
+    InvestigationForm,
+    EyeExamForm,
+    CommonModule,
+    ConsultationFormComponent
+  ],
   templateUrl: './eye-doctor.component.html',
   styleUrls: ['./eye-doctor.component.scss']
 })
@@ -19,6 +25,8 @@ export class EyeDoctorComponent {
   showExamForm = false;
   showConsultationForm = false;
   showAnalysisForm = false;
+
+  constructor(private toastr: ToastrService) {} // ✅ أضفنا toastr
 
   // 🔹 يلتقط المريض من SearchApplicantComponent
   onApplicantSelected(applicant: Applicant) {
@@ -30,7 +38,7 @@ export class EyeDoctorComponent {
 
   addEyeExam() {
     if (!this.selectedApplicant) {
-      alert('يرجى البحث عن مريض أولاً');
+      this.toastr.warning('يرجى البحث عن مريض أولاً', 'تنبيه');
       return;
     }
     this.showExamForm = true;
@@ -40,7 +48,7 @@ export class EyeDoctorComponent {
 
   requestConsultation() {
     if (!this.selectedApplicant) {
-      alert('يرجى البحث عن مريض أولاً');
+      this.toastr.warning('يرجى البحث عن مريض أولاً', 'تنبيه');
       return;
     }
     this.showConsultationForm = true;
@@ -49,7 +57,12 @@ export class EyeDoctorComponent {
   }
 
   requestAnalysis() {
-    if (!this.selectedApplicant) { alert('يرجى البحث عن مريض أولاً'); return; }
-    this.showAnalysisForm = true; this.showExamForm = false; this.showConsultationForm = false;
+    if (!this.selectedApplicant) {
+      this.toastr.warning('يرجى البحث عن مريض أولاً', 'تنبيه');
+      return;
+    }
+    this.showAnalysisForm = true;
+    this.showExamForm = false;
+    this.showConsultationForm = false;
   }
 }

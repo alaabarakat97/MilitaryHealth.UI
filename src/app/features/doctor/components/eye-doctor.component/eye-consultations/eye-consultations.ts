@@ -5,24 +5,27 @@ import { EyeExamService } from '../../../services/eye-exam.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { EditConsultation } from '../../Consultations/edit-consultation/edit-consultation';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-eye-consultations',
   standalone: true,
-  imports: [CommonModule, FormsModule,EditConsultation],
+  imports: [CommonModule, FormsModule, EditConsultation],
   templateUrl: './eye-consultations.html',
   styleUrls: ['./eye-consultations.scss']
 })
 export class EyeConsultations implements OnInit {
- consultations: Consultation[] = [];
+  consultations: Consultation[] = [];
   filteredConsultations: Consultation[] = [];
   selectedConsultation: Consultation | null = null;
   loading: boolean = false;
   searchText: string = '';
-  environment = environment; 
+  environment = environment;  
 
-
-  constructor(private service: EyeExamService) {}
+  constructor(
+    private service: EyeExamService,
+    private toastr: ToastrService // ✅ أضفنا Toastr
+  ) {}
 
   ngOnInit(): void {
     this.loadConsultations();
@@ -36,19 +39,21 @@ export class EyeConsultations implements OnInit {
         this.filteredConsultations = [...this.consultations];
         this.loading = false;
       },
-      error: (err) => {
-        console.error('❌ خطأ في جلب الاستشارات:', err);
+      error: () => {
+        this.toastr.error('❌ خطأ في جلب الاستشارات', 'خطأ');
         this.loading = false;
       }
     });
   }
 
-
-openFile(attachment: string) {
-  if (!attachment) return;
-  const url = `${environment.apiUrl}/${attachment}`; 
-  window.open(url, '_blank');
-}
+  openFile(attachment: string) {
+    if (!attachment) {
+      this.toastr.warning('⚠️ لا يوجد ملف مرفق', 'تنبيه');
+      return;
+    }
+    const url = `${environment.apiUrl}/${attachment}`;
+    window.open(url, '_blank');
+  }
 
   filterConsultations() {
     const search = this.searchText.trim().toLowerCase();
@@ -69,7 +74,9 @@ openFile(attachment: string) {
 
   onDialogClose(updated: boolean) {
     this.selectedConsultation = null;
-    if (updated) this.loadConsultations();
+    if (updated) {
+      this.toastr.success('✅ تم تحديث الاستشارة بنجاح', 'نجاح');
+      this.loadConsultations();
+    }
   }
-
 }

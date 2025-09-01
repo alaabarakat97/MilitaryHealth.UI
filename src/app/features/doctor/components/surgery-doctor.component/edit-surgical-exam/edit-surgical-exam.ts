@@ -3,14 +3,15 @@ import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angula
 import { SurgicalExam } from '../../../models/surgical-exam-post.model';
 import { CommonModule } from '@angular/common';
 import { SurgicalExamService } from '../../../services/surgical-exam.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-edit-surgical-exam',
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './edit-surgical-exam.html',
-  styleUrl: './edit-surgical-exam.scss'
+  styleUrls: ['./edit-surgical-exam.scss']
 })
-export class EditSurgicalExam implements OnInit{
+export class EditSurgicalExam implements OnInit {
   @Input() exam!: SurgicalExam;  
   @Output() dialogClosed = new EventEmitter<boolean>(); 
 
@@ -19,11 +20,11 @@ export class EditSurgicalExam implements OnInit{
 
   constructor(
     private fb: FormBuilder,
-    private examService: SurgicalExamService
+    private examService: SurgicalExamService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
-    // بناء الفورم
     this.examForm = this.fb.group({
       generalSurgery: [this.exam?.generalSurgery || '', Validators.required],
       urinarySurgery: [this.exam?.urinarySurgery || '', Validators.required],
@@ -41,18 +42,18 @@ export class EditSurgicalExam implements OnInit{
           this.examForm.patchValue({ resultID: this.exam.resultID });
         }
       },
-      error: (err) => console.error('❌ Error loading results', err)
+      error: () => this.toastr.error('❌ فشل تحميل النتائج')
     });
   }
 
   onSubmit() {
     if (!this.exam?.surgicalExamID) {
-      alert('❌ لا يمكن التحديث: لا يوجد ID للفحص');
+      this.toastr.error('❌ لا يمكن التحديث: لا يوجد ID للفحص');
       return;
     }
 
     if (this.examForm.invalid) {
-      alert('❌ يرجى تعبئة جميع الحقول المطلوبة');
+      this.toastr.warning('❌ يرجى تعبئة جميع الحقول المطلوبة');
       return;
     }
 
@@ -65,17 +66,13 @@ export class EditSurgicalExam implements OnInit{
     const examID: number = updatedExam.surgicalExamID!;
 
     this.examService.updateSurgicalExam(examID, updatedExam).subscribe({
-      next: (res) => {
-        alert('✅ تم التحديث بنجاح');
-        // تحديث الكائن المحلي للعرض فورًا
+      next: () => {
+        this.toastr.success('✅ تم التحديث بنجاح');
         this.exam.result = this.results.find(r => r.resultID === updatedExam.resultID);
         this.exam.resultID = updatedExam.resultID; 
         this.dialogClosed.emit(true);
       },
-      error: (err) => {
-        console.error('❌ API error:', err);
-        alert('❌ فشل التحديث، تحقق من ID أو الاتصال بالإنترنت');
-      }
+      error: () => this.toastr.error('❌ فشل التحديث، تحقق من ID أو الاتصال بالإنترنت')
     });
   }
 

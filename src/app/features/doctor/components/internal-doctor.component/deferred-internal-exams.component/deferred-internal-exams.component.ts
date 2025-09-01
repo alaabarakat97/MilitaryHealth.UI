@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { EditInternalExamComponent } from '../edit-internal-exam-component/edit-internal-exam-component';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-deferred-internal-exams.component',
@@ -13,18 +14,20 @@ import { EditInternalExamComponent } from '../edit-internal-exam-component/edit-
   styleUrl: './deferred-internal-exams.component.scss'
 })
 export class DeferredInternalExamsComponent {
-exams: InternalExam[] = [];
+  exams: InternalExam[] = [];
   filteredExams: InternalExam[] = [];
   loading = true;
   selectedExam: InternalExam | null = null;
   searchTerm: string = '';
 
-  // 👇 خصائص التقليب
   page = 1;
   pageSize = 10;
   totalItems = 0;
 
-  constructor(private examService: InternalExamService) {}
+  constructor(
+    private examService: InternalExamService,
+    private toastr: ToastrService // ✅ أضفنا toastr
+  ) {}
 
   ngOnInit(): void {
     this.loadExams();
@@ -36,13 +39,11 @@ exams: InternalExam[] = [];
       next: (data: any) => {
         this.exams = data;
         this.filteredExams = [...this.exams];
-
-        // مؤقت: يمكن تعديل totalItems حسب ما يرجعه السيرفر
-        this.totalItems = this.page * this.pageSize; 
+        this.totalItems = this.page * this.pageSize; // يمكن تعديل حسب ما يرجعه السيرفر
         this.loading = false;
       },
-      error: (err) => { 
-        console.error(err); 
+      error: () => { 
+        this.toastr.error('❌ فشل في جلب الفحوصات الداخلية', 'خطأ');
         this.loading = false; 
       }
     });
@@ -76,6 +77,10 @@ exams: InternalExam[] = [];
       exam.reason?.toLowerCase().includes(term) ||
       exam.result?.description?.toLowerCase().includes(term)
     );
+
+    if (this.filteredExams.length === 0 && term) {
+      this.toastr.info('⚠️ لا توجد نتائج مطابقة للبحث', 'معلومة');
+    }
   }
 
   openEditDialog(exam: InternalExam) { 
@@ -84,6 +89,9 @@ exams: InternalExam[] = [];
 
   onDialogClose(updated: boolean) {
     this.selectedExam = null;
-    if (updated) this.loadExams();
+    if (updated) {
+      this.toastr.success('✅ تم تحديث الفحص بنجاح', 'نجاح');
+      this.loadExams();
+    }
   }
 }

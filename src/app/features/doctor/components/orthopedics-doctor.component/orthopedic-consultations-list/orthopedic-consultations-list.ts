@@ -7,9 +7,10 @@ import { EditConsultation } from '../../Consultations/edit-consultation/edit-con
 
 @Component({
   selector: 'app-orthopedic-consultations-list',
+  standalone: true,
   imports: [CommonModule, FormsModule, EditConsultation],
   templateUrl: './orthopedic-consultations-list.html',
-  styleUrl: './orthopedic-consultations-list.scss'
+  styleUrls: ['./orthopedic-consultations-list.scss'] // ✅ صحيح: styleUrls وليس styleUrl
 })
 export class OrthopedicConsultationsList implements OnInit {
   consultations: Consultation[] = [];
@@ -27,13 +28,13 @@ export class OrthopedicConsultationsList implements OnInit {
   loadConsultations() {
     this.loading = true;
     this.service.getOrthopedicConsultations().subscribe({
-      next: res => { 
+      next: (res: Consultation[]) => { 
         this.consultations = res; 
         this.filteredConsultations = [...res]; 
         this.loading = false; 
       },
-      error: err => { 
-        console.error(err); 
+      error: (err) => { 
+        console.error('❌ Error loading consultations:', err); 
         this.loading = false; 
       }
     });
@@ -41,14 +42,18 @@ export class OrthopedicConsultationsList implements OnInit {
 
   filterConsultations() {
     const search = this.searchText.trim().toLowerCase();
-    this.filteredConsultations = !search ? [...this.consultations] :
-      this.consultations.filter(c =>
-        c.applicantFileNumber.toLowerCase().includes(search) ||
-        c.consultationType.toLowerCase().includes(search) ||
-        c.referredDoctor.toLowerCase().includes(search) ||
-        c.result.toLowerCase().includes(search) ||
-        (c.doctor?.fullName?.toLowerCase().includes(search) ?? false)
-      );
+    if (!search) {
+      this.filteredConsultations = [...this.consultations];
+      return;
+    }
+
+    this.filteredConsultations = this.consultations.filter(c =>
+      c.applicantFileNumber.toLowerCase().includes(search) ||
+      c.consultationType.toLowerCase().includes(search) ||
+      c.referredDoctor.toLowerCase().includes(search) ||
+      c.result.toLowerCase().includes(search) ||
+      (c.doctor?.fullName?.toLowerCase().includes(search) ?? false)
+    );
   }
 
   openEditDialog(c: Consultation) {
