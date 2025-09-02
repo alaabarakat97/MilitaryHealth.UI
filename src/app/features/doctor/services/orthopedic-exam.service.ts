@@ -99,7 +99,7 @@ getByFileNumber(fileNumber: string): Observable<OrthopedicExam | null> {
       const items: OrthopedicExam[] = res.data?.items || [];
       // 🔹 نبحث عن فحص سابق لنفس الملف ونفس عيادة العظام فقط (specializationID = 2)
       const exam = items.find(e => 
-        e.applicantFileNumber === fileNumber && e.doctor?.specializationID === 2
+        e.applicantFileNumber === fileNumber && e.doctor?.specializationID === 4
       );
       return exam || null;
     })

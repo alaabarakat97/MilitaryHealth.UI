@@ -105,7 +105,7 @@ getByFileNumber(fileNumber: string): Observable<InternalExam | null> {
       const items: InternalExam[] = res.data?.items || [];
       // 🔹 نبحث عن فحص لنفس الملف ونفس التخصص (العيادة الداخلية specializationID = 2)
       const exam = items.find(e => 
-        e.applicantFileNumber === fileNumber && e.doctor?.specializationID === 1
+        e.applicantFileNumber === fileNumber && e.doctor?.specializationID === 2
       );
       return exam || null;
     }),
