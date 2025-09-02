@@ -97,7 +97,7 @@ getByFileNumber(fileNumber: string): Observable<OrthopedicExam | null> {
   return this.http.get<any>(url, { headers: this.getAuthHeaders() }).pipe(
     map(res => {
       const items: OrthopedicExam[] = res.data?.items || [];
-      // 🔹 نبحث عن فحص سابق لنفس الملف ونفس عيادة العظام فقط (specializationID = 2)
+      // 🔹 نبحث عن فحص سابق لنفس الملف ونفس عيادة العظام فقط (specializationID = 4)
       const exam = items.find(e => 
         e.applicantFileNumber === fileNumber && e.doctor?.specializationID === 4
       );

@@ -43,45 +43,39 @@
     @if (role === 'Doctor_Eye') {
       <li routerLink="/doctor/eye">
         <i class="pi pi-eye"></i>
-        <span>عمليات الفحص العيني   </span>
-        <span>عمليات الفحص العيني   </span>
+        <span>إنشاء فحص عين للمريض</span>
       </li>
       <li routerLink="/doctor/eye/deferred">
         <i class="pi pi-file"></i>
-        <span> الفحص العيني </span>
+        <span>الفحوص العين</span>
       </li>
        <li routerLink="/doctor/eye/consultations">
         <i class="pi pi-file"></i>
-        <span> الاستشارات التخصصية  </span>
+        <span>الاستشارات العين</span>
       </li>
-       <li routerLink="/doctor/eye/investigations">
+      <li routerLink="/doctor/eye/investigations">
         <i class="pi pi-file"></i>
-        <span> الاستقصاءات الشعاعية والمخبرية </span>
+        <span>التحاليل العين</span>
       </li>
-    
     }
 
     <!-- Doctor Internal -->
     @if (role === 'Doctor_Internal') {
       <li routerLink="/doctor/internal">
         <i class="pi pi-stethoscope"></i>
-        <span>عمليات الفحوصات الباطنية   </span>
-        <span>عمليات الفحوصات الباطنية   </span>
+        <span>الفحوصات الداخلية للمريض</span>
       </li>
       <li routerLink="/doctor/internal/medications">
         <i class="pi pi-medkit"></i>
-        <span>الفحص  الباطني    </span>
-        <span>الفحص  الباطني    </span>
+        <span>الفحوص الداخلية</span>
       </li>
        <li routerLink="/doctor/internal/consultations">
     <i class="pi pi-clock"></i>
-    <span> الاستشارات التخصصية </span>
-    <span> الاستشارات التخصصية </span>
+    <span>استشارات الداخلية</span>
   </li>
   <li routerLink="/doctor/internal/investigations">
     <i class="pi pi-clock"></i>
-    <span> الاستقصاءات الشعاعية والمخبرية </span>
-    <span> الاستقصاءات الشعاعية والمخبرية </span>
+    <span>التحاليل الداخلية</span>
   </li>
     }
 
@@ -89,23 +83,19 @@
 @if (role === 'Doctor_Orthopedics') {
   <li routerLink="/doctor/orthopedics">
     <i class="pi pi-heart"></i>
-    <span>  عمليات الجراحة العظمية </span>
-    <span>  عمليات الجراحة العظمية </span>
+    <span>الفحوصات العظمية للمريض</span>
   </li>
   <li routerLink="/doctor/orthopedics/deferred">
     <i class="pi pi-refresh"></i>
-    <span>فحص الجراحة العظمية </span>
-    <span>فحص الجراحة العظمية </span>
+    <span>الفحوص العظمية</span>
   </li>
   <li routerLink="/doctor/orthopedics/consultations">
     <i class="pi pi-stethoscope"></i>
-    <span> الاستشارات التخصصية </span>
-    <span> الاستشارات التخصصية </span>
+    <span>الاستشارات العظمية</span>
   </li>
   <li routerLink="/doctor/orthopedics/investigations">
     <i class="pi pi-flask"></i>
-    <span> الاستقصاءات الشعاعية والمخبرية </span>
-    <span> الاستقصاءات الشعاعية والمخبرية </span>
+    <span>التحاليل العظمية</span>
   </li>
 }
 
@@ -118,18 +108,15 @@
   </li>
   <li routerLink="/doctor/surgery/records">
     <i class="pi pi-file"></i>
-    <span> الفحص الجراحي</span>
-    <span> الفحص الجراحي</span>
+    <span>الفحوص الجراحية</span>
   </li>
   <li routerLink="/doctor/surgery/consultations">
     <i class="pi pi-comments"></i>
-    <span>الاستشارات التخصصية  </span>
-    <span>الاستشارات التخصصية  </span>
+    <span>الاستشارات الجراحية</span>
   </li>
   <li routerLink="/doctor/surgery/investigations">
     <i class="pi pi-search"></i>
-    <span> الاستقصاءات الشعاعية والمخبرية </span>
-    <span> الاستقصاءات الشعاعية والمخبرية </span>
+    <span>التحاليل الجراحية</span>
   </li>
 }
 
