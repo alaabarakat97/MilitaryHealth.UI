@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Applicant } from '../../../applicants/models/applicant.model';
 import { EyeExamForm } from './eye-exam-form/eye-exam-form';
 import { SearchApplicantComponent } from '../../../applicants/components/search-applican/search-applicant.component.ts/search-applicant.component';
@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { ConsultationFormComponent } from '../Consultations/consultation-form.component/consultation-form.component';
 import { InvestigationForm } from '../Investigations/investigation-form/investigation-form';
 import { ToastrService } from 'ngx-toastr';
+import { EyeExamService } from '../../services/eye-exam.service';
 
 @Component({
   selector: 'app-eye-doctor',
@@ -21,48 +22,52 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./eye-doctor.component.scss']
 })
 export class EyeDoctorComponent {
-  selectedApplicant: Applicant | null = null;
-  showExamForm = false;
-  showConsultationForm = false;
-  showAnalysisForm = false;
+ selectedApplicant: Applicant | null = null;
+    hasEyeExam = false; 
 
-  constructor(private toastr: ToastrService) {} // ✅ أضفنا toastr
+  @ViewChild('eyeExamForm') eyeExamForm!: EyeExamForm;
+  @ViewChild('consultationForm') consultationForm!: ConsultationFormComponent;
+  @ViewChild('investigationForm') investigationForm!: InvestigationForm;
 
-  // 🔹 يلتقط المريض من SearchApplicantComponent
-  onApplicantSelected(applicant: Applicant) {
-    this.selectedApplicant = applicant;
-    this.showExamForm = false;
-    this.showConsultationForm = false;
-    this.showAnalysisForm = false;
+  constructor(private toastr: ToastrService, private eyeExamService :EyeExamService) {}
+
+
+
+onApplicantSelected(applicant: Applicant) {
+  this.selectedApplicant = applicant;
+
+  if (applicant?.fileNumber) {
+    // جلب الفحوص السابقة
+    this.eyeExamService.getByFileNumber(applicant.fileNumber).subscribe({
+      next: (exam) => this.hasEyeExam = !!exam,
+      error: () => this.hasEyeExam = false
+    });
   }
+}
+
+
 
   addEyeExam() {
     if (!this.selectedApplicant) {
       this.toastr.warning('يرجى البحث عن مريض أولاً', 'تنبيه');
       return;
     }
-    this.showExamForm = true;
-    this.showConsultationForm = false;
-    this.showAnalysisForm = false;
+    this.eyeExamForm.openModal();
   }
 
-  requestConsultation() {
+  addConsultation() {
     if (!this.selectedApplicant) {
       this.toastr.warning('يرجى البحث عن مريض أولاً', 'تنبيه');
       return;
     }
-    this.showConsultationForm = true;
-    this.showExamForm = false;
-    this.showAnalysisForm = false;
+    this.consultationForm.openModal();
   }
 
-  requestAnalysis() {
+  addInvestigation() {
     if (!this.selectedApplicant) {
       this.toastr.warning('يرجى البحث عن مريض أولاً', 'تنبيه');
       return;
     }
-    this.showAnalysisForm = true;
-    this.showExamForm = false;
-    this.showConsultationForm = false;
+    this.investigationForm.openModal();
   }
 }

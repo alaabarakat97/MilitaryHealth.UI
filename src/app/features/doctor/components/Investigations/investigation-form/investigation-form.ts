@@ -1,24 +1,27 @@
-import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AuthService } from '../../../../auth/services/auth.service';
-import { Investigation } from '../../../models/investigation.model';
-import { EyeExamService } from '../../../services/eye-exam.service';
-import { ToastrService } from 'ngx-toastr';
+  import { CommonModule } from '@angular/common';
+  import { Component, EventEmitter, Input, Output } from '@angular/core';
+  import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+  import { AuthService } from '../../../../auth/services/auth.service';
+  import { Investigation } from '../../../models/investigation.model';
+  import { EyeExamService } from '../../../services/eye-exam.service';
+  import { ToastrService } from 'ngx-toastr';
 
-@Component({
-  selector: 'app-investigation-form',
-  imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './investigation-form.html',
-  styleUrl: './investigation-form.scss'
-})
-export class InvestigationForm {
-  @Input() applicantFileNumber: string = '';
+  @Component({
+    selector: 'app-investigation-form',
+    imports: [CommonModule, ReactiveFormsModule],
+    templateUrl: './investigation-form.html',
+    styleUrl: './investigation-form.scss'
+  })
+  export class InvestigationForm {
+ @Input() applicantFileNumber: string = '';
+  @Input() showModal: boolean = false;  // 🔹 مهم جدًا
   @Input() investigationToEdit?: Investigation;
+  @Output() close = new EventEmitter<void>();
 
   investigationForm!: FormGroup;
   uploadedPath: string | null = null;
-  loading: boolean = false;
+  
+  previewUrl: string | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -37,21 +40,30 @@ export class InvestigationForm {
 
     if (this.investigationToEdit?.attachment) {
       this.uploadedPath = this.investigationToEdit.attachment;
+      this.previewUrl = this.uploadedPath;
     }
+  }
+
+  openModal() { this.showModal = true; }
+  closeModal() { 
+    this.showModal = false; 
+    this.close.emit();
   }
 
   onFileSelected(event: any) {
     const file: File = event.target.files[0];
     if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => this.previewUrl = e.target.result;
+      reader.readAsDataURL(file);
+
       this.service.uploadFile(file).subscribe({
         next: (path) => {
           this.uploadedPath = path;
           this.investigationForm.patchValue({ attachment: path });
-          this.toastr.success('تم رفع الملف بنجاح', 'نجاح');
+          this.toastr.success('✅ تم رفع الملف بنجاح', 'نجاح');
         },
-        error: (err) => {
-          this.toastr.error('فشل رفع الملف', 'خطأ');
-        }
+        error: () => this.toastr.error('❌ فشل رفع الملف', 'خطأ')
       });
     }
   }
@@ -64,7 +76,7 @@ export class InvestigationForm {
 
     const doctorID = Number(this.authService.getDoctorId());
     if (!doctorID) {
-      this.toastr.error('لم يتم العثور على معرف الطبيب', 'خطأ');
+      this.toastr.error('❌ لم يتم العثور على معرف الطبيب', 'خطأ');
       return;
     }
 
@@ -78,7 +90,6 @@ export class InvestigationForm {
       attachment: this.uploadedPath ?? ''
     };
 
-    this.loading = true;
 
     const request$ = this.investigationToEdit
       ? this.service.updateInvestigation(this.investigationToEdit.investigationID!, investigation)
@@ -92,11 +103,11 @@ export class InvestigationForm {
         );
         this.investigationForm.reset();
         this.uploadedPath = null;
-        this.loading = false;
+        this.previewUrl = null;
+        this.closeModal();
       },
-      error: (err) => {
+      error: () => {
         this.toastr.error('فشل في العملية', 'خطأ');
-        this.loading = false;
       }
     });
   }

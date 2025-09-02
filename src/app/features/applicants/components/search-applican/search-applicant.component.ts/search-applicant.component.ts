@@ -20,9 +20,10 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./search-applicant.component.scss']
 })
 export class SearchApplicantComponent implements OnInit {
-  searchForm!: FormGroup;
+ searchForm!: FormGroup;
   applicant: Applicant | null = null;
   loading = false;
+  responseMessage: string | null = null;   // أضفنا المتغير
 
   @Output() applicantSelected = new EventEmitter<Applicant>();
 
@@ -41,7 +42,7 @@ export class SearchApplicantComponent implements OnInit {
   onSearch(): void {
     const fileNumber = this.searchForm.value.fileNumber?.trim();
     if (!fileNumber) {
-      this.toastr.warning('يرجى إدخال رقم الملف أولاً');
+      this.responseMessage = 'يرجى إدخال رقم الملف أولاً';
       return;
     }
 
@@ -50,8 +51,9 @@ export class SearchApplicantComponent implements OnInit {
       next: (applicant) => {
         this.applicant = applicant || null;
         if (!this.applicant) {
-          this.toastr.warning('لم يتم العثور على منتسب بهذا الرقم');
+          this.responseMessage = 'لم يتم العثور على منتسب بهذا الرقم';
         } else {
+          this.responseMessage = null; // مسح الرسالة عند النجاح
           this.applicantSelected.emit(this.applicant);
         }
         this.loading = false;
@@ -59,7 +61,7 @@ export class SearchApplicantComponent implements OnInit {
       error: () => {
         this.applicant = null;
         this.loading = false;
-        this.toastr.error('حدث خطأ أثناء جلب البيانات');
+        this.responseMessage = 'حدث خطأ أثناء جلب البيانات';
       }
     });
   }

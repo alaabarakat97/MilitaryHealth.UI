@@ -1,34 +1,58 @@
-<div class="card p-3">
-  <h4>إضافة فحص العظام</h4>
-  <form [formGroup]="examForm" (ngSubmit)="onSubmit()">
-
-    <div class="mb-3">
-      <label class="form-label">الجهاز العضلي الهيكلي</label>
-      <input type="text" class="form-control" formControlName="musculoskeletal" />
+<!-- المودال -->
+<div class="modal-backdrop" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    
+    <!-- الهيدر -->
+    <div class="modal-header">
+      <h5 class="modal-title">إضافة فحص العظام</h5>
+      <button type="button" class="btn-close" (click)="closeModal()"></button>
     </div>
 
-    <div class="mb-3">
-      <label class="form-label">الجراحة العصبية</label>
-      <input type="text" class="form-control" formControlName="neurologicalSurgery" />
-    </div>
+    <!-- البودي -->
+    <div class="modal-body">
+      <form [formGroup]="examForm" (ngSubmit)="onSubmit()" novalidate>
+        
+        <!-- القسم الأول -->
+        <h6 class="section-title">البيانات الطبية</h6>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">الجهاز العضلي الهيكلي <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" formControlName="musculoskeletal"
+              [class.is-invalid]="examForm.get('musculoskeletal')?.invalid && examForm.get('musculoskeletal')?.touched" />
+          </div>
 
-    <div class="mb-3">
-      <label class="form-label">نتيجة الفحص</label>
-      <select class="form-select" formControlName="resultID">
-        <option value="">اختر النتيجة</option>
-        <option *ngFor="let r of results" [value]="r.resultID">
-          {{ r.description }}
-        </option>
-      </select>
-    </div>
+          <div class="col-md-6">
+            <label class="form-label">الجراحة العصبية <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" formControlName="neurologicalSurgery"
+              [class.is-invalid]="examForm.get('neurologicalSurgery')?.invalid && examForm.get('neurologicalSurgery')?.touched" />
+          </div>
+        </div>
 
-    <div class="mb-3">
-      <label class="form-label">السبب</label>
-      <textarea class="form-control" formControlName="reason"></textarea>
-    </div>
+        <!-- القسم الثاني -->
+        <h6 class="section-title mt-4">نتيجة الفحص</h6>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">النتيجة <span class="text-danger">*</span></label>
+            <select class="form-select" formControlName="resultID"
+              [class.is-invalid]="examForm.get('resultID')?.invalid && examForm.get('resultID')?.touched">
+              <option *ngFor="let r of results" [value]="r.resultID">{{ r.description }}</option>
+            </select>
+          </div>
 
-    <button type="submit" class="btn btn-success" [disabled]="examForm.invalid">
-      حفظ فحص العظام
-    </button>
-  </form>
+          <div class="col-md-6">
+            <label class="form-label">السبب</label>
+            <textarea class="form-control" formControlName="reason" rows="2"></textarea>
+          </div>
+        </div>
+
+        <!-- زر الحفظ -->
+        <div class="d-flex gap-2 mt-4">
+          <button type="submit" class="btn btn-success px-4" [disabled]="examForm.invalid || loading">
+            <i class="pi pi-save me-2 ms-2"></i> حفظ فحص العظام
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
 </div>

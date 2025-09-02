@@ -12,7 +12,9 @@ export interface Applicant {
   tattoo?: boolean;
   distinctiveMarks?: string;
   maritalStatus?: MaritalStatus;
+  hasInternalExam?: boolean;   // ✅ أضفناها
 }
+
 
 export interface MaritalStatus {
   maritalStatusID: number;

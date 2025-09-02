@@ -1,16 +1,98 @@
-.card {
-  border-radius: 0.75rem;
+.applicant-card {
+  border-radius: 1rem;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  font-size: 0.9rem; /* تصغير النص قليلاً */
 }
 
-h4 {
+.applicant-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.bg-gradient-primary {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+}
+
+.card-header {
   font-weight: 600;
+  padding: 0.8rem 1rem;
+  font-size: 1rem;
 }
 
-.form-label {
+.list-group-item {
+  font-size: 0.88rem; /* تصغير النص */
+  color: #444;
+  padding: 0.5rem 0.75rem; /* تقليل الحشو */
+  border: none;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+}
+
+.list-group-item:last-child {
+  border-bottom: none;
+}
+
+.list-group-item strong {
+  color: #222;
   font-weight: 500;
-  color: #374151;
 }
 
-button.btn-primary {
+.list-group-item span {
+  font-weight: 400;
+  color: #555;
+}
+
+.row.g-3 > .col-md-6 {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+/* تحسين التباعد داخل الكارد */
+.card-body {
+  padding: 1rem;
+}
+
+/* تحسين البحث */
+.search-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.search-btn {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: #fff;
   font-weight: 600;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 4px 10px rgba(0, 91, 187, 0.2);
+  font-size: 0.9rem;
+}
+
+.search-btn:hover {
+  background: linear-gradient(135deg, #0062cc, #004085);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0, 91, 187, 0.3);
+}
+
+.search-input {
+  flex: 1;
+  border-radius: 0.5rem;
+  border: 1px solid #ddd;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.88rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.search-input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  outline: none;
 }

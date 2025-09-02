@@ -1,14 +1,18 @@
+import { ToastModule } from 'primeng/toast';
 import { Component, OnInit } from '@angular/core';
 import { Consultation } from '../../../models/consultation.model';
 import { OrthopedicExamService } from '../../../services/orthopedic-exam.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { EditConsultation } from '../../Consultations/edit-consultation/edit-consultation';
+import { environment } from '../../../../../../environments/environment';
+import { ToastrService } from 'ngx-toastr';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-orthopedic-consultations-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, EditConsultation],
+  imports: [CommonModule,ButtonModule, FormsModule, EditConsultation],
   templateUrl: './orthopedic-consultations-list.html',
   styleUrls: ['./orthopedic-consultations-list.scss'] // ✅ صحيح: styleUrls وليس styleUrl
 })
@@ -19,7 +23,7 @@ export class OrthopedicConsultationsList implements OnInit {
   loading = false;
   searchText = '';
 
-  constructor(private service: OrthopedicExamService) {}
+  constructor(private service: OrthopedicExamService,private toastr: ToastrService) {}
 
   ngOnInit() {
     this.loadConsultations();
@@ -34,7 +38,6 @@ export class OrthopedicConsultationsList implements OnInit {
         this.loading = false; 
       },
       error: (err) => { 
-        console.error('❌ Error loading consultations:', err); 
         this.loading = false; 
       }
     });
@@ -65,8 +68,12 @@ export class OrthopedicConsultationsList implements OnInit {
     if (updated) this.loadConsultations();
   }
 
-  openFile(attachment: string) {
-    if (!attachment) return;
-    window.open(`${this.service.uploadUrl}/${attachment}`, '_blank');
+    openFile(attachment: string) {
+    if (!attachment) {
+      this.toastr.warning('⚠️ لا يوجد ملف مرفق', 'تنبيه');
+      return;
+    }
+    const url = `${environment.apiUrl}/${attachment}`;
+    window.open(url, '_blank');
   }
 }

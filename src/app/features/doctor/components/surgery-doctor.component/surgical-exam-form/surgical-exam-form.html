@@ -1,44 +1,77 @@
-<div class="card p-3">
-  <h4>إضافة فحص جراحي</h4>
-  <form [formGroup]="examForm" (ngSubmit)="onSubmit()">
 
-    <div class="mb-3">
-      <label class="form-label">جراحة عامة</label>
-      <input type="text" class="form-control" formControlName="generalSurgery" />
+<!-- المودال -->
+<div class="modal-backdrop" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+
+    <!-- الهيدر -->
+    <div class="modal-header">
+      <h5 class="modal-title">إضافة فحص جراحي</h5>
+      <button type="button" class="btn-close" (click)="closeModal()"></button>
     </div>
 
-    <div class="mb-3">
-      <label class="form-label">جراحة المسالك البولية</label>
-      <input type="text" class="form-control" formControlName="urinarySurgery" />
-    </div>
+    <!-- البودي -->
+    <div class="modal-body">
+      <form [formGroup]="examForm" (ngSubmit)="onSubmit()" novalidate>
 
-    <div class="mb-3">
-      <label class="form-label">جراحة الأوعية الدموية</label>
-      <input type="text" class="form-control" formControlName="vascularSurgery" />
-    </div>
+        <!-- القسم الأول: البيانات الجراحية -->
+        <h6 class="section-title">البيانات الجراحية</h6>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">جراحة عامة <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" formControlName="generalSurgery"
+              [class.is-invalid]="examForm.get('generalSurgery')?.invalid && examForm.get('generalSurgery')?.touched"
+              placeholder="أدخل نوع الجراحة العامة"/>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">جراحة المسالك البولية <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" formControlName="urinarySurgery"
+              [class.is-invalid]="examForm.get('urinarySurgery')?.invalid && examForm.get('urinarySurgery')?.touched"
+              placeholder="أدخل نوع جراحة المسالك"/>
+          </div>
+        </div>
 
-    <div class="mb-3">
-      <label class="form-label">جراحة الصدر</label>
-      <input type="text" class="form-control" formControlName="thoracicSurgery" />
-    </div>
+        <div class="row g-3 mt-3">
+          <div class="col-md-6">
+            <label class="form-label">جراحة الأوعية الدموية <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" formControlName="vascularSurgery"
+              [class.is-invalid]="examForm.get('vascularSurgery')?.invalid && examForm.get('vascularSurgery')?.touched"
+              placeholder="أدخل نوع جراحة الأوعية الدموية"/>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">جراحة الصدر <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" formControlName="thoracicSurgery"
+              [class.is-invalid]="examForm.get('thoracicSurgery')?.invalid && examForm.get('thoracicSurgery')?.touched"
+              placeholder="أدخل نوع جراحة الصدر"/>
+          </div>
+        </div>
 
-    <div class="mb-3">
-      <label class="form-label">نتيجة الفحص</label>
-      <select class="form-select" formControlName="resultID">
-        <option value="">اختر النتيجة</option>
-        <option *ngFor="let r of results" [value]="r.resultID">
-          {{ r.description }}
-        </option>
-      </select>
-    </div>
+        <!-- القسم الثاني: نتيجة الفحص -->
+        <h6 class="section-title mt-4">نتيجة الفحص</h6>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label">النتيجة <span class="text-danger">*</span></label>
+              <select class="form-select" formControlName="resultID"
+                [class.is-invalid]="examForm.get('resultID')?.invalid && examForm.get('resultID')?.touched">
+                <option value="" disabled selected>اختر النتيجة</option>
+                <option *ngFor="let r of results" [value]="r.resultID">{{ r.description }}</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">السبب (اختياري)</label>
+              <textarea class="form-control" formControlName="reason" rows="3" placeholder="يمكنك كتابة السبب إن وجد"></textarea>
+            </div>
+          </div>
+        </div>
 
-    <div class="mb-3">
-      <label class="form-label">السبب</label>
-      <textarea class="form-control" formControlName="reason"></textarea>
-    </div>
+        <!-- زر الحفظ -->
+        <div class="text-end mt-4">
+          <button type="submit" class="btn btn-success px-4" [disabled]="examForm.invalid || loading">
+            {{ loading ? 'جاري الحفظ...' : 'حفظ الفحص الجراحي' }}
+          </button>
+        </div>
 
-    <button type="submit" class="btn btn-success" [disabled]="examForm.invalid">
-      حفظ الفحص الجراحي
-    </button>
-  </form>
+      </form>
+    </div>
+  </div>
 </div>

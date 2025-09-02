@@ -138,6 +138,20 @@ addInvestigation(investigation: Investigation) {
     });
   }
 
-
+// EyeExamService.ts
+getByFileNumber(fileNumber: string): Observable<EyeExam | null> {
+  const url = `${this.apiUrl}?sortDesc=false&page=1&pageSize=1000`;
+  return this.http.get<any>(url, { headers: this.getAuthHeaders() }).pipe(
+    map(res => {
+      const items: EyeExam[] = res.data?.items || [];
+      // 🔹 نبحث عن أي فحص سابق لنفس رقم الملف وبالتخصص (specializationID = 1)
+      const exam = items.find(e => 
+        e.applicantFileNumber?.toString() === fileNumber.toString() &&
+        ( e.doctor?.specializationID === 1)
+      );
+      return exam || null;
+    })
+  );
+}
 
 }

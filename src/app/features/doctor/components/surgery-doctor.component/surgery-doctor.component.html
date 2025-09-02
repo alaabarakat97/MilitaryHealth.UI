@@ -1,26 +1,39 @@
 <div class="container mt-3">
-  <!-- البحث -->
+  <!-- البحث عن المريض -->
   <div class="mb-3">
     <app-search-applicant (applicantSelected)="onApplicantSelected($event)"></app-search-applicant>
   </div>
 
-  <!-- الأزرار -->
-  <div class="button-group mb-3">
-    <button class="btn btn-primary" (click)="addSurgicalExam()">إضافة فحص جراحي</button>
-    <button class="btn btn-warning" (click)="addConsultation()">طلب استشارة</button>
-    <button class="btn btn-success" (click)="addInvestigation()">طلب تحليل</button>
-  </div>
+  <!-- أزرار الإضافة -->
+  <div class="button-group mb-3 d-flex gap-2">
+  <button 
+    class="btn btn-primary" 
+    (click)="addSurgicalExam()" 
+    *ngIf="!hasSurgicalExam && selectedApplicant">
+    إضافة فحص جراحي
+  </button>
 
-  <!-- الفورمات -->
-  <div *ngIf="showExamForm && selectedApplicant" class="mt-3">
-    <app-surgical-exam-form [applicantFileNumber]="selectedApplicant!.fileNumber"></app-surgical-exam-form>
-  </div>
+  <button class="btn btn-warning" (click)="addConsultation()" *ngIf="selectedApplicant">
+    طلب استشارة
+  </button>
+  <button class="btn btn-success" (click)="addInvestigation()" *ngIf="selectedApplicant">
+    طلب تحليل
+  </button>
+</div>
 
-  <div *ngIf="showConsultationForm && selectedApplicant" class="mt-3">
-    <app-consultation-form [applicantFileNumber]="selectedApplicant!.fileNumber" specializationID="4"></app-consultation-form>
-  </div>
+  <!-- المكونات -->
+  <app-surgical-exam-form
+    *ngIf="selectedApplicant"
+    [applicantFileNumber]="selectedApplicant.fileNumber">
+  </app-surgical-exam-form>
 
-  <div *ngIf="showInvestigationForm && selectedApplicant" class="mt-3">
-    <app-investigation-form [applicantFileNumber]="selectedApplicant!.fileNumber" specializationID="4"></app-investigation-form>
-  </div>
+  <app-consultation-form
+    *ngIf="selectedApplicant"
+    [applicantFileNumber]="selectedApplicant.fileNumber">
+  </app-consultation-form>
+
+  <app-investigation-form
+    *ngIf="selectedApplicant"
+    [applicantFileNumber]="selectedApplicant.fileNumber">
+  </app-investigation-form>
 </div>

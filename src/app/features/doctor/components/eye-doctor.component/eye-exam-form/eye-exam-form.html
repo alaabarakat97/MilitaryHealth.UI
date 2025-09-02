@@ -1,56 +1,83 @@
-<!-- components/eye-doctor/eye-exam-form/eye-exam-form.html -->
-<div class="card p-3">
-  <h4>إضافة فحص للعين</h4>
-  <form [formGroup]="examForm" (ngSubmit)="onSubmit()">
+<!-- المودال -->
+<div class="modal-backdrop" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
 
-    <div class="mb-3">
-      <label class="form-label">حدة البصر</label>
-      <input type="text" class="form-control" formControlName="vision" />
+    <!-- الهيدر -->
+    <div class="modal-header">
+      <h5 class="modal-title">إضافة فحص عيني</h5>
+      <button type="button" class="btn-close" (click)="closeModal()"></button>
     </div>
 
-    <div class="mb-3">
-      <label class="form-label">فحص الألوان</label>
-      <input type="text" class="form-control" formControlName="colorTest" />
+    <!-- البودي -->
+    <div class="modal-body">
+      <form [formGroup]="examForm" (ngSubmit)="onSubmit()" novalidate>
+
+        <!-- القسم الأول -->
+        <h6 class="section-title">البيانات الطبية</h6>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">القدرة البصر <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" formControlName="vision"
+              [class.is-invalid]="examForm.get('vision')?.invalid && examForm.get('vision')?.touched" />
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">اختبار الألوان <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" formControlName="colorTest"
+              [class.is-invalid]="examForm.get('colorTest')?.invalid && examForm.get('colorTest')?.touched" />
+          </div>
+        </div>
+
+        <div class="row g-3 mt-3">
+          <div class="col-md-6">
+            <label class="form-label">أسواء الانكسار <span class="text-danger">*</span></label>
+            <select class="form-select" formControlName="refractionTypeID"
+              [class.is-invalid]="examForm.get('refractionTypeID')?.invalid && examForm.get('refractionTypeID')?.touched">
+              <option *ngFor="let type of refractionTypes" [value]="type.refractionTypeID">
+                {{ type.description }}
+              </option>
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">نسبة الانكسار <span class="text-danger">*</span></label>
+            <input type="number" class="form-control" formControlName="refractionValue"
+              [class.is-invalid]="examForm.get('refractionValue')?.invalid && examForm.get('refractionValue')?.touched" />
+          </div>
+        </div>
+
+        <div class="row g-3 mt-3">
+          <div class="col-md-6">
+            <label class="form-label">أمراض أخرى</label>
+            <input type="text" class="form-control" formControlName="otherDiseases" />
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">نتيجة الفحص <span class="text-danger">*</span></label>
+            <select class="form-select" formControlName="resultID"
+              [class.is-invalid]="examForm.get('resultID')?.invalid && examForm.get('resultID')?.touched">
+              <option *ngFor="let r of results" [value]="r.resultID">
+                {{ r.description }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row g-3 mt-3">
+          <div class="col-12">
+            <label class="form-label">السبب</label>
+            <textarea class="form-control" formControlName="reason" rows="2"></textarea>
+          </div>
+        </div>
+
+        <!-- زر الحفظ -->
+        <div class="d-flex gap-2 mt-4">
+          <button type="submit" class="btn btn-success px-4" [disabled]="examForm.invalid || loading">
+            <i class="pi pi-save me-2 ms-2"></i> حفظ فحص العيون
+          </button>
+        </div>
+
+      </form>
     </div>
-
-  <div class="mb-3">
-  <label class="form-label">نوع الانكسار</label>
-  <select class="form-select" formControlName="refractionTypeID">
-    <option value="">اختر النوع</option>
-    <option *ngFor="let type of refractionTypes" [value]="type.refractionTypeID">
-      {{ type.description }}
-    </option>
-  </select>
-</div>
-
-    <div class="mb-3">
-      <label class="form-label">قيمة الانكسار</label>
-      <input type="number" class="form-control" formControlName="refractionValue" />
-    </div>
-
-    <div class="mb-3">
-    <label class="form-label">أمراض أخرى</label>
-    <input type="text" class="form-control" formControlName="otherDiseases" />
-    </div>
-
-
-  <div class="mb-3">
-  <label class="form-label">نتيجة الفحص</label>
-  <select class="form-select" formControlName="resultID">
-    <option value="">اختر النتيجة</option>
-    <option *ngFor="let r of results" [value]="r.resultID">
-      {{ r.description }}
-    </option>
-  </select>
-</div>
-
-    <div class="mb-3">
-      <label class="form-label">السبب</label>
-      <textarea class="form-control" formControlName="reason"></textarea>
-    </div>
-
-    <button type="submit" class="btn btn-success" [disabled]="examForm.invalid">
-      حفظ الفحص
-    </button>
-  </form>
+  </div>
 </div>

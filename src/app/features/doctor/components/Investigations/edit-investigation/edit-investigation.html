@@ -1,43 +1,56 @@
-<div class="dialog-backdrop" (click)="onCancel()">
-  <div class="dialog-card" (click)="$event.stopPropagation()">
-    <div class="dialog-header"><h3>تعديل التحليل</h3></div>
+<!-- المودال -->
+<div class="modal-backdrop" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal-content card" (click)="$event.stopPropagation()">
 
-    <form [formGroup]="investigationForm" (ngSubmit)="onSubmit()" class="dialog-form">
+    <!-- الهيدر -->
+    <div class="modal-header">
+      <h5 class="modal-title">تعديل التحليل</h5>
+      <button type="button" class="btn-close" (click)="closeModal()"></button>
+    </div>
 
-      <div class="form-group">
-        <label>رقم ملف المريض</label>
-        <input [value]="investigation.applicantFileNumber" disabled />
-      </div>
+    <!-- البودي -->
+    <div class="modal-body">
+      <form [formGroup]="investigationForm" (ngSubmit)="onSubmit()" novalidate>
 
-      <div class="form-group">
-        <label>نوع التحليل</label>
-        <input formControlName="type" placeholder="أدخل نوع التحليل" />
-      </div>
+        <!-- القسم الأول: بيانات التحليل -->
+        <h6 class="section-title">بيانات التحليل</h6>
+        <div class="row g-3">
+          <!-- نوع التحليل مخفي -->
+          <input type="hidden" formControlName="type" />
 
-      <div class="form-group">
-        <label>النتيجة</label>
-        <textarea formControlName="result" placeholder="أدخل النتيجة"></textarea>
-      </div>
+          <div class="col-md-12">
+            <label class="form-label">النتيجة</label>
+            <textarea class="form-control" formControlName="result" rows="3" placeholder="أدخل النتيجة"></textarea>
+          </div>
+        </div>
 
-      <div class="form-group">
-        <label>الحالة</label>
-        <select formControlName="status">
-          <option value="مؤجل">مؤجل</option>
-          <option value="مكتمل">مكتمل</option>
-        </select>
-      </div>
+        <div class="row g-3 mt-3">
+          <div class="col-md-6">
+            <label class="form-label">حالة التحليل</label>
+            <input class="form-control" formControlName="status" readonly />
+          </div>
 
-      <div class="form-group">
-        <label>ملف مرفق</label>
-        <input type="file" (change)="onFileSelected($event)" />
-        <div *ngIf="uploadedPath">{{ uploadedPath }}</div>
-      </div>
+          <div class="col-md-6">
+            <label class="form-label">ملف مرفق</label>
+            <input type="file" class="form-control" (change)="onFileSelected($event)">
+          </div>
+        </div>
 
-      <div class="form-actions">
-        <button type="submit" class="btn btn-success" [disabled]="loading">حفظ</button>
-        <button type="button" class="btn btn-secondary" (click)="onCancel()">إلغاء</button>
-      </div>
+        <!-- معاينة الملف -->
+        <div *ngIf="previewUrl" class="preview-container mt-3">
+          <p class="text-muted"> معاينة الملف:</p>
+          <img [src]="previewUrl" alt="معاينة المرفق" class="img-fluid rounded border" style="max-height: 200px;">
+        </div>
 
-    </form>
+        <!-- الأزرار -->
+        <div class="text-end mt-4">
+          <button type="submit" class="btn btn-success px-4" [disabled]="loading">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm"></span>
+            حفظ التعديل
+          </button>
+        </div>
+
+      </form>
+    </div>
   </div>
 </div>
