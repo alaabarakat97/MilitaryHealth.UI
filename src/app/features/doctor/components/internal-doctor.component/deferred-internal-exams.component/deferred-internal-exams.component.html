@@ -52,7 +52,7 @@
             <td>{{ exam.reason || '-' }}</td>
             <td>
               <span [ngClass]="{
-                'badge bg-success': exam.result?.description === 'لائق',
+                'badge bg-success': exam.result?.description === 'مقبول',
                 'badge bg-danger': exam.result?.description === 'مرفوض',
                 'badge bg-warning text-dark': exam.result?.description === 'مؤجل'
               }">

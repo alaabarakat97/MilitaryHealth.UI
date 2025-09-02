@@ -5,8 +5,8 @@ export interface EyeExam {
   // بيانات أساسية
   applicantFileNumber: string;   // رقم ملف المريض
   doctorID: number;              // رقم الدكتور
-  vision: string;                // حدة البصر
-  colorTest: string;             // فحص الألوان
+  vision: string;                // القدرة البصرية
+  colorTest: string;             // اختبار الألوان
   refractionTypeID: number;      // نوع الانكسار
   refractionValue: number;       // قيمة الانكسار
   otherDiseases?: string;        // أمراض أخرى (اختياري) نص وليس ID

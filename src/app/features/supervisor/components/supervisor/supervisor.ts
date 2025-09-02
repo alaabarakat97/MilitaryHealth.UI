@@ -86,7 +86,6 @@ export class Supervisor implements OnInit {
       next: (data) => {
         this.results = data;
         const rejected = this.results.find(r => r.description == 'مرفوض');
-        console.log(rejected);
         const postponed = this.results.find(r => r.description == 'مؤجل');
         this.rejectedId = rejected ? rejected.resultID : null;
         this.postponedId = postponed ? postponed.resultID : null;
@@ -112,7 +111,6 @@ export class Supervisor implements OnInit {
       this.isApproved = false;
     } else {
       this.isApproved = true;
-      this.decisionModel.reason = '';
       this.decisionModel.postponeDuration = '';
     }
   }
@@ -138,4 +136,8 @@ export class Supervisor implements OnInit {
         }
       });
   }
+  getResultDescription(resultID: number): string {
+  const result = this.results.find(r => r.resultID === resultID);
+  return result ? result.description : 'غير محدد';
+}
 }

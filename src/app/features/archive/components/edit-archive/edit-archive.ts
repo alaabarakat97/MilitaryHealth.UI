@@ -19,7 +19,7 @@ export class EditArchive {
 
   fileForm: FormGroup;
   selectedFile: File | null = null;
-
+previewUrl: string | null = null;
   constructor(
     private fb: FormBuilder,
     private fileUploadService: FileUploadService,
@@ -30,13 +30,38 @@ export class EditArchive {
     this.fileForm = this.fb.group({});
   }
 
-  onFileSelected(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      this.selectedFile = input.files[0];
+  // onFileSelected(event: Event) {
+  //   const input = event.target as HTMLInputElement;
+  //   if (input.files && input.files.length > 0) {
+  //     this.selectedFile = input.files[0];
+  //   }
+  // }
+  ngOnInit() {
+  if (this.archive?.digitalCopy && this.isImage(this.archive.digitalCopy)) {
+    this.previewUrl = this.getFileUrl(this.archive.digitalCopy);
+  }
+}
+isImage(filePath: string): boolean {
+  const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
+  const extension = filePath.substring(filePath.lastIndexOf('.')).toLowerCase();
+  return imageExtensions.includes(extension);
+}
+onFileSelected(event: Event) {
+  const input = event.target as HTMLInputElement;
+  if (input.files && input.files.length > 0) {
+    this.selectedFile = input.files[0];
+    // Create a temporary URL to preview the selected image
+    if (this.selectedFile.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.previewUrl = e.target?.result as string;
+      };
+      reader.readAsDataURL(this.selectedFile);
+    } else {
+      this.previewUrl = null; // Clear the preview if a non-image file is selected
     }
   }
-
+}
   save() {
     if (!this.selectedFile) return;
 
@@ -67,7 +92,8 @@ export class EditArchive {
 
   cancel() {
     this.selectedFile = null;
-    this.modalService.dismissAll();
+  this.previewUrl = null;
+  this.modalService.dismissAll();
   }
   getFileUrl(path: string) {
     return `${environment.apiUrl}/${path}`;
