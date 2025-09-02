@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, catchError, map, of } from 'rxjs';
+import { Observable, catchError, map, of } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { InternalExam } from '../models/internal-exam.model';
 import { Consultation } from '../models/consultation.model';
@@ -45,6 +46,7 @@ export class InternalExamService {
     );
   }
       //جلب كل الفحوصات الداخلية
+    getAllInternalExams(page: number, pageSize: number, searchTerm: string = ''): Observable<InternalExam[]> {
     getAllInternalExams(page: number, pageSize: number, searchTerm: string = ''): Observable<InternalExam[]> {
       const url = `${this.apiUrl}?sortDesc=false&page=${page}&pageSize=${pageSize}`;
       return this.http.get<any>(url, { headers: this.getAuthHeaders() }).pipe(
