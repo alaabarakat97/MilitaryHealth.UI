@@ -1,104 +1,78 @@
-.dialog-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+.modal-backdrop {
+  position: fixed; inset: 0;
+  display: flex; justify-content: center; align-items: center;
+  background: rgba(0,0,0,.7); z-index: 1050;
+  backdrop-filter: blur(3px); /* 🔹 تأثير ضبابي جميل */
+}
+
+.modal-content {
+  background: #fff;
+  border-radius: 16px;
+  max-width: 700px; width: 100%;
+  max-height: 85vh;
+  display: flex; flex-direction: column;
+  box-shadow: 0 8px 24px rgba(0,0,0,.35); /* 🔹 ظل أعمق */
+  animation: fadeIn 0.35s ease;
+  border-top: 5px solid #0d6efd; /* 🔹 شريط ألوان جذاب */
+}
+
+.modal-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 20px;
+  border-bottom: 1px solid #eee;
+  background: #f8f9fa;
+  border-radius: 16px 16px 0 0;
+}
+
+.modal-header .modal-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #0d6efd;
   display: flex;
   align-items: center;
-  justify-content: center;
-  z-index: 1000;
+  gap: 8px;
 }
 
-.dialog-card {
-  background-color: #fff;
-  border-radius: 12px;
-  width: 500px;          /* تم زيادة العرض */
-  max-width: 90%;
-  max-height: 80vh;
-  overflow-y: auto;      /* Scroll تلقائي إذا المحتوى طويل */
-  padding: 20px 25px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-  animation: fadeIn 0.2s ease-in-out;
+.modal-body {
+  padding: 20px;
+  overflow-y: auto;
 }
 
-.dialog-header h3 {
-  text-align: center;
-  font-size: 1.4rem;
-  font-weight: 600;
-  margin-bottom: 15px;
-  color: #333;
+.section-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0d6efd;
+  margin: 16px 0 12px;
+  padding-bottom: 4px;
+  border-bottom: 2px solid #0d6efd;
 }
 
-.dialog-form .form-row {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 10px;
+.form-control:focus, .form-select:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 6px rgba(13,110,253,.3);
 }
 
-.dialog-form .form-group {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-
-.dialog-form label {
-  font-weight: 500;
-  margin-bottom: 5px;
-  color: #374151;
-}
-
-.dialog-form input,
-.dialog-form select,
-.dialog-form textarea {
-  padding: 7px 10px;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  font-size: 0.95rem;
-}
-
-.dialog-form input::placeholder,
-.dialog-form textarea::placeholder {
-  color: #9ca3af;
-}
-
-.dialog-form textarea {
-  min-height: 60px;
-  resize: vertical;
-}
-
-.dialog-form .form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 15px;
-}
-
-.btn-success {
-  background-color: #10b981;
-  color: #fff;
-  border-radius: 6px;
-  padding: 7px 14px;
-  font-weight: 600;
+.btn-primary {
+  background: linear-gradient(135deg, #6f42c1, #d63384);
   border: none;
+  font-weight: 600;
+  transition: all 0.3s;
 }
 
-.btn-success:hover {
-  background-color: #0f9f6e;
+.btn-primary:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 12px rgba(110,53,255,.3);
 }
 
 .btn-secondary {
-  background-color: #6b7280;
-  color: #fff;
-  border-radius: 6px;
-  padding: 7px 14px;
-  font-weight: 600;
-  border: none;
+  transition: all 0.3s;
 }
 
 .btn-secondary:hover {
-  background-color: #4b5563;
+  transform: scale(1.05);
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
+  from {opacity:0; transform:translateY(-20px);}
+  to {opacity:1; transform:translateY(0);}
 }

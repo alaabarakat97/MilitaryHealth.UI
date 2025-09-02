@@ -5,10 +5,12 @@ import { EditConsultation } from '../../Consultations/edit-consultation/edit-con
 import { Consultation } from '../../../models/consultation.model';
 import { SurgicalExamService } from '../../../services/surgical-exam.service';
 import { ToastrService } from 'ngx-toastr';
+import { environment } from '../../../../../../environments/environment';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-surgery-consultations-list',
-  imports: [CommonModule, FormsModule, EditConsultation],
+  imports: [CommonModule,ButtonModule, FormsModule, EditConsultation],
   templateUrl: './surgery-consultations-list.html',
   styleUrls: ['./surgery-consultations-list.scss']
 })
@@ -64,8 +66,12 @@ export class SurgeryConsultationsList implements OnInit {
     if (updated) this.loadConsultations();
   }
 
-  openFile(attachment: string) {
-    if (!attachment) return;
-    window.open(`${this.service.uploadUrl}/${attachment}`, '_blank');
+    openFile(attachment: string) {
+    if (!attachment) {
+      this.toastr.warning('⚠️ لا يوجد ملف مرفق', 'تنبيه');
+      return;
+    }
+    const url = `${environment.apiUrl}/${attachment}`;
+    window.open(url, '_blank');
   }
 }

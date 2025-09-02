@@ -6,11 +6,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { EditConsultation } from '../../Consultations/edit-consultation/edit-consultation';
 import { ToastrService } from 'ngx-toastr';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-eye-consultations',
   standalone: true,
-  imports: [CommonModule, FormsModule, EditConsultation],
+  imports: [CommonModule, ButtonModule ,FormsModule, EditConsultation],
   templateUrl: './eye-consultations.html',
   styleUrls: ['./eye-consultations.scss']
 })

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { SearchApplicantComponent } from '../../../applicants/components/search-applican/search-applicant.component.ts/search-applicant.component';
 import { Applicant } from '../../../applicants/models/applicant.model';
 import { CommonModule } from '@angular/common';
@@ -6,6 +6,7 @@ import { OrthopedicExamFormComponent } from './orthopedic-exam-form.component/or
 import { ConsultationFormComponent } from '../Consultations/consultation-form.component/consultation-form.component';
 import { InvestigationForm } from '../Investigations/investigation-form/investigation-form';
 import { ToastrService } from 'ngx-toastr';
+import { OrthopedicExamService } from '../../services/orthopedic-exam.service';
 
 @Component({
   selector: 'app-orthopedics-doctor.component',
@@ -21,16 +22,27 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./orthopedics-doctor.component.scss']
 })
 export class OrthopedicsDoctorComponent {
-  selectedApplicant: Applicant | null = null;
-  showExamForm = false;
-  showConsultationForm = false;
-  showInvestigationForm = false;
+selectedApplicant: Applicant | null = null;
+  hasOrthopedicExam = false;
 
-  constructor(private toastr: ToastrService) {}
+  @ViewChild(OrthopedicExamFormComponent) orthopedicForm!: OrthopedicExamFormComponent;
+  @ViewChild(ConsultationFormComponent) consultationForm!: ConsultationFormComponent;
+  @ViewChild(InvestigationForm) investigationForm!: InvestigationForm;
+
+  constructor(
+    private toastr: ToastrService,
+    private orthopedicService: OrthopedicExamService
+  ) {}
 
   onApplicantSelected(applicant: Applicant) {
     this.selectedApplicant = applicant;
-    this.showExamForm = false;
+
+    if (applicant?.fileNumber) {
+      this.orthopedicService.getByFileNumber(applicant.fileNumber).subscribe({
+        next: (exam) => this.hasOrthopedicExam = !!exam,
+        error: () => this.hasOrthopedicExam = false
+      });
+    }
   }
 
   addOrthopedicExam() {
@@ -38,7 +50,7 @@ export class OrthopedicsDoctorComponent {
       this.toastr.warning('يرجى البحث عن مريض أولاً');
       return;
     }
-    this.showExamForm = true; // فتح الفورم بعد التحقق
+    this.orthopedicForm.openModal();
   }
 
   addConsultation() {
@@ -46,8 +58,7 @@ export class OrthopedicsDoctorComponent {
       this.toastr.warning('يرجى البحث عن مريض أولاً');
       return;
     }
-    this.showConsultationForm = true;
-    this.showInvestigationForm = false;
+    this.consultationForm.openModal();
   }
 
   addInvestigation() {
@@ -55,7 +66,6 @@ export class OrthopedicsDoctorComponent {
       this.toastr.warning('يرجى البحث عن مريض أولاً');
       return;
     }
-    this.showInvestigationForm = true;
-    this.showConsultationForm = false;
+    this.investigationForm.openModal();
   }
 }

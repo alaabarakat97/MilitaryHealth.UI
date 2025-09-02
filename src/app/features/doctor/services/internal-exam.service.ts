@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
+import { Observable, catchError, map, of } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { InternalExam } from '../models/internal-exam.model';
 import { Consultation } from '../models/consultation.model';
@@ -45,7 +45,7 @@ export class InternalExamService {
     );
   }
       //جلب كل الفحوصات الداخلية
-    getAllInternalExams(page: number = 1, pageSize: number = 50): Observable<InternalExam[]> {
+    getAllInternalExams(page: number, pageSize: number, searchTerm: string = ''): Observable<InternalExam[]> {
       const url = `${this.apiUrl}?sortDesc=false&page=${page}&pageSize=${pageSize}`;
       return this.http.get<any>(url, { headers: this.getAuthHeaders() }).pipe(
         map(res => res.data?.items || [])
@@ -96,4 +96,21 @@ export class InternalExamService {
       map(res => (res.data?.items || []).filter(c => c.doctor?.specializationID === 2)) // 2 = العيادة الداخلية
     );
   }
+
+
+getByFileNumber(fileNumber: string): Observable<InternalExam | null> {
+  const url = `${this.apiUrl}?sortDesc=false&page=1&pageSize=1000`;
+  return this.http.get<any>(url, { headers: this.getAuthHeaders() }).pipe(
+    map(res => {
+      const items: InternalExam[] = res.data?.items || [];
+      // 🔹 نبحث عن فحص لنفس الملف ونفس التخصص (العيادة الداخلية specializationID = 2)
+      const exam = items.find(e => 
+        e.applicantFileNumber === fileNumber && e.doctor?.specializationID === 1
+      );
+      return exam || null;
+    }),
+    catchError(() => of(null))
+  );
+}
+
 }

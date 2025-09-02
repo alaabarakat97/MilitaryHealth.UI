@@ -5,10 +5,12 @@ import { EditInvestigation } from '../../Investigations/edit-investigation/edit-
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
+import { environment } from '../../../../../../environments/environment';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-surgery-investigations-list',
-  imports: [CommonModule, FormsModule, EditInvestigation],
+  imports: [CommonModule,ButtonModule, FormsModule, EditInvestigation],
   templateUrl: './surgery-investigations-list.html',
   styleUrls: ['./surgery-investigations-list.scss']
 })
@@ -64,8 +66,12 @@ export class SurgeryInvestigationsList implements OnInit {
     if (updated) this.loadInvestigations();
   }
 
-  openFile(attachment: string) {
-    if (!attachment) return;
-    window.open(`${this.service.uploadUrl}/${attachment}`, '_blank');
+    openFile(attachment: string) {
+    if (!attachment) {
+      this.toastr.warning('⚠️ لا يوجد ملف مرفق', 'تنبيه');
+      return;
+    }
+    const url = `${environment.apiUrl}/${attachment}`;
+    window.open(url, '_blank');
   }
 }

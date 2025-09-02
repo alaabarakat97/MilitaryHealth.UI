@@ -1,34 +1,63 @@
-<div class="investigation-form">
-  <form [formGroup]="investigationForm" (ngSubmit)="onSubmit()">
-    <div class="form-group">
-      <label>نوع التحليل</label>
-      <input class="form-control" formControlName="type" />
+
+<!-- المودال -->
+<div class="modal-backdrop" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal-content card" (click)="$event.stopPropagation()">
+
+    <!-- الهيدر -->
+    <div class="modal-header">
+      <h5 class="modal-title">طلب تحليل</h5>
+      <button type="button" class="btn-close" (click)="closeModal()"></button>
     </div>
 
-    <div class="form-group">
-      <label>النتيجة</label>
-      <textarea class="form-control" formControlName="result"></textarea>
-    </div>
+    <!-- البودي -->
+    <div class="modal-body">
+      <form [formGroup]="investigationForm" (ngSubmit)="onSubmit()" novalidate>
 
-    <div class="form-group">
-      <label>حالة التحليل</label>
-      <select class="form-control" formControlName="status">
-        <option value="مؤجل">مؤجل</option>
-        <option value="مكتمل">مكتمل</option>
-      </select>
-    </div>
+        <!-- القسم الأول: بيانات التحليل -->
+        <h6 class="section-title">بيانات التحليل</h6>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">نوع التحليل <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" formControlName="type"
+              [class.is-invalid]="investigationForm.get('type')?.invalid && investigationForm.get('type')?.touched"
+              placeholder="أدخل نوع التحليل">
+          </div>
 
-    <div class="form-group">
-      <label>ملف مرفق</label>
-      <input type="file" (change)="onFileSelected($event)" />
-      <div *ngIf="uploadedPath">
-        {{ uploadedPath }}
-      </div>
-    </div>
+          <div class="col-md-6">
+            <label class="form-label">النتيجة</label>
+            <textarea class="form-control" formControlName="result" rows="3" placeholder="يمكنك كتابة النتيجة إن وجدت"></textarea>
+          </div>
+        </div>
 
-    <button type="submit" class="btn btn-success" [disabled]="loading">
-      <span *ngIf="loading" class="spinner-border spinner-border-sm"></span>
-      حفظ طلب التحليل 
-    </button>
-  </form>
+        <div class="row g-3 mt-3">
+          <div class="col-md-6">
+            <label class="form-label">حالة التحليل</label>
+            <select class="form-select" formControlName="status">
+              <option value="مؤجل">مؤجل</option>
+              <option value="مكتمل">مكتمل</option>
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">ملف مرفق</label>
+            <input type="file" class="form-control" (change)="onFileSelected($event)">
+          </div>
+        </div>
+
+        <!-- معاينة الصورة -->
+        <div *ngIf="previewUrl" class="preview-container mt-3">
+          <p>📷 معاينة الملف:</p>
+          <img [src]="previewUrl" alt="معاينة المرفق" class="img-fluid rounded" style="max-height: 200px;" >
+        </div>
+
+        <!-- زر الحفظ -->
+        <div class="text-end mt-4">
+          <button type="submit" class="btn btn-success px-4" [disabled]="investigationForm.invalid">
+            حفظ طلب التحليل
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
 </div>

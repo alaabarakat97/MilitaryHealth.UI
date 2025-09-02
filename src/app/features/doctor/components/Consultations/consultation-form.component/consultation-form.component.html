@@ -1,32 +1,51 @@
-<div class="consultation-form">
-  <form [formGroup]="consultationForm" (ngSubmit)="onSubmit()">
+<!-- المودال -->
+<div class="modal-backdrop" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
 
-    <div class="form-group">
-      <label>نوع الاستشارة</label>
-      <input class="form-control" formControlName="consultationType">
+    <!-- الهيدر -->
+    <div class="modal-header">
+      <h5 class="modal-title">إضافة استشارة</h5>
+      <button type="button" class="btn-close" (click)="closeModal()"></button>
     </div>
 
-    <div class="form-group">
-      <label>الطبيب المُحال إليه</label>
-      <input class="form-control" formControlName="referredDoctor">
-    </div>
+    <!-- البودي -->
+    <div class="modal-body">
+      <form [formGroup]="consultationForm" (ngSubmit)="onSubmit()">
+        
+        <div class="form-group mb-3">
+          <label>نوع الاستشارة <span class="text-danger">*</span></label>
+          <input class="form-control" formControlName="consultationType">
+        </div>
 
-    <div class="form-group">
-      <label>النتيجة</label>
-      <textarea class="form-control" formControlName="result"></textarea>
-    </div>
+        <div class="form-group mb-3">
+          <label>الطبيب المُحال إليه <span class="text-danger">*</span></label>
+          <input class="form-control" formControlName="referredDoctor">
+        </div>
 
-    <div class="form-group">
-      <label>ملف مرفق</label>
-      <input type="file" (change)="onFileSelected($event)">
-      <div *ngIf="uploadedPath">
-        {{ uploadedPath }}
-      </div>
-    </div>
+        <div class="form-group mb-3">
+          <label>النتيجة</label>
+          <textarea class="form-control" formControlName="result"></textarea>
+        </div>
 
-    <button type="submit" class="btn btn-primary" [disabled]="loading">
-  <span *ngIf="loading" class="spinner-border spinner-border-sm"></span>
-  حفظ الاستشارة
-</button>
-  </form>
+        <div class="form-group mb-3">
+          <label>ملف مرفق</label>
+          <input type="file" class="form-control" accept="image/*" (change)="onFileSelected($event)">
+
+          <!-- ✅ عرض المعاينة -->
+          <div *ngIf="previewUrl" class="mt-2">
+            <p class="text-muted">📷 معاينة الصورة:</p>
+            <img [src]="previewUrl" class="img-fluid rounded border" style="max-height: 200px;">
+          </div>
+        </div>
+
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-success" [disabled]="loading">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm"></span>
+            حفظ الاستشارة
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
 </div>

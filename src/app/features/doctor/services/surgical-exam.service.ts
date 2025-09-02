@@ -99,4 +99,20 @@ getAllSurgicalExams(page: number = 1, pageSize: number = 10): Observable<{ items
     const token = localStorage.getItem('token') || '';
     return new HttpHeaders({ Authorization: `Bearer ${token}` });
   }
+
+  getByFileNumber(fileNumber: string): Observable<SurgicalExam | null> {
+  const url = `${this.apiUrl}?sortDesc=false&page=1&pageSize=1000`;
+  return this.http.get<any>(url, { headers: this.getAuthHeaders() }).pipe(
+    map(res => {
+      const items: SurgicalExam[] = res.data?.items || [];
+      // 🔹 نبحث عن فحص سابق لنفس الملف ونفس عيادة الجراحة (specializationID = 3)
+      const exam = items.find(e => 
+        e.applicantFileNumber?.toString() === fileNumber.toString() &&
+        (e.doctor?.specializationID === 3)
+      );
+      return exam || null;
+    })
+  );
+}
+
 }

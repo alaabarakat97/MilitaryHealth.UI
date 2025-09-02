@@ -1,53 +1,79 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+
 import { SearchApplicantComponent } from '../../../applicants/components/search-applican/search-applicant.component.ts/search-applicant.component';
 import { Applicant } from '../../../applicants/models/applicant.model';
 import { InternalExamForm } from './internal-exam-form/internal-exam-form';
-import { CommonModule } from '@angular/common';
 import { InvestigationForm } from '../Investigations/investigation-form/investigation-form';
 import { ConsultationFormComponent } from '../Consultations/consultation-form.component/consultation-form.component';
+import { InternalExamService } from '../../services/internal-exam.service';
 
 @Component({
-  selector: 'app-internal-doctor.component',
-  imports: [CommonModule,
+  selector: 'app-internal-doctor',
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
     SearchApplicantComponent,
     InternalExamForm,
     ConsultationFormComponent,
-    InvestigationForm],
+    InvestigationForm
+  ],
   templateUrl: './internal-doctor.component.html',
-  styleUrl: './internal-doctor.component.scss'
+  styleUrls: ['./internal-doctor.component.scss'] // ✅ صححنا
 })
 export class InternalDoctorComponent {
   selectedApplicant: Applicant | null = null;
+  hasInternalExam = false;
 
-  showInternalExamForm = false;
-  showConsultationForm = false;
-  showInvestigationForm = false;
+  @ViewChild(InternalExamForm) internalForm!: InternalExamForm;
+  @ViewChild(ConsultationFormComponent) consultationForm!: ConsultationFormComponent;
+  @ViewChild(InvestigationForm) investigationForm!: InvestigationForm;
 
-  onApplicantSelected(applicant: Applicant) {
-    this.selectedApplicant = applicant;
-    this.showInternalExamForm = false;
-    this.showConsultationForm = false;
-    this.showInvestigationForm = false;
-  }
+  constructor(
+    private toastr: ToastrService,
+    private examService: InternalExamService
+  ) {}
+
+onApplicantSelected(applicant: Applicant) {
+  this.selectedApplicant = applicant;
+
+  this.examService.getByFileNumber(applicant.fileNumber).subscribe({
+    next: (exam) => {
+      // ✅ تحقّق إذا فعلاً فيه بيانات
+      this.hasInternalExam = !!(exam && exam.internalExamID); 
+    },
+    error: () => this.hasInternalExam = false
+  });
+}
+
 
   addInternalExam() {
-    if (!this.selectedApplicant) return alert('يرجى البحث عن مريض أولاً');
-    this.showInternalExamForm = true;
-    this.showConsultationForm = false;
-    this.showInvestigationForm = false;
+    if (!this.selectedApplicant) {
+      this.toastr.warning('يرجى البحث عن مريض أولاً');
+      return;
+    }
+    if (this.hasInternalExam) {
+      this.toastr.error('المريض لديه فحص باطني سابق ولا يمكن إضافته مرة أخرى');
+      return;
+    }
+    this.internalForm.openModal();
   }
 
   addConsultation() {
-    if (!this.selectedApplicant) return alert('يرجى البحث عن مريض أولاً');
-    this.showConsultationForm = true;
-    this.showInternalExamForm = false;
-    this.showInvestigationForm = false;
+    if (!this.selectedApplicant) {
+      this.toastr.warning('يرجى البحث عن مريض أولاً');
+      return;
+    }
+    this.consultationForm.openModal();
   }
 
   addInvestigation() {
-    if (!this.selectedApplicant) return alert('يرجى البحث عن مريض أولاً');
-    this.showInvestigationForm = true;
-    this.showInternalExamForm = false;
-    this.showConsultationForm = false;
+    if (!this.selectedApplicant) {
+      this.toastr.warning('يرجى البحث عن مريض أولاً');
+      return;
+    }
+    this.investigationForm.openModal();
   }
 }

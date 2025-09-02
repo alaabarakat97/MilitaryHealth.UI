@@ -16,6 +16,20 @@ export class InternalExamForm implements OnInit {
   @Input() applicantFileNumber: string = '';
   examForm!: FormGroup;
   results: any[] = [];
+  showModal: boolean = false;
+
+  examFields = [
+    { label: '  امراض القلب والدوران', control: 'heart' },
+    { label: 'امراض الجهاز التنفسي', control: 'respiratory' },
+    { label: 'امراض الجهاز الهضمي', control: 'digestive' },
+    { label: 'امراض الغدد الصماء', control: 'endocrine' },
+    { label: 'امراض الجهاز العصبي', control: 'neurology' },
+    { label: 'امراض الدم', control: 'blood' },
+    { label: 'امراض المفاصل', control: 'joints' },
+    { label: 'امراض الكلى', control: 'kidney' },
+    { label: 'امراض السمع', control: 'hearing' },
+    { label: 'امراض الجلد', control: 'skin' },
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -46,6 +60,14 @@ export class InternalExamForm implements OnInit {
     });
   }
 
+  openModal() {
+    this.showModal = true;
+  }
+
+  closeModal() {
+    this.showModal = false;
+  }
+
   onSubmit() {
     if (this.examForm.invalid) {
       this.toastr.warning('يرجى تعبئة جميع الحقول المطلوبة', 'تنبيه');
@@ -63,12 +85,9 @@ export class InternalExamForm implements OnInit {
       next: () => {
         this.toastr.success('✅ تمت إضافة الفحص بنجاح', 'نجاح');
         this.examForm.reset();
+        this.closeModal();
       },
-      error: (err) => {
-        if (err.error?.errors?.detail?.[0] === "Applicant already registered before.") {
-          this.toastr.warning('⚠️ هذا المنتسب مسجل مسبقاً، استخدم التحديث بدل الإضافة.', 'تنبيه');
-          return;
-        }
+      error: () => {
         this.toastr.error('❌ حدث خطأ أثناء إضافة الفحص', 'خطأ');
       }
     });

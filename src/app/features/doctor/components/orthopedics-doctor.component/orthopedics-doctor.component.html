@@ -4,25 +4,46 @@
     <app-search-applicant (applicantSelected)="onApplicantSelected($event)"></app-search-applicant>
   </div>
 
-  <!-- أزرار الإضافة بشكل أفقي -->
-  <div class="button-group mb-3">
-    <button class="btn btn-primary" (click)="addOrthopedicExam()">إضافة فحص العظام</button>
-    <button class="btn btn-warning" (click)="addConsultation()">طلب استشارة</button>
-    <button class="btn btn-success" (click)="addInvestigation()">طلب تحليل</button>
+  <!-- أزرار الإضافة -->
+  <div class="button-group mb-3 d-flex gap-2">
+    <button 
+      class="btn btn-primary" 
+      (click)="addOrthopedicExam()" 
+      *ngIf="!hasOrthopedicExam && selectedApplicant">
+      إضافة فحص العظام
+    </button>
+
+    <button 
+      class="btn btn-warning" 
+      (click)="addConsultation()" 
+      *ngIf="selectedApplicant">
+      طلب استشارة
+    </button>
+
+    <button 
+      class="btn btn-success" 
+      (click)="addInvestigation()" 
+      *ngIf="selectedApplicant ">
+      طلب تحليل
+    </button>
   </div>
 
-  <!-- فورم فحص العظام -->
-  <div *ngIf="showExamForm && selectedApplicant" class="mt-3">
-    <app-orthopedic-exam-form [applicantFileNumber]="selectedApplicant.fileNumber"></app-orthopedic-exam-form>
-  </div>
+  <!-- مودال فحص العظام -->
+  <app-orthopedic-exam-form
+    *ngIf="selectedApplicant"
+    [applicantFileNumber]="selectedApplicant.fileNumber">
+  </app-orthopedic-exam-form>
 
-  <!-- فورم الاستشارة -->
-  <div *ngIf="showConsultationForm && selectedApplicant" class="mt-3">
-    <app-consultation-form [applicantFileNumber]="selectedApplicant.fileNumber" specializationID="3"></app-consultation-form>
-  </div>
+  <!-- مودال الاستشارة -->
+  <app-consultation-form
+    *ngIf="selectedApplicant"
+    [applicantFileNumber]="selectedApplicant.fileNumber">
+  </app-consultation-form>
 
   <!-- فورم التحليل -->
-  <div *ngIf="showInvestigationForm && selectedApplicant" class="mt-3">
-    <app-investigation-form [applicantFileNumber]="selectedApplicant.fileNumber" specializationID="3"></app-investigation-form>
-  </div>
+  <app-investigation-form
+    *ngIf="selectedApplicant"
+    #investigationForm
+    [applicantFileNumber]="selectedApplicant.fileNumber">
+  </app-investigation-form>
 </div>
