@@ -28,7 +28,7 @@
 
 <div *ngIf="previewUrl">
   <h6 class="mt-3">معاينة الصورة:</h6>
-  <img [src]="previewUrl" class="img-thumbnail preview-image" alt="Image Preview" />
+  <a [href]="getFileUrl(archive.digitalCopy)" target="_blank" (click)="cancel()"><img [src]="previewUrl" class="img-thumbnail preview-image" alt="Image Preview" /></a>
 </div>
 
 </div>
