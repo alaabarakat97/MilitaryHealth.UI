@@ -107,7 +107,7 @@ export class Supervisor implements OnInit {
     };
   }
   onResultChange(selectedId: number) {
-    if (selectedId === this.rejectedId || selectedId === this.postponedId) {
+    if (selectedId === this.postponedId) {
       this.isApproved = false;
     } else {
       this.isApproved = true;
