@@ -38,11 +38,17 @@
         </td>
         <td>{{ archive.archiveDate | date:'yyyy/MM/dd' }}</td>
 
-        <!-- زر التعديل -->
         <td class="text-center">
-          <button class="btn btn-sm btn-primary" (click)="openEditArchive(archive)">
-            <i class="fas fa-edit"></i> تعديل
+          @if (archive.digitalCopy) {
+          <button class="btn btn-sm btn-info">
+            <i class="fas fa-eye"></i>
           </button>
+          } @else {
+          <button class="btn btn-sm btn-primary" (click)="openEditArchive(archive)">
+            <i class="fas fa-edit"></i>
+          </button>
+          }
+
         </td>
       </tr>
     </ng-template>
