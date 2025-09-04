@@ -1,15 +1,17 @@
 <div class="dialog-backdrop" (click)="onCancel()">
   <div class="dialog-card" (click)="$event.stopPropagation()">
+
     <div class="dialog-header">
-      <h3>تعديل فحص العين</h3>
+      <h3>تعديل الفحص العيني</h3>
     </div>
 
     <form [formGroup]="examForm" (ngSubmit)="onSubmit()" class="dialog-form">
 
+      <!-- صف الرؤية والألوان -->
       <div class="form-row">
         <div class="form-group">
-          <label>القدرة البصرية</label>
-          <input formControlName="vision" placeholder="أدخل القدرة البصرية" />
+          <label>القدرة  البصرية </label>
+          <input formControlName="vision" placeholder="أدخل حدة البصر" />
         </div>
 
         <div class="form-group">
@@ -18,9 +20,10 @@
         </div>
       </div>
 
+      <!-- صف الانكسار -->
       <div class="form-row">
         <div class="form-group">
-          <label>نوع الانكسار</label>
+          <label>أسواء  الانكسار</label>
           <select formControlName="refractionTypeID">
             <option *ngFor="let r of refractionTypes" [value]="r.refractionTypeID">
               {{ r.description }}
@@ -29,33 +32,41 @@
         </div>
 
         <div class="form-group">
-          <label>قيمة الانكسار</label>
+          <label>نسبة الانكسار</label>
           <input type="number" formControlName="refractionValue" />
         </div>
       </div>
 
+      <!-- الأمراض الأخرى -->
       <div class="form-group">
         <label>الأمراض الأخرى</label>
         <input formControlName="otherDiseases" placeholder="إن وجدت" />
       </div>
 
-      <div class="form-group">
-        <label>النتيجة</label>
-        <select formControlName="resultID">
-          <option *ngFor="let r of results" [value]="r.resultID">{{ r.description }}</option>
-        </select>
+      <!-- النتيجة والسبب -->
+      <div class="form-row">
+        <div class="form-group">
+          <label>النتيجة</label>
+          <select formControlName="resultID">
+            <option *ngFor="let r of results" [value]="r.resultID">{{ r.description }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>السبب</label>
+          <textarea formControlName="reason" placeholder="أدخل السبب إذا وجد"></textarea>
+        </div>
       </div>
 
-      <div class="form-group">
-        <label>السبب</label>
-        <textarea formControlName="reason" placeholder="أدخل السبب إذا وجد"></textarea>
-      </div>
-
+      <!-- أزرار الإجراء -->
       <div class="form-actions">
-        <button type="submit" class="btn btn-success">حفظ</button>
-        <button type="button" class="btn btn-secondary" (click)="onCancel()">إلغاء</button>
+        <button type="submit" class="btn btn-success">
+          حفظ
+        </button>
+        
       </div>
 
     </form>
+
   </div>
 </div>

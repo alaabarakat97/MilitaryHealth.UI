@@ -4,13 +4,15 @@ import { OrthopedicExamService } from '../../../services/orthopedic-exam.service
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { EditInvestigation } from '../../Investigations/edit-investigation/edit-investigation';
+import { environment } from '../../../../../../environments/environment';
 import { ToastrService } from 'ngx-toastr';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-orthopedic-investigations-list',
-  imports: [CommonModule, FormsModule, EditInvestigation],
+  imports: [CommonModule,ButtonModule, FormsModule, EditInvestigation],
   templateUrl: './orthopedic-investigations-list.html',
-  styleUrls: ['./orthopedic-investigations-list.scss']
+  styleUrl: './orthopedic-investigations-list.scss'
 })
 export class OrthopedicInvestigationsList implements OnInit {
   investigations: Investigation[] = [];
@@ -19,10 +21,7 @@ export class OrthopedicInvestigationsList implements OnInit {
   loading = false;
   searchText = '';
 
-  constructor(
-    private service: OrthopedicExamService,
-    private toastr: ToastrService
-  ) {}
+  constructor(private service: OrthopedicExamService,private toastr:ToastrService) {}
 
   ngOnInit() {
     this.loadInvestigations();
@@ -37,7 +36,7 @@ export class OrthopedicInvestigationsList implements OnInit {
         this.loading = false; 
       },
       error: err => { 
-        this.toastr.error('حدث خطأ أثناء تحميل الفحوصات'); 
+        console.error(err); 
         this.loading = false; 
       }
     });
@@ -64,8 +63,12 @@ export class OrthopedicInvestigationsList implements OnInit {
     if (updated) this.loadInvestigations();
   }
 
-  openFile(attachment: string) {
-    if (!attachment) return;
-    window.open(`${this.service.uploadUrl}/${attachment}`, '_blank');
+   openFile(attachment: string) {
+    if (!attachment) {
+      this.toastr.warning('⚠️ لا يوجد ملف مرفق', 'تنبيه');
+      return;
+    }
+    const url = `${environment.apiUrl}/${attachment}`;
+    window.open(url, '_blank');
   }
 }

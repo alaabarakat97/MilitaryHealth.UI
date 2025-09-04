@@ -91,5 +91,20 @@ getOrthopedicInvestigations(page = 1, pageSize = 50): Observable<Investigation[]
     map(res => (res.data?.items || []).filter((i: Investigation) => i.doctor?.specializationID === 4))
   );
 }
+
+getByFileNumber(fileNumber: string): Observable<OrthopedicExam | null> {
+  const url = `${this.apiUrl}?sortDesc=false&page=1&pageSize=1000`;
+  return this.http.get<any>(url, { headers: this.getAuthHeaders() }).pipe(
+    map(res => {
+      const items: OrthopedicExam[] = res.data?.items || [];
+      // 🔹 نبحث عن فحص سابق لنفس الملف ونفس عيادة العظام فقط (specializationID = 4)
+      const exam = items.find(e => 
+        e.applicantFileNumber === fileNumber && e.doctor?.specializationID === 4
+      );
+      return exam || null;
+    })
+  );
+}
+
 }
 

@@ -1,0 +1,133 @@
+.eye-consultations.deferred-exams-page {
+  .title {
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 20px;
+  }
+
+  .search-wrapper {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+
+    .search-input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    .search-btn {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 10px 15px;
+      border-radius: 8px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+
+      i {
+        font-size: 1.1rem;
+      }
+    }
+  }
+
+  .custom-table {
+    width: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #ddd;
+
+    thead {
+      background-color: #007bff;
+      color: #fff;
+      th {
+        text-align: center;
+        font-weight: bold;
+      }
+    }
+
+    tbody {
+      td {
+        text-align: center;
+        vertical-align: middle;
+        border-top: 1px solid #ddd;
+
+        .p-button {
+          border-radius: 8px;
+          font-size: 0.85rem;
+          padding: 4px 10px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .p-button-sm {
+          padding: 4px 8px;
+          font-size: 0.85rem;
+          color: #000;
+          border: none;
+        }
+
+        .p-button-sm:hover {
+          background-color: #d1d5db;
+          color: #111;
+        }
+
+        .p-button-primary {
+          padding: 4px 8px;
+          font-size: 0.8rem;
+          color: #000;
+          border: none;       
+         }
+
+        .p-button-primary:hover {
+           background-color: #d1d5db;
+          color: #111;     
+        
+        }
+
+        .p-button-info {
+          background-color: #ff00aa;
+          color: #fff;
+          border: none;
+        }
+
+        .p-button-info:hover {
+          background-color: #b30077;
+          color: #fff;
+        }
+
+        i.pi {
+          margin-right: 5px;
+        }
+      }
+
+      tr:hover {
+        background-color: #f1f1f1;
+      }
+    }
+
+    .badge {
+      padding: 0.4em 0.7em;
+      border-radius: 5px;
+      font-size: 0.85rem;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .search-wrapper {
+      flex-direction: column-reverse;
+      gap: 5px;
+    }
+
+    .custom-table {
+      font-size: 0.85rem;
+    }
+  }
+}

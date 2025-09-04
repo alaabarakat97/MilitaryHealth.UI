@@ -13,9 +13,11 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./surgical-exam-form.scss']
 })
 export class SurgicalExamForm implements OnInit {
-  @Input() applicantFileNumber: string = '';
+ @Input() applicantFileNumber: string = '';
   examForm!: FormGroup;
   results: any[] = [];
+  loading: boolean = false;
+  showModal: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -26,18 +28,23 @@ export class SurgicalExamForm implements OnInit {
 
   ngOnInit(): void {
     this.examForm = this.fb.group({
-      generalSurgery: ['', Validators.required],
-      urinarySurgery: ['', Validators.required],
-      vascularSurgery: ['', Validators.required],
-      thoracicSurgery: ['', Validators.required],
+      generalSurgery: ['سليم', Validators.required],
+      urinarySurgery: ['سليم', Validators.required],
+      vascularSurgery: ['سليم', Validators.required],
+      thoracicSurgery: ['سليم', Validators.required],
       resultID: [null, Validators.required],
       reason: ['']
     });
 
-    this.examService.getResults().subscribe({
-      next: res => this.results = res.data.items,
-      error: () => this.toastr.error('❌ فشل تحميل النتائج')
-    });
+    this.examService.getResults().subscribe(res => this.results = res.data?.items || res);
+  }
+
+  openModal() {
+    this.showModal = true;
+  }
+
+  closeModal() {
+    this.showModal = false;
   }
 
   onSubmit() {
@@ -51,7 +58,7 @@ export class SurgicalExamForm implements OnInit {
 
     const exam: SurgicalExam = {
       applicantFileNumber: this.applicantFileNumber,
-      doctorID: doctorID,
+      doctorID,
       generalSurgery: this.examForm.value.generalSurgery,
       urinarySurgery: this.examForm.value.urinarySurgery,
       vascularSurgery: this.examForm.value.vascularSurgery,
@@ -60,17 +67,20 @@ export class SurgicalExamForm implements OnInit {
       reason: this.examForm.value.reason || ''
     };
 
+    this.loading = true;
     this.examService.addSurgicalExam(exam).subscribe({
       next: () => {
         this.toastr.success('✅ تمت إضافة الفحص الجراحي بنجاح');
         this.examForm.reset();
+        this.loading = false;
+        this.closeModal();
       },
       error: (err: any) => {
+        this.loading = false;
         if (err?.error?.errors?.detail?.includes('Applicant already registered before')) {
           this.toastr.warning('⚠️ هذا المريض مسجّل مسبقًا. لا يمكن إضافة فحص جديد لنفس الرقم.');
         } else {
           this.toastr.error('❌ حدث خطأ أثناء إضافة الفحص الجراحي');
-          this.toastr.warning('⚠️ ربما هذا المريض مسجّل مسبقًا. لا يمكن إضافة فحص جديد لنفس الرقم.');
         }
       }
     });

@@ -1,34 +1,53 @@
 <div class="container mt-3">
-  <!-- عنصر البحث -->
+  <!-- البحث عن المريض -->
   <div class="mb-3">
     <app-search-applicant (applicantSelected)="onApplicantSelected($event)"></app-search-applicant>
   </div>
 
-  <!-- الأزرار -->
-  <div class="button-group mb-3">
-    <button class="btn btn-primary" (click)="addEyeExam()">
-      إضافة فحص للعين
-    </button>
-    <button class="btn btn-secondary" (click)="requestConsultation()">
-      طلب استشارة خارجية
-    </button>
-    <button class="btn btn-success" (click)="requestAnalysis()">
-      طلب تحليل
-    </button>
+  <!-- أزرار الإضافة -->
+  <div class="button-group mb-3 d-flex gap-2">
+
+<div class="button-group mb-3 d-flex gap-2">
+            <button 
+                class="btn btn-primary" 
+                (click)="addEyeExam()" 
+                *ngIf="!hasEyeExam && selectedApplicant">
+                إضافة فحص للعين
+              </button>
+            <button 
+              class="btn btn-warning" 
+              (click)="addConsultation()"
+              *ngIf="selectedApplicant">
+              طلب استشارة
+            </button>
+
+            <button 
+              class="btn btn-success" 
+              (click)="addInvestigation()"
+              *ngIf="selectedApplicant">
+              طلب تحليل
+            </button>
+          </div>
   </div>
 
-  <!-- عرض النماذج حسب الاختيار -->
-  <div *ngIf="showExamForm && selectedApplicant">
-    <app-eye-exam-form [applicantFileNumber]="selectedApplicant!.fileNumber"></app-eye-exam-form>
-  </div>
+  <!-- مودال فحص العيون -->
+  <app-eye-exam-form
+    *ngIf="selectedApplicant"
+    #eyeExamForm
+    [applicantFileNumber]="selectedApplicant.fileNumber">
+  </app-eye-exam-form>
 
-  <div *ngIf="showConsultationForm && selectedApplicant">
-    <!-- هون بتحط الكمبوننت تبع الاستشارة -->
-    <app-consultation-form [applicantFileNumber]="selectedApplicant!.fileNumber"></app-consultation-form>
-  </div>
+  <!-- مودال الاستشارة -->
+  <app-consultation-form
+    *ngIf="selectedApplicant"
+    [applicantFileNumber]="selectedApplicant.fileNumber"
+    #consultationForm>
+  </app-consultation-form>
 
-  <div *ngIf="showAnalysisForm && selectedApplicant">
-    <!-- هون بتحط الكمبوننت تبع التحليل -->
-    <app-investigation-form [applicantFileNumber]="selectedApplicant!.fileNumber"></app-investigation-form>
-  </div>
+  <!-- مودال التحليل -->
+  <app-investigation-form
+    *ngIf="selectedApplicant"
+    #investigationForm
+    [applicantFileNumber]="selectedApplicant.fileNumber">
+  </app-investigation-form>
 </div>

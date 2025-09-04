@@ -15,17 +15,18 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./eye-exam-form.scss']
 })
 export class EyeExamForm implements OnInit {
-  @Input() applicantFileNumber: string = ''; // رقم ملف المريض
+@Input() applicantFileNumber: string = '';
   examForm!: FormGroup;
-
   refractionTypes: any[] = [];
   results: any[] = [];
+  loading = false;
+  showModal = false;
 
   constructor(
     private fb: FormBuilder,
     private examService: EyeExamService,
     private authService: AuthService,
-    private toastr: ToastrService // ✅ أضفنا Toastr
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -39,10 +40,12 @@ export class EyeExamForm implements OnInit {
       reason: ['']
     });
 
-    // جلب القوائم
     this.examService.getRefractionTypes().subscribe(res => this.refractionTypes = res.data.items);
     this.examService.getResults().subscribe(res => this.results = res.data.items);
   }
+
+  openModal() { this.showModal = true; }
+  closeModal() { this.showModal = false; }
 
   onSubmit() {
     if (this.examForm.invalid) {
@@ -68,12 +71,17 @@ export class EyeExamForm implements OnInit {
       reason: this.examForm.value.reason || ''
     };
 
+    this.loading = true;
+
     this.examService.addEyeExam(exam).subscribe({
       next: () => {
         this.toastr.success('✅ تمت إضافة الفحص بنجاح', 'نجاح');
         this.examForm.reset();
+        this.loading = false;
+        this.closeModal();
       },
       error: () => {
+        this.loading = false;
         this.toastr.error('❌ حدث خطأ أثناء إضافة الفحص', 'خطأ');
       }
     });

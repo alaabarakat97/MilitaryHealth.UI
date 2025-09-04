@@ -1,9 +1,9 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../../auth/services/auth.service';
 import { Investigation } from '../../../models/investigation.model';
 import { EyeExamService } from '../../../services/eye-exam.service';
-import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -18,7 +18,9 @@ export class EditInvestigation {
 
   investigationForm!: FormGroup;
   uploadedPath: string | null = null;
-  loading = false;
+  previewUrl: string | null = null;
+  loading: boolean = false;
+  showModal: boolean = true; // 🔹 التحكم بالظهور مباشرة
 
   constructor(
     private fb: FormBuilder,
@@ -28,36 +30,56 @@ export class EditInvestigation {
   ) {}
 
   ngOnInit(): void {
-    this.investigationForm = this.fb.group({
-      type: [this.investigation.type, Validators.required],
-      result: [this.investigation.result],
-      status: [this.investigation.status, Validators.required],
-      attachment: [this.investigation.attachment || null]
-    });
-    this.uploadedPath = this.investigation.attachment || null;
+  this.investigationForm = this.fb.group({
+    type: [this.investigation.type], // مخفي ولا يمكن تعديله
+    result: [this.investigation.result || ''],
+    status: [this.investigation.result ? 'مكتمل' : 'مؤجل', Validators.required],
+    attachment: [this.investigation.attachment || null]
+  });
+
+  if (this.investigation.attachment) {
+    this.uploadedPath = this.investigation.attachment;
+    this.previewUrl = this.uploadedPath;
+  }
+
+  // 🔹 مراقبة التغيرات على حقل النتيجة لتحديث الحالة تلقائيًا
+  this.investigationForm.get('result')?.valueChanges.subscribe(value => {
+    const statusControl = this.investigationForm.get('status');
+    if (statusControl) {
+      statusControl.setValue(value?.trim() ? 'مكتمل' : 'مؤجل', { emitEvent: false });
+    }
+  });
+}
+
+  closeModal() {
+    this.showModal = false;
+    this.dialogClosed.emit(false);
   }
 
   onFileSelected(event: any) {
     const file: File = event.target.files[0];
     if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => this.previewUrl = e.target.result;
+      reader.readAsDataURL(file);
+
       this.service.uploadFile(file).subscribe({
         next: (path) => {
           this.uploadedPath = path;
           this.investigationForm.patchValue({ attachment: path });
-          this.toastr.success('تم رفع الملف بنجاح', 'نجاح');
+          this.toastr.success('✅ تم رفع الملف بنجاح', 'نجاح');
         },
-        error: () => this.toastr.error('فشل رفع الملف', 'خطأ')
+        error: () => this.toastr.error('❌ فشل رفع الملف', 'خطأ')
       });
     }
   }
 
   onSubmit() {
-    if (!this.investigation || this.investigationForm.invalid) {
+    if (!this.investigationForm.valid) {
       this.toastr.warning('يرجى تعبئة الحقول المطلوبة', 'تنبيه');
       return;
     }
 
-    this.loading = true;
     const doctorID = Number(this.authService.getDoctorId());
 
     const updatedInv: Investigation = {
@@ -70,18 +92,19 @@ export class EditInvestigation {
       attachment: this.uploadedPath ?? ''
     };
 
-    this.service.updateInvestigation(this.investigation.investigationID!, updatedInv).subscribe({
-      next: () => {
-        this.toastr.success('تم التحديث بنجاح', 'نجاح');
-        this.loading = false;
-        this.dialogClosed.emit(true);
-      },
-      error: () => {
-        this.toastr.error('فشل التحديث', 'خطأ');
-        this.loading = false;
-      }
-    });
-  }
+    this.loading = true;
 
-  onCancel() { this.dialogClosed.emit(false); }
+    this.service.updateInvestigation(this.investigation.investigationID!, updatedInv)
+      .subscribe({
+        next: () => {
+          this.toastr.success('تم تعديل التحليل بنجاح', 'نجاح');
+          this.loading = false;
+          this.closeModal();
+        },
+        error: () => {
+          this.toastr.error('فشل التحديث', 'خطأ');
+          this.loading = false;
+        }
+      });
+  }
 }

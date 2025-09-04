@@ -5,24 +5,31 @@
   </div>
 
   <!-- أزرار الإضافة -->
-  <div class="button-group mb-3">
-    <button class="btn btn-primary" (click)="addInternalExam()">إضافة فحص داخلي</button>
+  <div *ngIf="selectedApplicant " class="button-group mb-3 d-flex gap-2">
+    <!-- يظهر فقط إذا ما عنده فحص سابق -->
+    <button 
+      *ngIf="hasInternalExam " 
+      class="btn btn-primary" 
+      (click)="addInternalExam()">إضافة فحص داخلي
+    </button>
+
     <button class="btn btn-warning" (click)="addConsultation()">طلب استشارة</button>
     <button class="btn btn-success" (click)="addInvestigation()">طلب تحليل</button>
   </div>
 
-  <!-- فورم الفحص الداخلي -->
-  <div *ngIf="showInternalExamForm && selectedApplicant" class="mt-3">
-    <app-internal-exam-form [applicantFileNumber]="selectedApplicant!.fileNumber"></app-internal-exam-form>
-  </div>
+  <!-- المكونات -->
+  <app-internal-exam-form
+    *ngIf="selectedApplicant"
+    [applicantFileNumber]="selectedApplicant.fileNumber">
+  </app-internal-exam-form>
 
-  <!-- فورم الاستشارة -->
-  <div *ngIf="showConsultationForm && selectedApplicant" class="mt-3">
-    <app-consultation-form [applicantFileNumber]="selectedApplicant!.fileNumber"></app-consultation-form>
-  </div>
+  <app-consultation-form
+    *ngIf="selectedApplicant"
+    [applicantFileNumber]="selectedApplicant.fileNumber">
+  </app-consultation-form>
 
-  <!-- فورم التحليل -->
-  <div *ngIf="showInvestigationForm && selectedApplicant" class="mt-3">
-    <app-investigation-form [applicantFileNumber]="selectedApplicant!.fileNumber"></app-investigation-form>
-  </div>
+  <app-investigation-form
+    *ngIf="selectedApplicant"
+    [applicantFileNumber]="selectedApplicant.fileNumber">
+  </app-investigation-form>
 </div>

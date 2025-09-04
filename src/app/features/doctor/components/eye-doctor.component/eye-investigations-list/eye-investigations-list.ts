@@ -6,10 +6,11 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { EditInvestigation } from '../../Investigations/edit-investigation/edit-investigation';
 import { ToastrService } from 'ngx-toastr';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-eye-investigations-list',
-  imports: [CommonModule, FormsModule, EditInvestigation],
+  imports: [CommonModule,ButtonModule, FormsModule, EditInvestigation],
   templateUrl: './eye-investigations-list.html',
   styleUrl: './eye-investigations-list.scss'
 })

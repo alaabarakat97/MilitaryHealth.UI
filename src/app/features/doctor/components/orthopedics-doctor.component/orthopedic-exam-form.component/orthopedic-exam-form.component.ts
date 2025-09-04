@@ -14,10 +14,11 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./orthopedic-exam-form.component.scss']
 })
 export class OrthopedicExamFormComponent {
-  @Input() applicantFileNumber: string = '';
+ @Input() applicantFileNumber: string = '';
   examForm!: FormGroup;
-
   results: any[] = [];
+  loading: boolean = false;
+  showModal: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -28,13 +29,21 @@ export class OrthopedicExamFormComponent {
 
   ngOnInit(): void {
     this.examForm = this.fb.group({
-      musculoskeletal: ['', Validators.required],
-      neurologicalSurgery: ['', Validators.required],
+      musculoskeletal: ['سليم', Validators.required],
+      neurologicalSurgery: ['سليم', Validators.required],
       resultID: [null, Validators.required],
       reason: ['']
     });
 
-    this.examService.getResults().subscribe(res => this.results = res.data.items || res);
+    this.examService.getResults().subscribe(res => this.results = res.data?.items || res);
+  }
+
+  openModal() {
+    this.showModal = true;
+  }
+
+  closeModal() {
+    this.showModal = false;
   }
 
   onSubmit() {
@@ -55,12 +64,17 @@ export class OrthopedicExamFormComponent {
       reason: this.examForm.value.reason || ''
     };
 
+    this.loading = true;
+
     this.examService.addOrthopedicExam(exam).subscribe({
       next: () => {
         this.toastr.success('✅ تمت إضافة فحص العظام بنجاح');
         this.examForm.reset();
+        this.loading = false;
+        this.closeModal();
       },
       error: (err: any) => {
+        this.loading = false;
         if (err?.error) {
           this.toastr.error(JSON.stringify(err.error));
         } else {

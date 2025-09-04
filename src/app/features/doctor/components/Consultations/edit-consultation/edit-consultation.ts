@@ -8,18 +8,20 @@ import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-edit-consultation',
-  standalone: true,  
-  imports: [CommonModule, ReactiveFormsModule], 
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './edit-consultation.html',
   styleUrls: ['./edit-consultation.scss']
 })
 export class EditConsultation {
-   @Input() consultation!: Consultation;
+  @Input() consultation!: Consultation;
   @Output() dialogClosed = new EventEmitter<boolean>();
 
   consultationForm!: FormGroup;
   uploadedPath: string | null = null;
-  loading: boolean = false;
+  previewUrl: string | null = null;
+  loading = false;
+  showModal = true;
 
   constructor(
     private fb: FormBuilder,
@@ -29,46 +31,50 @@ export class EditConsultation {
   ) {}
 
   ngOnInit(): void {
-    // بناء الفورم مع بيانات الاستشارة الحالية
     this.consultationForm = this.fb.group({
-      consultationType: [this.consultation.consultationType, Validators.required],
-      referredDoctor: [this.consultation.referredDoctor, Validators.required],
-      result: [this.consultation.result],
+      consultationType: [this.consultation.consultationType], // مخفي
+      referredDoctor: [this.consultation.referredDoctor], // مخفي
+      result: [this.consultation.result || ''],
       attachment: [this.consultation.attachment || null]
     });
 
-    this.uploadedPath = this.consultation.attachment || null;
+    if (this.consultation.attachment) {
+      this.uploadedPath = this.consultation.attachment;
+      this.previewUrl = this.uploadedPath;
+    }
   }
 
-  // رفع الملف
+  closeModal() {
+    this.showModal = false;
+    this.dialogClosed.emit(false);
+  }
+
   onFileSelected(event: any) {
     const file: File = event.target.files[0];
     if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => this.previewUrl = e.target.result;
+      reader.readAsDataURL(file);
+
       this.service.uploadFile(file).subscribe({
         next: (path) => {
-          this.uploadedPath = path; 
+          this.uploadedPath = path;
           this.consultationForm.patchValue({ attachment: path });
+          this.toastr.success('✅ تم رفع الملف بنجاح', 'نجاح');
         },
-        error: (err) => {
-          this.toastr.error('فشل رفع الملف', 'خطأ');
-        }
+        error: () => this.toastr.error('❌ فشل رفع الملف', 'خطأ')
       });
     }
   }
 
   onSubmit() {
-    if (!this.consultation || this.consultationForm.invalid) {
+    if (!this.consultationForm.valid) {
       this.toastr.warning('❌ يرجى تعبئة جميع الحقول المطلوبة', 'تحذير');
       return;
     }
 
-    this.loading = true;
-
     const doctorID = Number(this.authService.getDoctorId());
-    if (!doctorID) {
-      this.loading = false;
-      return;
-    }
+    if (!doctorID) return;
 
     const updatedConsultation: Consultation = {
       ...this.consultation,
@@ -80,20 +86,19 @@ export class EditConsultation {
       attachment: this.uploadedPath ?? ''
     };
 
-    this.service.updateConsultation(this.consultation.consultationID!, updatedConsultation).subscribe({
-      next: () => {
-        this.toastr.success('✅ تم التحديث بنجاح', 'نجاح');
-        this.loading = false;
-        this.dialogClosed.emit(true);
-      },
-      error: (err) => {
-        this.toastr.error('❌ فشل التحديث', 'خطأ');
-        this.loading = false;
-      }
-    });
-  }
+    this.loading = true;
 
-  onCancel() {
-    this.dialogClosed.emit(false);
+    this.service.updateConsultation(this.consultation.consultationID!, updatedConsultation)
+      .subscribe({
+        next: () => {
+          this.toastr.success('✅ تم التحديث بنجاح', 'نجاح');
+          this.loading = false;
+          this.closeModal();
+        },
+        error: () => {
+          this.toastr.error('❌ فشل التحديث', 'خطأ');
+          this.loading = false;
+        }
+      });
   }
 }

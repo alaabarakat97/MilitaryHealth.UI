@@ -1,77 +1,147 @@
-.eye-consultations {
-  padding: 20px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-
+.eye-consultations.deferred-exams-page {
   .title {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #2c3e50;
-    margin-bottom: 15px;
-    display: flex;
-    align-items: center;
-  }
-
-  .loading {
-    font-size: 1rem;
-    color: #007bff;
     text-align: center;
-    margin: 20px 0;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 20px;
   }
 
-  .consultation-table {
+  .search-wrapper {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+
+    .search-input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    .search-btn {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 10px 15px;
+      border-radius: 8px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+
+      i {
+        font-size: 1.1rem;
+      }
+    }
+  }
+
+  .custom-table {
     width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #ddd;
 
     thead {
-      background-color: #34495e;
+      background-color: #007bff;
       color: #fff;
-      text-align: center;
-
       th {
-        padding: 10px 12px;
-        font-weight: 500;
-        border-bottom: 2px solid #2c3e50;
+        text-align: center;
+        font-weight: bold;
       }
     }
 
     tbody {
-      tr {
+      td {
         text-align: center;
-        transition: background 0.2s;
+        vertical-align: middle;
+        border-top: 1px solid #ddd;
 
-        &:nth-child(even) {
-          background-color: #f8f9fa;
+        /* أزرار PrimeNG */
+        .p-button {
+          border-radius: 8px;
+          font-size: 0.85rem;
+          padding: 4px 10px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
         }
 
-        &:hover {
-          background-color: #e0f7fa;
+        .p-button-sm {
+          padding: 4px 8px;
+          font-size: 0.8rem;
         }
 
-        td {
-          padding: 10px 12px;
-          border-bottom: 1px solid #ddd;
+        .p-button-primary {
+          background-color: #007bff;
+          border: none;
+          color: #fff;
+        }
 
-          a {
-            color: #007bff;
-            text-decoration: none;
-            font-weight: 500;
+        .p-button-primary:hover {
+          background-color: #0056b3;
+        }
+/* زر التعديل أو الإضافة */
+.p-button-sm {
+  border-radius: 8px;
+  font-size: 0.85rem;
+  padding: 4px 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #000000;
+  border: none;
+}
 
-            &:hover {
-              text-decoration: underline;
-            }
-          }
+/* تأثير Hover */
+.p-button-sm:hover {
+  background-color: #d1d5db; /* رمادي فاتح */
+  color: #111; /* نص أسود لضمان وضوح */
+}
+
+       /* زر فتح الملف */
+.p-button-info {
+  background-color: #ff00aa; /* نفس لون زر التعديل */
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  padding: 4px 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.p-button-info:hover {
+  background-color: #b30077; /* نفس Hover زر التعديل */
+}
+
+        i.pi {
+          margin-right: 5px;
         }
       }
+
+      tr:hover {
+        background-color: #f1f1f1;
+      }
+    }
+
+    .badge {
+      padding: 0.4em 0.7em;
+      border-radius: 5px;
+      font-size: 0.85rem;
     }
   }
 
-  .no-data {
-    margin-top: 20px;
-    text-align: center;
-    font-size: 1rem;
-    color: #7f8c8d;
+  @media (max-width: 767px) {
+    .search-wrapper {
+      flex-direction: column-reverse;
+      gap: 5px;
+    }
+
+    .custom-table {
+      font-size: 0.85rem;
+    }
   }
 }
