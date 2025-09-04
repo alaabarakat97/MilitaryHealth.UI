@@ -40,7 +40,7 @@
 
         <td class="text-center">
           @if (archive.digitalCopy) {
-          <button class="btn btn-sm btn-info">
+          <button class="btn btn-sm btn-info" (click)="openEditArchive(archive)">
             <i class="fas fa-eye"></i>
           </button>
           } @else {
