@@ -4,6 +4,7 @@ import { EyeExam } from '../../../models/eye-exam-post.model';
 import { EyeExamService } from '../../../services/eye-exam.service';
 import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-edit-eye-exam',
@@ -12,7 +13,9 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './edit-eye-exam.scss'
 })
 export class EditEyeExam {
+  @Output() eyeExamUpdated = new EventEmitter<any>();
   @Input() exam!: EyeExam;
+  
   @Output() dialogClosed = new EventEmitter<boolean>();
 
   examForm!: FormGroup;
@@ -22,11 +25,11 @@ export class EditEyeExam {
   constructor(
     private fb: FormBuilder,
     private examService: EyeExamService,
-    private toastr: ToastrService // ✅ أضفنا ToastrService
+    private toastr: ToastrService ,
+    private modalService: NgbModal,
   ) {}
 
   ngOnInit(): void {
-    // بناء الفورم مع ملء البيانات الحالية
     this.examForm = this.fb.group({
       vision: [this.exam.vision, Validators.required],
       colorTest: [this.exam.colorTest, Validators.required],
@@ -37,7 +40,6 @@ export class EditEyeExam {
       reason: [this.exam.reason || '']
     });
 
-    // جلب قوائم Select
     this.examService.getRefractionTypes().subscribe(res => this.refractionTypes = res.data.items);
     this.examService.getResults().subscribe(res => this.results = res.data.items);
   }
@@ -56,7 +58,6 @@ export class EditEyeExam {
       resultID: Number(this.examForm.value.resultID)
     };
 
-    // نفترض أن الـ API يستخدم حقل ID غير موجود بالـ interface
     const examID = (this.exam as any).eyeExamID; 
 
     this.examService.updateEyeExam(examID, updatedExam).subscribe({
@@ -69,8 +70,8 @@ export class EditEyeExam {
       }
     });
   }
-
-  onCancel() {
-    this.dialogClosed.emit(false);
+ 
+  cancel() {
+  this.modalService.dismissAll();
   }
 }

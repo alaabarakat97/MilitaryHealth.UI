@@ -30,7 +30,8 @@
               <strong>الاسم: </strong> <span>{{ applicant.fullName }}</span>
             </div>
             <div class="col-6 col-md-3">
-              <strong>الحالة الاجتماعية: </strong> <span>{{ getMaritalStatusDescription(applicant.maritalStatusID) }}</span>
+              <strong>الحالة الاجتماعية: </strong> <span>{{ getMaritalStatusDescription(applicant.maritalStatusID)
+                }}</span>
             </div>
             <div class="col-6 col-md-3">
               <strong>الوظيفة: </strong> <span>{{ applicant.job }}</span>
@@ -60,7 +61,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="col-12 mt-4">
       <div class="card shadow-sm">
         <div class="card-header bg-dark text-white">
@@ -79,7 +80,7 @@
                 </ng-container>
               </div>
             </div>
-            
+
             <div class="col">
               <div class="border rounded p-2 small compact-exam-card">
                 <h6 class="text-warning mb-2">🩺 الفحص الجراحي</h6>
@@ -92,7 +93,7 @@
                 </ng-container>
               </div>
             </div>
-            
+
             <div class="col">
               <div class="border rounded p-2 small compact-exam-card">
                 <h6 class="text-danger mb-2">❤️ الفحص الباطني</h6>
@@ -111,7 +112,7 @@
                 </ng-container>
               </div>
             </div>
-            
+
             <div class="col">
               <div class="border rounded p-2 small compact-exam-card">
                 <h6 class="text-secondary mb-2">🦴 فحص العظام</h6>
@@ -122,7 +123,7 @@
                 </ng-container>
               </div>
             </div>
-            
+
             <div class="col">
               <div class="border rounded p-2 small compact-exam-card">
                 <h6 class="text-dark mb-2">📑 الاستشارة</h6>
@@ -132,7 +133,7 @@
                 </ng-container>
               </div>
             </div>
-            
+
             <ng-template #noData>
               <div class="text-muted">لا يوجد بيانات</div>
             </ng-template>
@@ -140,7 +141,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="col-12 mt-4">
       <div class="card shadow-sm">
         <div class="card-header bg-dark text-white">
@@ -155,9 +156,15 @@
                 placeholder="اختر النتيجة" [appendTo]="'body'">
               </ng-select>
             </div>
-            
+
             <div class="mb-3">
+              @if(isAccept){
+              <label class="form-label">التوصية</label>
+              }
+              @else {
               <label class="form-label">السبب</label>
+              }
+
               <textarea class="form-control" [(ngModel)]="decisionModel.reason" name="reason"></textarea>
             </div>
             @if(!isApproved){

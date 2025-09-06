@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { environment } from '../../../../../../environments/environment';
 import { ButtonModule } from 'primeng/button';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-internal-consultations-list',
@@ -23,7 +24,8 @@ export class InternalConsultationsList implements OnInit {
 
   constructor(
     private service: InternalExamService,
-    private toastr: ToastrService // ✅ toastr
+    private toastr: ToastrService ,
+    private modalService: NgbModal,// ✅ toastr
   ) {}
 
   ngOnInit() { this.loadConsultations(); }
@@ -69,5 +71,17 @@ export class InternalConsultationsList implements OnInit {
     }
     const url = `${environment.apiUrl}/${attachment}`;
     window.open(url, '_blank');
+  }
+  openEditConsultation(consultation: Consultation) {
+    const modalRef = this.modalService.open(EditConsultation, {
+      size: 'lg',
+      backdrop: 'static',
+      keyboard: false,
+      centered: true
+    });
+    modalRef.componentInstance.consultation  = consultation;
+    modalRef.componentInstance.consultationUpdated.subscribe(() => {
+      this.loadConsultations();
+    });
   }
 }

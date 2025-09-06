@@ -2,16 +2,17 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, HostListener } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import { PaginatorComponent } from '../../../../shared/components/paginator/paginator.component';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { PagedResponse } from '../../../applicants/models/api-response.model';
 import { ArchiveModel } from '../../models/archive.model';
 import { ArchiveService } from '../../services/archive';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Result } from '../../../../shared/models/result.model';
 import { EditArchive } from '../edit-archive/edit-archive';
+import { DataSharingService } from '../../../../shared/services/data-sharing';
 @Component({
   selector: 'app-archive-list',
-  imports: [PaginatorComponent, TableModule, CommonModule],
+  imports: [PaginatorComponent, TableModule, CommonModule,RouterModule],
   templateUrl: './archive-list.html',
   styleUrl: './archive-list.scss'
 })
@@ -30,6 +31,7 @@ archives: ArchiveModel[] = [];
     private cdr: ChangeDetectorRef,
     private router: Router,
     private modalService: NgbModal,
+    private dataSharingService: DataSharingService 
   ) { }
 
   ngOnInit(): void {
@@ -49,6 +51,10 @@ archives: ArchiveModel[] = [];
           this.loading = false;
         }
       });
+  }
+
+ openArchiveDetails(archive: ArchiveModel) {
+    this.router.navigate(['/applicants', archive.applicant.fileNumber], { state: { archiveData: archive } });
   }
 
   onPageChange(newPage: number) {

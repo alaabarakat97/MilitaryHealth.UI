@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { map, Observable, switchMap } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { EyeExam } from '../models/eye-exam-post.model';
 import { Consultation } from '../models/consultation.model'; // لازم تعمل موديل للاستشارة
 import { Investigation } from '../models/investigation.model';
+import { ApiResponse, PagedResponse } from '../../applicants/models/api-response.model';
 
 @Injectable({ providedIn: 'root' })
 export class EyeExamService {
@@ -73,16 +74,38 @@ uploadFile(file: File): Observable<string> {
 
 
 //  جلب كل فحوصات العيادة العينية فقط مع التصفية
-getAllEyeExams(page: number = 1, pageSize: number = 20): Observable<EyeExam[]> {
-  const url = `${this.apiUrl}?sortDesc=false&page=${page}&pageSize=${pageSize}`;
-  return this.http.get<any>(url, { headers: this.getAuthHeaders() }).pipe(
-    map(res => {
-      const items: EyeExam[] = res.data?.items || [];
-      // فقط فحوصات العيادة العينية (specializationID = 1)
-      return items.filter(exam => exam.doctor?.specializationID === 1);
-    })
-  );
-}
+// getAllEyeExams(page: number = 1, pageSize: number = 20,filter:string=''): Observable<EyeExam[]> {
+//   const url = `${this.apiUrl}?sortDesc=false&page=${page}&pageSize=${pageSize}&filter=${filter}`;
+//   return this.http.get<any>(url, { headers: this.getAuthHeaders() }).pipe(
+//     map(res => {
+//       const items: EyeExam[] = res.data?.items || [];
+//       // فقط فحوصات العيادة العينية (specializationID = 1)
+//       return items.filter(exam => exam.doctor?.specializationID === 1);
+//     })
+//   );
+// }
+
+getAllEyeExams(
+    page: number = 1,
+    pageSize: number = 20,
+    filter: string = ''
+  ): Observable<PagedResponse<EyeExam>> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('pageSize', pageSize.toString())
+      .set('sortDesc', false);
+
+    if (filter) {
+      params = params.set('filter', filter);
+    }
+
+
+    // ✅ استخدام HttpParams في الطلب
+    return this.http.get<ApiResponse<PagedResponse<EyeExam>>>(this.apiUrl, { params })
+      .pipe(
+        map(res => res.data)
+      );
+  }
 
 
  //  إضافة استشارة جديدة
@@ -92,16 +115,38 @@ addConsultation(consultation: Consultation): Observable<any> {
   });
 }
  // جلب جميع استشارات العيادة العينية فقط
-getEyeClinicConsultations(page: number = 1, pageSize: number = 20): Observable<Consultation[]> {
-  const url = `${this.consultationUrl}?sortDesc=false&page=${page}&pageSize=${pageSize}`;
-  return this.http.get<any>(url, { headers: this.getAuthHeaders() }).pipe(
-    map(res => {
-      const items: Consultation[] = res.data?.items || [];
-      // فقط استشارات العيادة العينية (specializationID = 1)
-      return items.filter(c => c.doctor?.specializationID === 1);
-    })
-  );
+// getEyeClinicConsultations(page: number = 1, pageSize: number = 20): Observable<Consultation[]> {
+//   const url = `${this.consultationUrl}?sortDesc=false&page=${page}&pageSize=${pageSize}`;
+//   return this.http.get<any>(url, { headers: this.getAuthHeaders() }).pipe(
+//     map(res => {
+//       const items: Consultation[] = res.data?.items || [];
+//       // فقط استشارات العيادة العينية (specializationID = 1)
+//       return items.filter(c => c.doctor?.specializationID === 1);
+//     })
+//   );
+// }
+getEyeClinicConsultations(
+  page: number = 1,
+  pageSize: number = 20,
+  filter: string = ''
+): Observable<PagedResponse<Consultation>> {
+  let params = new HttpParams()
+    .set('page', page.toString())
+    .set('pageSize', pageSize.toString())
+    .set('sortDesc', false);
+
+  // فلترة حسب الاختصاص (عيادة العيون)
+  if (filter) {
+    params = params.set('filter', filter);
+  }
+
+  return this.http.get<ApiResponse<PagedResponse<Consultation>>>(this.consultationUrl, { 
+      params 
+    }).pipe(
+      map(res => res.data)
+    );
 }
+
 
   // تحديث استشارة موجودة
 updateConsultation(id: number, consultation: Consultation): Observable<any> {
@@ -115,15 +160,37 @@ updateConsultation(id: number, consultation: Consultation): Observable<any> {
 private investigationUrl = `${environment.apiUrl}/api/Investigations`;
 
   // جلب جميع التحاليل الخاصة بالعيادة العينية فقط
-  getEyeClinicInvestigations(page: number = 1, pageSize: number = 20): Observable<Investigation[]> {
-    const url = `${this.investigationUrl}?sortDesc=false&page=${page}&pageSize=${pageSize}`;
-    return this.http.get<any>(url, { headers: this.getAuthHeaders() }).pipe(
-      map(res => {
-        const items = res.data?.items || [];
-        // نفترض أن العيادة العينية لها specializationID = 1
-        return items.filter((inv: any) => inv.doctor?.specializationID === 1);
-      })
-    );
+  // getEyeClinicInvestigations(page: number = 1, pageSize: number = 20): Observable<Investigation[]> {
+  //   const url = `${this.investigationUrl}?sortDesc=false&page=${page}&pageSize=${pageSize}`;
+  //   return this.http.get<any>(url, { headers: this.getAuthHeaders() }).pipe(
+  //     map(res => {
+  //       const items = res.data?.items || [];
+  //       // نفترض أن العيادة العينية لها specializationID = 1
+  //       return items.filter((inv: any) => inv.doctor?.specializationID === 1);
+  //     })
+  //   );
+  // }
+
+  getEyeClinicInvestigations(
+    page: number = 1,
+    pageSize: number = 20,
+    filter: string = ''
+  ): Observable<PagedResponse<Investigation>> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('pageSize', pageSize.toString())
+      .set('sortDesc', false);
+  
+    // فلترة حسب الاختصاص (عيادة العيون)
+    if (filter) {
+      params = params.set('filter', filter);
+    }
+  
+    return this.http.get<ApiResponse<PagedResponse<Investigation>>>(this.consultationUrl, { 
+        params 
+      }).pipe(
+        map(res => res.data)
+      );
   }
 // إضافة طلب تحليل جديد
 addInvestigation(investigation: Investigation) {

@@ -5,6 +5,7 @@ import { AuthService } from '../../../../auth/services/auth.service';
 import { Investigation } from '../../../models/investigation.model';
 import { EyeExamService } from '../../../services/eye-exam.service';
 import { ToastrService } from 'ngx-toastr';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-edit-investigation',
@@ -14,7 +15,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class EditInvestigation {
   @Input() investigation!: Investigation;
-  @Output() dialogClosed = new EventEmitter<boolean>();
+  @Output() investigationUpdated = new EventEmitter<any>();
 
   investigationForm!: FormGroup;
   uploadedPath: string | null = null;
@@ -26,7 +27,8 @@ export class EditInvestigation {
     private fb: FormBuilder,
     private service: EyeExamService,
     private authService: AuthService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private modalService: NgbModal,
   ) {}
 
   ngOnInit(): void {
@@ -51,10 +53,6 @@ export class EditInvestigation {
   });
 }
 
-  closeModal() {
-    this.showModal = false;
-    this.dialogClosed.emit(false);
-  }
 
   onFileSelected(event: any) {
     const file: File = event.target.files[0];
@@ -99,7 +97,7 @@ export class EditInvestigation {
         next: () => {
           this.toastr.success('تم تعديل التحليل بنجاح', 'نجاح');
           this.loading = false;
-          this.closeModal();
+          this.cancel();
         },
         error: () => {
           this.toastr.error('فشل التحديث', 'خطأ');
@@ -107,4 +105,7 @@ export class EditInvestigation {
         }
       });
   }
+  cancel() {
+    this.modalService.dismissAll();
+    }
 }

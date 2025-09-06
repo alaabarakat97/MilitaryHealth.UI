@@ -1,56 +1,45 @@
 <!-- المودال -->
-<div class="modal-backdrop" *ngIf="showModal" (click)="closeModal()">
-  <div class="modal-content card" (click)="$event.stopPropagation()">
+<div class="modal-content modal-lg">
+  <div class="modal-header d-flex justify-content-between align-items-center">
+    <h5 class="modal-title flex-grow-1 text-center">تعديل التحليل</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="cancel()"></button>
+  </div>
 
-    <!-- الهيدر -->
-    <div class="modal-header">
-      <h5 class="modal-title">تعديل التحليل</h5>
-      <button type="button" class="btn-close" (click)="closeModal()"></button>
-    </div>
+  <div class="modal-body">
+    <form [formGroup]="investigationForm" (ngSubmit)="onSubmit()">
 
-    <!-- البودي -->
-    <div class="modal-body">
-      <form [formGroup]="investigationForm" (ngSubmit)="onSubmit()" novalidate>
+      <!-- النتيجة -->
+      <div class="mb-3">
+        <label class="form-label">النتيجة</label>
+        <textarea class="form-control" formControlName="result" rows="3" placeholder="أدخل النتيجة"></textarea>
+      </div>
 
-        <!-- القسم الأول: بيانات التحليل -->
-        <h6 class="section-title">بيانات التحليل</h6>
-        <div class="row g-3">
-          <!-- نوع التحليل مخفي -->
-          <input type="hidden" formControlName="type" />
+      <!-- حالة التحليل -->
+      <div class="mb-3">
+        <label class="form-label">حالة التحليل</label>
+        <input type="text" class="form-control" formControlName="status" readonly />
+      </div>
 
-          <div class="col-md-12">
-            <label class="form-label">النتيجة</label>
-            <textarea class="form-control" formControlName="result" rows="3" placeholder="أدخل النتيجة"></textarea>
-          </div>
+      <!-- الملف المرفق -->
+      <div class="mb-3">
+        <label class="form-label">ملف مرفق</label>
+        <input type="file" class="form-control" (change)="onFileSelected($event)" />
+
+        <div *ngIf="previewUrl" class="mt-2">
+          <p class="text-muted">📷 معاينة الملف:</p>
+          <img [src]="previewUrl" class="img-fluid rounded border" style="max-height: 200px;">
         </div>
+      </div>
 
-        <div class="row g-3 mt-3">
-          <div class="col-md-6">
-            <label class="form-label">حالة التحليل</label>
-            <input class="form-control" formControlName="status" readonly />
-          </div>
+      <!-- الأزرار -->
+      <div class="modal-footer d-flex gap-2 justify-content-end">
+        <button type="submit" class="btn btn-success" [disabled]="loading">
+          <span *ngIf="loading" class="spinner-border spinner-border-sm"></span>
+          حفظ التعديل
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="cancel()">إلغاء</button>
+      </div>
 
-          <div class="col-md-6">
-            <label class="form-label">ملف مرفق</label>
-            <input type="file" class="form-control" (change)="onFileSelected($event)">
-          </div>
-        </div>
-
-        <!-- معاينة الملف -->
-        <div *ngIf="previewUrl" class="preview-container mt-3">
-          <p class="text-muted"> معاينة الملف:</p>
-          <img [src]="previewUrl" alt="معاينة المرفق" class="img-fluid rounded border" style="max-height: 200px;">
-        </div>
-
-        <!-- الأزرار -->
-        <div class="text-end mt-4">
-          <button type="submit" class="btn btn-success px-4" [disabled]="loading">
-            <span *ngIf="loading" class="spinner-border spinner-border-sm"></span>
-            حفظ التعديل
-          </button>
-        </div>
-
-      </form>
-    </div>
+    </form>
   </div>
 </div>

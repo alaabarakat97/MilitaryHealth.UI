@@ -1,76 +1,87 @@
-<div class="eye-consultations deferred-exams-page container">
-  <!-- عنوان الصفحة -->
-  <h3 class="title"> الاستشارات التخصصية </h3>
+<div class="user-header-section px-1 pt-1 container-fluid">
+  <!-- العنوان -->
+  <h3 class="title">الاستشارات التخصصية</h3>
 
-  <!-- بحث -->
-  <div class="row justify-content-center mb-4">
-    <div class="col-md-6">
-      <div class="search-wrapper">
-        <input type="text" class="form-control search-input" placeholder="ابحث عن رقم الملف أو أي معلومة..."
-               [(ngModel)]="searchText" (input)="filterConsultations()">
-        <button class="btn search-btn" (click)="loadConsultations()">
-          <i class="fas fa-search"></i> بحث
-        </button>
-      </div>
+  <!-- البحث -->
+  <div class="mb-3 d-flex justify-content-end">
+    <div class="search-wrapper">
+      <input type="text" class="search-input" placeholder="ابحث عن رقم الملف أو الاسم"
+        (input)="onFilterChange($event)" />
+      <i class="fas fa-search search-icon"></i>
     </div>
   </div>
 
-  <!-- Loading Spinner -->
-  <div *ngIf="loading" class="text-center my-3">
-    <div class="spinner-border text-primary" role="status"></div>
-  </div>
-
   <!-- جدول النتائج -->
-  <div class="table-responsive" *ngIf="!loading && filteredConsultations.length > 0">
-    <table class="table table-striped table-hover custom-table">
-      <thead>
-        <tr>
-          <th>رقم ملف المريض</th>
-          <th>نوع الاستشارة</th>
-          <th>الطبيب المحال إليه</th>
-          <th>النتيجة</th>
-          <th>الملف المرفق</th>
-          <th>اسم الطبيب</th>
-          <th>إجراءات</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let c of filteredConsultations">
-          <td>{{ c.applicantFileNumber }}</td>
-          <td>{{ c.consultationType }}</td>
-          <td>{{ c.referredDoctor }}</td>
-          <td>
-            <span [ngClass]="{
-              'badge bg-success': c.result === 'مقبول',
-              'badge bg-danger': c.result === 'مرفوض',
-              'badge bg-warning text-dark': c.result === 'مؤجل'
-            }">
-              {{ c.result }}
-            </span>
-          </td>
-          <td>
-            <button *ngIf="c.attachment" pButton type="button" icon="pi pi-file" class="p-button-sm p-button-info"
-              (click)="openFile(c.attachment)">فتح الملف</button>
-          </td>
-          <td>{{ c.doctor?.fullName }}</td>
-          <td>
-            <button pButton type="button" icon="pi pi-pencil" class="p-button-sm"
-              (click)="openEditDialog(c)">اضافة نتجية </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <p-table [value]="filteredConsultations" [paginator]="false" [rows]="10" [totalRecords]="totalRecords" [lazy]="true"
+    [showCurrentPageReport]="true" class="custom-table">
 
-  <!-- رسالة عدم وجود بيانات -->
-  <div *ngIf="!loading && filteredConsultations.length === 0" class="alert alert-info text-center mt-3">
-    لا توجد استشارات
-  </div>
+    <!-- الهيدر -->
+    <ng-template pTemplate="header">
+      <tr>
+        <th>رقم ملف المريض</th>
+        <th>نوع الاستشارة</th>
+        <th>الطبيب المحال إليه</th>
+        <th>اسم الطبيب</th>
+        <th>النتيجة</th>
+        <th>الملف المرفق</th>
+        <th>إجراءات</th>
+      </tr>
+    </ng-template>
+
+    <!-- الصفوف -->
+    <ng-template pTemplate="body" let-c>
+      <tr>
+        <td>{{ c.applicantFileNumber }}</td>
+        <td>{{ c.consultationType }}</td>
+        <td>{{ c.referredDoctor }}</td>
+        <td class="text-center">{{ c.doctor?.fullName || '-' }}</td>
+        <td>
+          <span class="badge result-badge">
+            {{ c.result || 'غير محدد' }}
+          </span>
+        </td>
+
+        <td class="text-center">
+          @if(c.attachment){
+
+          <button title="عرض الملف" class="btn btn-sm btn-info btn-small" (click)="openFile(c.attachment)">
+            <i class="fas fa-eye small-icon"></i>
+          </button>
+          }@else {
+          <button title="إضافة/تعديل" class="btn btn-sm btn-success btn-small">
+            <i class="fas fa-pencil-alt small-icon"></i>
+          </button>
+          }
+        </td>
+
+
+
+
+        <td class="text-center">
+          <button type="button" class="btn btn-sm btn-success btn-small" title="إضافة نتيجة"
+          (click)="openEditConsultation(c)">إضافة نتيجة
+          </button>
+        </td>
+
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="7" class="text-center">لا توجد استشارات</td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <!-- المـُـرقم -->
+  <app-paginator [totalRecords]="totalRecords" [pageSize]="rowsPerPage" [currentPage]="page"
+    (pageChange)="onPageChange($event)" (pageSizeChange)="onPageSizeChange($event)">
+  </app-paginator>
 
   <!-- مودال التعديل -->
-  <app-edit-consultation
+  <!-- <app-edit-consultation
     *ngIf="selectedConsultation"
     [consultation]="selectedConsultation"
     (dialogClosed)="onDialogClose($event)">
-  </app-edit-consultation>
+  </app-edit-consultation> -->
 </div>

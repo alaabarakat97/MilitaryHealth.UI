@@ -1,0 +1,70 @@
+<div class="report-container" >
+  <div class="report-header text-center">
+    <h4>تقرير بيانات المنتسب</h4>
+    <hr>
+  </div>
+  <h5 class="section-title">البيانات الشخصية</h5>
+  <table class="table table-bordered">
+    <tr><th>رقم الملف</th><td>{{ applicant.fileNumber }}</td></tr>
+    <tr><th>الاسم</th><td>{{ applicant.fullName }}</td></tr>
+    <tr><th>الحالة الاجتماعية</th><td>{{ getMaritalStatusDescription(applicant.maritalStatusID) }}</td></tr>
+    <tr><th>الوظيفة</th><td>{{ applicant.job }}</td></tr>
+    <tr><th>الطول / الوزن</th><td>{{ applicant.height }} سم / {{ applicant.weight }} كجم</td></tr>
+    <tr><th>BMI</th><td>{{ applicant.bmi }}</td></tr>
+    <tr><th>ضغط الدم</th><td>{{ applicant.bloodPressure }}</td></tr>
+    <tr><th>النبض</th><td>{{ applicant.pulse }}</td></tr>
+    <tr><th>وشم</th><td>{{ applicant.tattoo ? 'يوجد' : 'لا يوجد' }}</td></tr>
+    <tr><th>علامات مميزة</th><td>{{ applicant.distinctiveMarks || 'لا توجد' }}</td></tr>
+  </table>
+
+  <!-- الفحوصات -->
+  <h5 class="section-title mt-3">الفحوصات الطبية</h5>
+  <table class="table table-bordered">
+    <tr><th colspan="2"> فحص العيون</th></tr>
+    <tr><td>النظر</td><td>{{ applicant.eyeExam?.vision }}</td></tr>
+    <tr><td>الألوان</td><td>{{ applicant.eyeExam?.colorTest }}</td></tr>
+    <tr><td>قيمة الانكسار</td><td>{{ applicant.eyeExam?.refractionValue }}</td></tr>
+    <tr><td>النتيجة</td><td>{{ getResultDescription(applicant.eyeExam?.resultID) }}</td></tr>
+    
+    <tr><th colspan="2"> الفحص الجراحي</th></tr>
+    <tr><td>عام</td><td>{{ applicant.surgicalExam?.generalSurgery }}</td></tr>
+    <tr><td>المسالك البولية</td><td>{{ applicant.surgicalExam?.urinarySurgery }}</td></tr>
+    <tr><td>الأوعية الدموية</td><td>{{ applicant.surgicalExam?.vascularSurgery }}</td></tr>
+    <tr><td>الصدر</td><td>{{ applicant.surgicalExam?.thoracicSurgery }}</td></tr>
+    <tr><td>النتيجة</td><td>{{ getResultDescription(applicant.surgicalExam?.resultID) }}</td></tr>
+    
+    <tr><th colspan="2"> الفحص الباطني</th></tr>
+    <tr><td>القلب</td><td>{{ applicant.internalExam?.heart }}</td></tr>
+    <tr><td>الجهاز التنفسي</td><td>{{ applicant.internalExam?.respiratory }}</td></tr>
+    <tr><td>الجهاز الهضمي</td><td>{{ applicant.internalExam?.digestive }}</td></tr>
+    <tr><td>الأعصاب</td><td>{{ applicant.internalExam?.neurology }}</td></tr>
+    <tr><td>الجلد</td><td>{{ applicant.internalExam?.skin }}</td></tr>
+    <tr><td>النتيجة</td><td>{{ getResultDescription(applicant.internalExam?.resultID) }}</td></tr>
+
+    <tr><th colspan="2">فحص العظام</th></tr>
+    <tr><td>عضلي هيكلي</td><td>{{ applicant.orthopedicExamDto?.musculoskeletal }}</td></tr>
+    <tr><td> جراحة عصبية</td><td>{{ applicant.orthopedicExamDto?.neurologicalSurgery }}</td></tr>
+    <tr><td> النتيجة</td><td>{{ getResultDescription(applicant.orthopedicExamDto?.resultID) }}</td></tr>
+
+        <tr><th colspan="2"> الاستشارة</th></tr>
+    <tr><td>النوع</td><td>{{ applicant.consultation?.consultationType }}</td></tr>
+    <tr><td>الطبيب </td><td>{{ applicant.consultation?.referredDoctor }}</td></tr>
+
+  </table>
+
+  <!-- القرار -->
+  <h5 class="section-title mt-3">القرار النهائي</h5>
+  <table class="table table-bordered">
+    <tr><th>النتيجة</th><td>{{ getResultDescription(decisionModel?.resultID) }}</td></tr>
+    <tr><th>السبب</th><td>{{ decisionModel?.reason || 'لا يوجد' }}</td></tr>
+    <tr><th>مدة التأجيل</th><td>{{ decisionModel?.postponeDuration || '-' }}</td></tr>
+    <tr><th>تاريخ القرار</th><td>{{ decisionModel?.decisionDate }}</td></tr>
+  </table>
+
+  <!-- زر الطباعة -->
+  <div class="text-end mt-3 no-print">
+    <button class="btn btn-primary" (click)="print()">
+      <i class="fas fa-print"></i> طباعة
+    </button>
+  </div>
+</div>

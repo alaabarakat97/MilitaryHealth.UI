@@ -5,7 +5,6 @@ import { ApplicantModel } from '../../models/applicant.model';
 import { ApplicantService } from '../../services/applicant.service';
 import { PaginatorComponent } from "../../../../shared/components/paginator/paginator.component";
 import { PagedResponse } from '../../../../shared/models/paged-response.model';
-import { HighlightPipe } from "../../../../shared/pipes/highlight.pipe";
 import { Router } from '@angular/router';
 
 @Component({

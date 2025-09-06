@@ -25,12 +25,12 @@ export class Supervisor implements OnInit {
 
   rejectedId: number | null = null;
   postponedId: number | null = null;
-
+ acceptedId: number | null = null;
   responseMessage: string = '';
   responseSuccess: boolean = false;
 
   isApproved: boolean = true;
-
+  isAccept : boolean = false;
   constructor(private applicantService: ApplicantService, private lookupService: LookupService,
     private decisionService: DecisionService, private maritalStatusService: MaritalStatusService
   ) { }
@@ -76,7 +76,6 @@ export class Supervisor implements OnInit {
     });
   }
   getMaritalStatusDescription(id: number): string {
-    console.log(this.maritalStatuses);
   const status = this.maritalStatuses.find(s => s.maritalStatusID === id);
   return status ? status.description : 'غير محدد';
 }
@@ -87,8 +86,10 @@ export class Supervisor implements OnInit {
         this.results = data;
         const rejected = this.results.find(r => r.description == 'مرفوض');
         const postponed = this.results.find(r => r.description == 'مؤجل');
+        const approved = this.results.find(r => r.description == 'مقبول');
         this.rejectedId = rejected ? rejected.resultID : null;
         this.postponedId = postponed ? postponed.resultID : null;
+        this.acceptedId = approved ? approved.resultID : null;
       },
       error: (err) => console.error('Error fetching results', err)
     });
@@ -112,6 +113,11 @@ export class Supervisor implements OnInit {
     } else {
       this.isApproved = true;
       this.decisionModel.postponeDuration = '';
+    }
+    if(selectedId == this.acceptedId){
+      this.isAccept = true;
+    }else{
+      this.isAccept = false;
     }
   }
 

@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { environment } from '../../../../../../environments/environment';
 import { ButtonModule } from 'primeng/button';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-surgery-investigations-list',
@@ -23,7 +24,8 @@ export class SurgeryInvestigationsList implements OnInit {
 
   constructor(
     private service: SurgicalExamService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private modalService: NgbModal,
   ) {}
 
   ngOnInit() { 
@@ -73,5 +75,17 @@ export class SurgeryInvestigationsList implements OnInit {
     }
     const url = `${environment.apiUrl}/${attachment}`;
     window.open(url, '_blank');
+  }
+  openEditInvestigation(investigation: Investigation) {
+    const modalRef = this.modalService.open(EditInvestigation, {
+      size: 'lg',
+      backdrop: 'static',
+      keyboard: false,
+      centered: true
+    });
+    modalRef.componentInstance.investigation  = investigation;
+    modalRef.componentInstance.investigationUpdated.subscribe(() => {
+      this.loadInvestigations();
+    });
   }
 }

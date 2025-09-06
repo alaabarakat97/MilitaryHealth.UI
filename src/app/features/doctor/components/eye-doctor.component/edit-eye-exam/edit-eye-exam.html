@@ -1,72 +1,65 @@
-<div class="dialog-backdrop" (click)="onCancel()">
-  <div class="dialog-card" (click)="$event.stopPropagation()">
+<div class="modal-content modal-lg">
+  <div class="modal-header d-flex justify-content-between align-items-center">
+    <button type="button" class="btn-close" aria-label="Close" (click)="cancel()"></button>
+    <h4 class="modal-title text-center flex-grow-1">تعديل الفحص</h4>
+  </div>
 
-    <div class="dialog-header">
-      <h3>تعديل الفحص العيني</h3>
-    </div>
+  <div class="modal-body">
+    <form [formGroup]="examForm" (ngSubmit)="onSubmit()">
 
-    <form [formGroup]="examForm" (ngSubmit)="onSubmit()" class="dialog-form">
-
-      <!-- صف الرؤية والألوان -->
-      <div class="form-row">
-        <div class="form-group">
-          <label>القدرة  البصرية </label>
-          <input formControlName="vision" placeholder="أدخل حدة البصر" />
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label class="form-label">القدرة البصرية</label>
+          <input class="form-control" formControlName="vision" placeholder="أدخل حدة البصر" />
         </div>
-
-        <div class="form-group">
-          <label>اختبار الألوان</label>
-          <input formControlName="colorTest" placeholder="أدخل نتيجة اختبار الألوان" />
+        <div class="col-md-6">
+          <label class="form-label">اختبار الألوان</label>
+          <input class="form-control" formControlName="colorTest" placeholder="أدخل نتيجة اختبار الألوان" />
         </div>
       </div>
 
       <!-- صف الانكسار -->
-      <div class="form-row">
-        <div class="form-group">
-          <label>أسواء  الانكسار</label>
-          <select formControlName="refractionTypeID">
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label class="form-label">أسواء الانكسار</label>
+          <select class="form-select" formControlName="refractionTypeID">
             <option *ngFor="let r of refractionTypes" [value]="r.refractionTypeID">
               {{ r.description }}
             </option>
           </select>
         </div>
-
-        <div class="form-group">
-          <label>نسبة الانكسار</label>
-          <input type="number" formControlName="refractionValue" />
+        <div class="col-md-6">
+          <label class="form-label">نسبة الانكسار</label>
+          <input type="number" class="form-control" formControlName="refractionValue" />
         </div>
       </div>
 
       <!-- الأمراض الأخرى -->
-      <div class="form-group">
-        <label>الأمراض الأخرى</label>
-        <input formControlName="otherDiseases" placeholder="إن وجدت" />
+      <div class="mb-3">
+        <label class="form-label">الأمراض الأخرى</label>
+        <input class="form-control" formControlName="otherDiseases" placeholder="إن وجدت" />
       </div>
 
       <!-- النتيجة والسبب -->
-      <div class="form-row">
-        <div class="form-group">
-          <label>النتيجة</label>
-          <select formControlName="resultID">
-            <option *ngFor="let r of results" [value]="r.resultID">{{ r.description }}</option>
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label class="form-label">النتيجة</label>
+          <select class="form-select" formControlName="resultID">
+            <option *ngFor="let r of results" [value]="r.resultID">
+              {{ r.description }}
+            </option>
           </select>
         </div>
-
-        <div class="form-group">
-          <label>السبب</label>
-          <textarea formControlName="reason" placeholder="أدخل السبب إذا وجد"></textarea>
+        <div class="col-md-6">
+          <label class="form-label">السبب</label>
+          <textarea class="form-control" formControlName="reason" placeholder="أدخل السبب إذا وجد"></textarea>
         </div>
       </div>
-
-      <!-- أزرار الإجراء -->
-      <div class="form-actions">
-        <button type="submit" class="btn btn-success">
-          حفظ
-        </button>
-        
-      </div>
-
     </form>
+  </div>
 
+  <div class="modal-footer">
+    <button class="btn btn-secondary" (click)="cancel()">إلغاء</button>
+    <button type="submit" class="btn btn-primary" [disabled]="!examForm.valid" (click)="onSubmit()">حفظ</button>
   </div>
 </div>

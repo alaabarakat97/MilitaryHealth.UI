@@ -1,47 +1,38 @@
-<!-- المودال -->
-<div class="modal-backdrop" *ngIf="showModal" (click)="closeModal()">
-  <div class="modal-content" (click)="$event.stopPropagation()">
+<div class="modal-content modal-lg">
+  <div class="modal-header d-flex justify-content-between align-items-center">
+    <h5 class="modal-title flex-grow-1 text-center">تعديل الاستشارة</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="cancel()"></button>
+  </div>
 
-    <!-- الهيدر -->
-    <div class="modal-header">
-      <h5 class="modal-title">تعديل الاستشارة</h5>
-      <button type="button" class="btn-close" (click)="closeModal()"></button>
-    </div>
+  <div class="modal-body">
+    <form [formGroup]="consultationForm" (ngSubmit)="onSubmit()">
 
-    <!-- البودي -->
-    <div class="modal-body">
-      <form [formGroup]="consultationForm" (ngSubmit)="onSubmit()">
+      <input type="hidden" formControlName="consultationType" />
+      <input type="hidden" formControlName="referredDoctor" />
 
-        <!-- الحقول المخفية -->
-        <input type="hidden" formControlName="consultationType" />
-        <input type="hidden" formControlName="referredDoctor" />
+      <div class="mb-3">
+        <label class="form-label">النتيجة</label>
+        <textarea class="form-control" formControlName="result" placeholder="أدخل النتيجة"></textarea>
+      </div>
 
-        <div class="form-group mb-3">
-          <label>النتيجة</label>
-          <textarea class="form-control" formControlName="result" placeholder="أدخل النتيجة"></textarea>
+      <div class="mb-3">
+        <label class="form-label">ملف مرفق</label>
+        <input type="file" class="form-control" accept="image/*" (change)="onFileSelected($event)" />
+
+        <div *ngIf="previewUrl" class="mt-2">
+          <p class="text-muted">📷 معاينة الصورة:</p>
+          <img [src]="previewUrl" class="img-fluid rounded border" style="max-height: 200px;">
         </div>
+      </div>
 
-        <div class="form-group mb-3">
-          <label>ملف مرفق</label>
-          <input type="file" class="form-control" accept="image/*" (change)="onFileSelected($event)" />
+      <div class="modal-footer d-flex gap-2 justify-content-end">
+        <button type="submit" class="btn btn-success" [disabled]="loading">
+          <span *ngIf="loading" class="spinner-border spinner-border-sm"></span>
+          حفظ التعديل
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="cancel()">إلغاء</button>
+      </div>
 
-          <!-- ✅ عرض المعاينة -->
-          <div *ngIf="previewUrl" class="mt-2">
-            <p class="text-muted">📷 معاينة الصورة:</p>
-            <img [src]="previewUrl" class="img-fluid rounded border" style="max-height: 200px;">
-          </div>
-        </div>
-
-        <!-- الأزرار -->
-        <div class="d-flex gap-2 justify-content-end mt-3">
-          <button type="submit" class="btn btn-success" [disabled]="loading">
-            <span *ngIf="loading" class="spinner-border spinner-border-sm"></span>
-            حفظ التعديل
-          </button>
-          <button type="button" class="btn btn-secondary" (click)="closeModal()">إلغاء</button>
-        </div>
-
-      </form>
-    </div>
+    </form>
   </div>
 </div>

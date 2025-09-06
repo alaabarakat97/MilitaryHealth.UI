@@ -47,7 +47,7 @@ export class AuthService {
       }),
       catchError(err => {
         console.log(err);
-        this.toastr.error(err.error.errors.detail[0] || 'Login failed');
+        this.toastr.error(err?.error?.errors?.detail[0] || 'Login failed');
         return throwError(() => err);
       })
     );

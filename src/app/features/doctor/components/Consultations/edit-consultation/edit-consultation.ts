@@ -5,6 +5,7 @@ import { Consultation } from '../../../models/consultation.model';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../../auth/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-edit-consultation',
@@ -15,6 +16,9 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class EditConsultation {
   @Input() consultation!: Consultation;
+  @Output() consultationUpdated = new EventEmitter<any>();
+
+  
   @Output() dialogClosed = new EventEmitter<boolean>();
 
   consultationForm!: FormGroup;
@@ -27,7 +31,8 @@ export class EditConsultation {
     private fb: FormBuilder,
     private service: EyeExamService,
     private authService: AuthService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private modalService: NgbModal,
   ) {}
 
   ngOnInit(): void {
@@ -101,4 +106,7 @@ export class EditConsultation {
         }
       });
   }
+  cancel() {
+    this.modalService.dismissAll();
+    }
 }

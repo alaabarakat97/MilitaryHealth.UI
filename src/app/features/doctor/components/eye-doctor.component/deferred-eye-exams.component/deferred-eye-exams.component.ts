@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener } from '@angular/core';
 import { EyeExam } from '../../../models/eye-exam-post.model';
 import { EyeExamService } from '../../../services/eye-exam.service';
 import { CommonModule } from '@angular/common';
@@ -7,29 +7,43 @@ import { ButtonModule } from 'primeng/button';
 import { EditSurgicalExam } from '../../surgery-doctor.component/edit-surgical-exam/edit-surgical-exam';
 import { EditEyeExam } from '../edit-eye-exam/edit-eye-exam';
 import { ToastrService } from 'ngx-toastr';
+import { TableModule } from 'primeng/table';
+import { Router } from '@angular/router';
+import { PagedResponse } from '../../../../applicants/models/api-response.model';
+import { PaginatorComponent } from "../../../../../shared/components/paginator/paginator.component";
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-deferred-eye-exams.component',
-  imports: [CommonModule, ButtonModule, FormsModule,EditEyeExam],
+  imports: [CommonModule, ButtonModule, FormsModule, EditEyeExam, TableModule, PaginatorComponent],
   templateUrl: './deferred-eye-exams.component.html',
   styleUrl: './deferred-eye-exams.component.scss'
 })
 export class DeferredEyeExamsComponent {
-exams: EyeExam[] = [];
+  exams: EyeExam[] = [];
   filteredExams: EyeExam[] = [];
-  loading = true;
+  globalFilter: string = '';
+  page = 1;
+  rowsPerPage = 10;
+  totalRecords = 0;
+  loading = false;
+
+
   selectedExam: EyeExam | null = null;
   searchTerm: string = '';
-
-  // 👇 خصائص التقليب
-  page = 1;
   pageSize = 10;
   totalItems = 0;
+  tableHeight = '400px';
+
+
 
   constructor(
     private examService: EyeExamService,
-    private toastr: ToastrService // ✅ أضفنا ToastrService
-  ) {}
+    private toastr: ToastrService,
+    private cdr: ChangeDetectorRef,
+    private router: Router,
+    private modalService: NgbModal,
+  ) { }
 
   ngOnInit(): void {
     this.loadEyeExams();
@@ -37,14 +51,12 @@ exams: EyeExam[] = [];
 
   loadEyeExams() {
     this.loading = true;
-    this.examService.getAllEyeExams(this.page, this.pageSize).subscribe({
-      next: (data: any) => {
-        this.exams = data;
-        this.filteredExams = [...this.exams];
-        this.totalItems =
-          data.length < this.pageSize
-            ? this.page * this.pageSize
-            : (this.page + 1) * this.pageSize;
+    const filter = this.globalFilter || '';
+    this.examService.getAllEyeExams(this.page, this.rowsPerPage, filter).subscribe({
+      next: (data: PagedResponse<EyeExam>) => {
+        this.exams = data.items;
+        this.filteredExams = data.items;
+        this.totalRecords = data.totalCount;
         this.loading = false;
       },
       error: () => {
@@ -54,45 +66,69 @@ exams: EyeExam[] = [];
     });
   }
 
-  changePage(newPage: number) {
-    if (newPage < 1) return;
+  onPageChange(newPage: number) {
     this.page = newPage;
     this.loadEyeExams();
   }
+  onPageSizeChange(newSize: number) {
+    this.rowsPerPage = newSize;
+    this.page = 1;
+    this.loadEyeExams();
+  }
+  onFilterChange(event: Event) {
+    const value = (event.target as HTMLInputElement).value.toLowerCase().trim();
+    this.globalFilter = value;
+    this.page = 1;
+    this.loadEyeExams();
 
-  onSearchChange() {
-    const term = this.searchTerm.trim().toLowerCase();
-    if (!term) {
-      this.filteredExams = [...this.exams];
-      return;
-    }
-
-    this.filteredExams = this.exams.filter(
-      exam =>
-        exam.applicantFileNumber?.toLowerCase().includes(term) ||
-        exam.vision?.toLowerCase().includes(term) ||
-        exam.colorTest?.toLowerCase().includes(term) ||
-        exam.refractionType?.description?.toLowerCase().includes(term) ||
-        exam.refractionValue?.toString().includes(term) ||
-        exam.otherDiseases?.toLowerCase().includes(term) ||
-        exam.reason?.toLowerCase().includes(term) ||
-        exam.result?.description?.toLowerCase().includes(term)
-    );
-
-    if (this.filteredExams.length === 0) {
-      this.toastr.info('لا توجد نتائج مطابقة للبحث', 'معلومة');
-    }
+  }
+  ngAfterViewInit() {
+    this.tableHeight = this.calculateTableHeight();
+    this.cdr.detectChanges();
   }
 
-  openEditDialog(exam: EyeExam) {
-    this.selectedExam = { ...exam };
+  calculateTableHeight(): string {
+    return window.innerHeight - 200 + 'px';
+  }
+  @HostListener('window:resize')
+  onResize() {
+    this.setTableHeight();
   }
 
-  onDialogClose(updated: boolean) {
-    this.selectedExam = null;
-    if (updated) {
-      this.toastr.success('تم تحديث الفحص بنجاح', 'نجاح');
+  setTableHeight() {
+    const screenHeight = window.innerHeight;
+
+    const reservedSpace = 220;
+
+    this.tableHeight = (screenHeight - reservedSpace) + 'px';
+  }
+
+
+  openEditExam(eyeExam: EyeExam) {
+    const modalRef = this.modalService.open(EditEyeExam, {
+      size: 'lg',
+      backdrop: 'static',
+      keyboard: false,
+      centered: true
+    });
+    modalRef.componentInstance.exam  = eyeExam;
+    modalRef.componentInstance.eyeExamUpdated.subscribe(() => {
       this.loadEyeExams();
+    });
+  }
+  getBadgeClass(result: any): string {
+    if (!result || !result.description) {
+      return 'badge';
+    }
+    switch (result.description) {
+      case 'مقبول':
+        return 'badge bg-success';
+      case 'مرفوض':
+        return 'badge bg-danger';
+      case 'مؤجل':
+        return 'badge bg-warning text-dark';
+      default:
+        return 'badge bg-secondary';
     }
   }
 }

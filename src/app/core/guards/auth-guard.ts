@@ -10,34 +10,22 @@ export const authGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
 
   const roles = route.data['roles'] as UserRoles[] || [];
-  const messageError = route.data['messageError'] || 'Access denied';
+  const messageError = route.data['messageError'] || 'تم رفض الوصول';
 
-  // ✅ تحقق من وجود توكن (المصادقة)
   if (!auth.isAuthenticated()) {
-    Swal.fire({
-      title: 'Not Authenticated',
-      text: `${messageError}. You are not logged in.`,
-      icon: 'error',
-      confirmButtonText: 'Close',
-      background: '#f8d7da',
-      confirmButtonColor: '#d33',
-      timer: 3000,
-      timerProgressBar: true
-    });
     return router.createUrlTree(['/login']);
   }
 
-  // ✅ تحقق من الأدوار (التفويض)
   if (roles.length > 0 && !auth.isAuthorizated(roles)) {
     Swal.fire({
-      title: 'Not Authorized',
-      text: `${messageError}. You don’t have permission.`,
+      title: 'غير مسموح',
+      text: `${messageError}. لا تملك صلاحية للوصول إلى هذه الصفحة.`,
       icon: 'error',
-      confirmButtonText: 'Close',
+      confirmButtonText: 'إغلاق',
       background: '#f8d7da',
       confirmButtonColor: '#d33'
     });
-    return router.createUrlTree(['/unauthorized']); // الأفضل توجيه لصفحة "Unauthorized" بدل "/"
+    return router.createUrlTree(['/unauthorized']);
   }
 
   return true;

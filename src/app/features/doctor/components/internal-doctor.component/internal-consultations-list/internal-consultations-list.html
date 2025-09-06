@@ -58,7 +58,7 @@
           <td>{{ c.doctor?.fullName || '-' }}</td>
           <td>
             <button pButton type="button" icon="pi pi-pencil" class="p-button-sm p-button-primary"
-                    (click)="openEditDialog(c)">اضافة نتيجة</button>
+                    (click)="openEditConsultation(c)">اضافة نتيجة</button>
           </td>
         </tr>
       </tbody>
@@ -71,10 +71,10 @@
   </div>
 
   <!-- مودال التعديل -->
-  <app-edit-consultation
+  <!-- <app-edit-consultation
     *ngIf="selectedConsultation"
     [consultation]="selectedConsultation"
     (dialogClosed)="onDialogClose($event)">
-  </app-edit-consultation>
+  </app-edit-consultation> -->
 
 </div>

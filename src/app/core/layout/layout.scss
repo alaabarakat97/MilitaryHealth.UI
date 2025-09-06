@@ -6,7 +6,9 @@
 }
 
 .sidebar {
-  width: 200px;
+  width: 220px; 
+  max-width: 25%; 
+  min-width: 180px; 
   background: #fff;
   border-left: 1px solid #eee;
   padding: 1rem;

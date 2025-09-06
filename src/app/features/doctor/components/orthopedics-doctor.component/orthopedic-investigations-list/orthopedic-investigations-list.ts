@@ -7,6 +7,7 @@ import { EditInvestigation } from '../../Investigations/edit-investigation/edit-
 import { environment } from '../../../../../../environments/environment';
 import { ToastrService } from 'ngx-toastr';
 import { ButtonModule } from 'primeng/button';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-orthopedic-investigations-list',
@@ -21,7 +22,9 @@ export class OrthopedicInvestigationsList implements OnInit {
   loading = false;
   searchText = '';
 
-  constructor(private service: OrthopedicExamService,private toastr:ToastrService) {}
+  constructor(private service: OrthopedicExamService,private toastr:ToastrService,
+    private modalService: NgbModal,
+  ) {}
 
   ngOnInit() {
     this.loadInvestigations();
@@ -70,5 +73,17 @@ export class OrthopedicInvestigationsList implements OnInit {
     }
     const url = `${environment.apiUrl}/${attachment}`;
     window.open(url, '_blank');
+  }
+  openEditInvestigation(investigation: Investigation) {
+    const modalRef = this.modalService.open(EditInvestigation, {
+      size: 'lg',
+      backdrop: 'static',
+      keyboard: false,
+      centered: true
+    });
+    modalRef.componentInstance.investigation  = investigation;
+    modalRef.componentInstance.investigationUpdated.subscribe(() => {
+      this.loadInvestigations();
+    });
   }
 }

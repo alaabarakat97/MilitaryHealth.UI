@@ -1,91 +1,65 @@
-<div class="deferred-exams-page container mt-4">
-
-  <!-- بحث -->
-  <div class="row justify-content-center mb-4">
-    <div class="col-md-6">
+<div class="user-header-section px-1 pt-1 container-fluid">
+  <div class="mb-3 d-flex justify-content-end">
       <div class="search-wrapper">
-        <input type="text" class="form-control search-input" placeholder="ابحث عن رقم الملف أو أي معلومة..."
-          [(ngModel)]="searchTerm" (input)="onSearchChange()">
-        <button class="btn search-btn" (click)="loadEyeExams()">
-          <i class="fas fa-search"></i> بحث
-        </button>
+          <input type="text" class="search-input" placeholder="ابحث عن رقم الملف أو الاسم"
+              (input)="onFilterChange($event)" />
+          <i class="fas fa-search search-icon"></i>
       </div>
-    </div>
   </div>
 
-  <!-- Loading Spinner -->
-  <div *ngIf="loading" class="text-center my-3">
-    <div class="spinner-border text-primary" role="status"></div>
-  </div>
 
-  <!-- جدول النتائج -->
-  <div class="table-responsive">
-    <table *ngIf="!loading && filteredExams.length > 0" class="table table-striped table-hover custom-table">
-      <thead>
-        <tr>
-          <th>رقم الملف</th>
-          <th>القدرة البصرية</th>
-          <th>اختبار الألوان</th>
-          <th>أسواء الانكسار</th>
-          <th>نسبة الانكسار</th>
-          <th>الأمراض الأخرى</th>
-          <th>السبب</th>
-          <th>النتيجة</th>
-          <th>إجراءات</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let exam of filteredExams">
-          <td>{{ exam.applicantFileNumber }}</td>
-          <td>{{ exam.vision }}</td>
-          <td>{{ exam.colorTest }}</td>
-          <td>{{ exam.refractionType?.description }}</td>
-          <td>{{ exam.refractionValue }}</td>
-          <td>{{ exam.otherDiseases || '-' }}</td>
-          <td>{{ exam.reason || '-' }}</td>
-          <td>
-            <span [ngClass]="{
-              'badge bg-success': exam.result?.description === 'مقبول',
-              'badge bg-danger': exam.result?.description === 'مرفوض',
-              'badge bg-warning text-dark': exam.result?.description === 'مؤجل'
-            }">
-              {{ exam.result?.description }}
-            </span>
-          </td>
-          <td>
-            <button pButton type="button" icon="pi pi-pencil" class="p-button-sm p-button-primary"
-              (click)="openEditDialog(exam)"> تعديل </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
 
-  <!-- Pagination -->
-  <div class="d-flex justify-content-center mt-4" *ngIf="!loading && filteredExams.length > 0">
-    <nav>
-      <ul class="pagination">
-        <li class="page-item" [class.disabled]="page === 1">
-          <a class="page-link" (click)="changePage(page - 1)">السابق</a>
-        </li>
-        <li class="page-item active"><span class="page-link">{{ page }}</span></li>
-        <li class="page-item" [class.disabled]="filteredExams.length < pageSize">
-          <a class="page-link" (click)="changePage(page + 1)">التالي</a>
-        </li>
-      </ul>
-    </nav>
-  </div>
+  <p-table #table [value]="exams" [rows]="pageSize" [totalRecords]="totalRecords" [rows]="10" [sortMode]="'multiple'"
+    [showCurrentPageReport]="true" [lazy]="true" [sortMode]="'multiple'" class="custom-table">
 
-  <!-- رسالة عدم وجود بيانات -->
-  <div *ngIf="!loading && filteredExams.length === 0" class="alert alert-info text-center mt-3">
-    لا توجد فحوص مؤجلة
-  </div>
+    <ng-template pTemplate="header">
+      <tr>
+        <th>رقم ملف المنتسب</th>
+        <th>القدرة البصرية</th>
+        <th>اختبار الألوان</th>
+        <th>أسواء الانكسار</th>
+        <th>نسبة الانكسار</th>
+        <th>الأمراض الأخرى</th>
+        <th>السبب</th>
+        <th>النتيجة</th>
+        <th>إجراءات</th>
+      </tr>
+    </ng-template>
 
-  <!-- مودال التعديل -->
-  <app-edit-eye-exam
-    *ngIf="selectedExam"
-    [exam]="selectedExam"
-    (dialogClosed)="onDialogClose($event)">
-  </app-edit-eye-exam>
+    <ng-template pTemplate="body" let-exam>
+      <tr>
+        <td>{{ exam.applicantFileNumber }}</td>
+        <td>{{ exam.vision }}</td>
+        <td>{{ exam.colorTest }}</td>
+        <td>{{ exam.refractionType?.description }}</td>
+        <td>{{ exam.refractionValue }}</td>
+        <td>{{ exam.otherDiseases || '-' }}</td>
+        <td>{{ exam.reason || '-' }}</td>
+        <td>
+          <span [ngClass]="getBadgeClass(exam.result)">
+            {{ exam.result?.description }}
+          </span>
+        </td>
+        <td>
+          <button title="تعديل" class="btn btn-sm btn-primary" (click)="openEditExam(exam)">
+            <i class="fas fa-edit"></i>
+          </button>
+        </td>
+      </tr>
+    </ng-template>
 
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="9" class="text-center">لا توجد فحوص مؤجلة.</td>
+      </tr>
+    </ng-template>
+
+  </p-table>
+
+  <!-- <app-edit-eye-exam *ngIf="selectedExam" [exam]="selectedExam" (dialogClosed)="onDialogClose($event)">
+  </app-edit-eye-exam> -->
+
+  <app-paginator [totalRecords]="totalRecords" [pageSize]="rowsPerPage" [currentPage]="page"
+  (pageChange)="onPageChange($event)" (pageSizeChange)="onPageSizeChange($event)">
+</app-paginator>
 </div>

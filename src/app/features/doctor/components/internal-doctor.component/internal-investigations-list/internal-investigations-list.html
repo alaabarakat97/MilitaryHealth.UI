@@ -56,7 +56,7 @@
           <td>{{ i.doctor?.fullName || '-' }}</td>
           <td>
             <button pButton type="button" icon="pi pi-pencil" class="p-button-sm p-button-primary"
-                    (click)="openEditDialog(i)">اضافة نتيجة</button>
+                    (click)="openEditInvestigation(i)">اضافة نتيجة</button>
           </td>
         </tr>
       </tbody>
@@ -72,11 +72,11 @@
 
   <!-- مودال التعديل -->
   <!-- مودال التعديل -->
-  <app-edit-investigation 
+  <!-- <app-edit-investigation 
     *ngIf="selectedInvestigation" 
     [investigation]="selectedInvestigation" 
     (dialogClosed)="onDialogClose($event)">
-  </app-edit-investigation>
+  </app-edit-investigation> -->
 
 
 </div>
